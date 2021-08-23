@@ -4,12 +4,9 @@ import Link from "next/link"
 import Image from 'next/image'
 import React, { useState } from "react"
 import useSWR from "swr"
-import { MainBreadcrumbs } from "."
+import { MainBreadcrumbs } from "./"
 
 const MainGroupTypes: React.FC = () => {
-   const bc = [
-      { to: "/smartphones-mobiles-accessories/", label: "Телефони та аксесуари" }
-   ]
    // const [raised, setRaised] = useState(false);
 
    const fetcher = async (url: string) => await axios.get(url).then(response => response.data)
@@ -53,7 +50,7 @@ const MainGroupTypes: React.FC = () => {
          <div className="container">
             <div className="main">
                <div className="breadcrumbs">
-                  <MainBreadcrumbs items={bc} />
+                  <MainBreadcrumbs />
                </div>
                <h2 className="main-title">Смартфони, мобільні телефони, аксесуари</h2>
                <div className="wrapper">
@@ -61,7 +58,7 @@ const MainGroupTypes: React.FC = () => {
                      <Grid container spacing={4}>
                         {data?.map((item: any) => (
                            <Grid item key={item.id} >
-                              <Link href={item.ref}>
+                              <Link href={`/${item.ref}`}>
                                  <Card
                                     className={classes.card}
                                     raised={false}

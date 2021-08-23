@@ -1,18 +1,15 @@
 import Image from 'next/image';
 import React from 'react';
 import Link from 'next/link';
-import axios from 'axios';
-import useSWR from 'swr';
 import { SmaSubmenu } from './categorysubmenus';
+import { useMainContext } from '../contexts';
 
 const Categories: React.FC<any> = props => {
-
-   const fetcher = async (url: string) => await axios.get(url).then(response => response.data)
-   const { data } = useSWR('categories', fetcher);
+   const mainCtx = useMainContext();
 
    const getSubItem: any = (ref: string) => {
       switch (ref) {
-         case '/smartphones-mobiles-accessories': return <SmaSubmenu />;
+         case 'smartphones-mobiles-accessories': return <SmaSubmenu />;
          default: return undefined
       }
    }
@@ -20,9 +17,9 @@ const Categories: React.FC<any> = props => {
    return (
       <nav ref={props.categories} className={"categories"}>
          <ul className="categories-list">
-            {data?.map((item: any) => (
-               <li className="category-item">
-                  <Link href={item.ref}>
+            {mainCtx.categoryItems?.map((item: any) => (
+               <li key={item.ref} className="category-item">
+                  <Link href={`/${item.ref}`}>
                      <a className="category-item__link">
                         <div className="link__icon">
                            <Image src={`${process.env.STATIC_URL}/categories/${item.pic}` as any} width={120} height={120} alt={item.name} />

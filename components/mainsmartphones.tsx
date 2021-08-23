@@ -1,18 +1,13 @@
 import React from "react"
-import { MainBreadcrumbs } from "./index";
+import { MainBreadcrumbs } from "./";
 
 const MainSmartphones: React.FC = () => {
-   const bc = [
-      { to: "/smartphones-mobiles-accessories/", label: "Телефони та аксесуари" },
-      { to: "/smartphones/", label: "Смартфони" }
-   ]
-
    return (
       <main>
          <div className="container">
             <div className="main">
                <div className="breadcrumbs">
-                  <MainBreadcrumbs items={bc} />
+                  <MainBreadcrumbs />
                </div>
                <h2 className="main-title">Смартфони</h2>
                <div className="wrapper">

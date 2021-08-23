@@ -2,7 +2,7 @@ import Head from 'next/head'
 import React from 'react'
 import { MainProvider } from '../contexts'
 import CartProvider from '../contexts/cart-context'
-import { Header, Footer } from './index'
+import { Header, Footer } from './'
 
 const MainLayout: React.FC<any> = (props) => (
   <>
@@ -10,13 +10,13 @@ const MainLayout: React.FC<any> = (props) => (
       <title>{props.title}</title>
     </Head>
     <div className="wrapper">
-      <MainProvider>
-        <CartProvider>
+      <CartProvider>
+        <MainProvider>
           <Header />
           {props.children}
           <Footer />
-        </CartProvider>
-      </MainProvider>
+        </MainProvider>
+      </CartProvider>
     </div>
   </>
 )

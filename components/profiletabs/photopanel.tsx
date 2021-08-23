@@ -70,6 +70,6 @@ const PhotoPanel: React.FC<any> = (props) => {
          </form>
       </>
    )
-
 }
+
 export default PhotoPanel

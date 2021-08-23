@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { Categories, Slider } from './index'
+import { Categories, MainProductCard, Slider } from './'
 import { useMainContext } from '../contexts';
 import useSWR from 'swr';
 import React from 'react';
-import MainProductCard from './mainproductcard';
 
 const Main: React.FC = () => {
    const mainCtx = useMainContext();
