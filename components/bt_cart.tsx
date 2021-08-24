@@ -1,6 +1,9 @@
 import { useRef } from 'react'
+import { useCartContext } from '../contexts/cart-context';
 
 const CartButton: React.FC<any> = props => {
+   const cart = useCartContext().cartState[0]
+
    const actionsCartDropdown = useRef<HTMLDivElement>(null);
    const Show: string = "show";
 
@@ -12,13 +15,14 @@ const CartButton: React.FC<any> = props => {
       actionsCartDropdown.current?.classList.remove(Show);
    }
 
+   const productsAmount = () => {
+      return cart.reduce((acc: number, curr: any) => (acc = acc + curr.amount), 0)
+   }
+
    return (
       <div className="actions__cart" onClick={props.click} onMouseEnter={actionsCartMouseEnter} onMouseLeave={actionsCartMouseLeave}>
          <i className="actions__cart-icon"></i>
-         <div ref={actionsCartDropdown} className="actions__cart-dropdown">
-            <p className="cart-dropdown__title">Ваш кошик порожній</p>
-            <p className="cart-dropdown__text">Додавайте до кошика товари, що сподобалися</p>
-         </div>
+         {cart?.length > 0 && <div className="actions__cart-amount">{productsAmount()}</div>}
       </div>
    )
 }

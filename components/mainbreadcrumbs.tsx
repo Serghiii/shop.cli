@@ -1,10 +1,10 @@
-import Link from "next/link"
 import { Breadcrumbs, Typography } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import HomeIcon from '@material-ui/icons/Home';
 import React from "react";
 import { useRouter } from "next/router";
 import { useMainContext } from "../contexts";
+import Link from "next/link";
 
 const MainBreadcrumbs: React.FC<any> = () => {
    const mainCtx = useMainContext();
@@ -43,12 +43,12 @@ const MainBreadcrumbs: React.FC<any> = () => {
             <Link href="/">
                <a><HomeIcon /></a>
             </Link>
-            {items?.map((obj: any, index: number, arr: any) => (
+            {items?.map((item: any, index: number, arr: any) => (
                index >= arr.length - 1 ? (
-                  <Typography color="textPrimary" key={obj.to}>{obj.label}</Typography>
+                  <Typography color="textPrimary" key={item.to}>{item.label}</Typography>
                ) : (
-                  <Link key={obj.to} href={obj.to}>
-                     <a>{obj.label}</a>
+                  <Link key={item.to} href={`/${item.to}`}>
+                     <a>{item.label}</a>
                   </Link>
                )
             ))}

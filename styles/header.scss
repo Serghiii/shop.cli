@@ -273,6 +273,7 @@ header {
     &__compare,
     &__cart {
         display: flex;
+        // position: relative;
         cursor: pointer;
         height: 100%;
         padding: 0 12px;
@@ -281,6 +282,20 @@ header {
         transition: 0.3s;
         &-icon {
             height: 28px;
+        }
+        &-amount {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            min-width: 18px;
+            height: 18px;
+            padding: 3px;
+            font-size: 12px;
+            border-radius: 10px;
+            background-color: $colorLogo;
         }
         &:hover {
             background-color: $colorTopSelected;

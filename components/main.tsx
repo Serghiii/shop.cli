@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Categories, MainProductCard, Slider } from './'
+import { Categories, LandingProductCard, Slider } from './'
 import { useMainContext } from '../contexts';
 import useSWR from 'swr';
 import React from 'react';
@@ -24,7 +24,7 @@ const Main: React.FC = () => {
                      <h2 className="main-new-goods-title">Нові надходження</h2>
                      <div className="main-product-cards">
                         {data?.map((obj: any) => (
-                           <MainProductCard key={obj.id} {...obj} />
+                           <LandingProductCard key={obj.id} {...obj} />
                         ))}
                      </div>
                   </section>

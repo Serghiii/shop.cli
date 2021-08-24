@@ -1,5 +1,5 @@
 export {
-   ActionKind,
+   // ActionKind,
    RegisterAuthAction,
    LogOutAuthAction,
    LoginAuthAction

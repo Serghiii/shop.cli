@@ -1,5 +1,5 @@
 import React from "react"
-import { MainLayout, MainSmartphones } from "../components"
+import { MainLayout, MainSmartphones } from "../../components"
 
 const Smartphones: React.FC = () => {
    return (

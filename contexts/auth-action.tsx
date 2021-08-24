@@ -14,7 +14,7 @@ const RegisterAuthAction = async (dispatch: any, userState: any, setErrorHandler
       const { data } = await axios.post("auth/register", userState);
       dispatch({ type: AuthAction.RegisterSuccess, payload: data });
       if (onSuccess) onSuccess();
-   } catch (e) {
+   } catch (e: any) {
       dispatch({
          type: AuthAction.RegisterFail,
          payload: e.response ? e.response.data.message : e.message
@@ -28,7 +28,7 @@ const LoginAuthAction = async (dispatch: any, loginState: any, setErrorHandler: 
       const data = await axios.post("auth/login", loginState);
       dispatch({ type: AuthAction.LoginSuccess, payload: data.data });
       if (onSuccess) onSuccess();
-   } catch (e) {
+   } catch (e: any) {
       dispatch({
          type: AuthAction.LoginFail,
          payload: e.response ? e.response.data.message : e.message
@@ -43,7 +43,7 @@ const LogOutAuthAction = async (dispatch: any) => {
          type: AuthAction.LogoutSuccess,
          payload: "",
       });
-   } catch (e) {
+   } catch (e: any) {
       dispatch({
          type: AuthAction.LogoutFail,
          payload: e.response ? e.response.data.message : e.message

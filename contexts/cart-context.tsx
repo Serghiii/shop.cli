@@ -1,6 +1,6 @@
 import React, { Dispatch, useContext, useReducer } from "react";
 
-enum CartAction {
+export enum CartAction {
    AddItem,
    AdjustAmount,
    RemoveItem
@@ -16,10 +16,22 @@ type State = {
    amount: number;
 }
 
-export const MAX_AMOUNT_PER_ITEM = 5;
-const initialState: [] = [];
+const getCart = () => {
+   let cart: any
+   try {
+      cart = localStorage.getItem("cart");
+   }
+   catch (e: any) {
+      return null
+   }
+   return JSON.parse(cart)
+}
+
+export const MAX_AMOUNT_PER_ITEM = 99;
+const initialState: [] = getCart() || [];
 
 function reducer(state: any, action: any) {
+   let cartState;
    const { id } = action.payload;
    switch (action.type) {
       case CartAction.AddItem:
@@ -35,10 +47,12 @@ function reducer(state: any, action: any) {
                return item;
             });
          }
-         return [...state, { id, amount: 1 }];
+         cartState = [...state, { id, amount: 1 }]
+         localStorage.setItem("cart", JSON.stringify(cartState));
+         return cartState;
       case CartAction.AdjustAmount:
          const { amount } = action.payload;
-         return state.map((item: any) => {
+         cartState = state.map((item: any) => {
             if (item.id === id) {
                return {
                   ...item,
@@ -47,8 +61,12 @@ function reducer(state: any, action: any) {
             }
             return item;
          });
+         localStorage.setItem("cart", JSON.stringify(cartState));
+         return cartState;
       case CartAction.RemoveItem:
-         return state.filter((item: any) => item.id !== id);
+         cartState = state.filter((item: any) => item.id !== id);
+         localStorage.setItem("cart", JSON.stringify(cartState));
+         return cartState;
       default:
          return state;
    }

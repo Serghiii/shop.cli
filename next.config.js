@@ -6,5 +6,5 @@ module.exports = {
   },
   images: {
     domains: ['localhost', '194.44.130.38'],
-  },
+  }
 }
