@@ -87,7 +87,7 @@ const DialogLogin: React.FC = () => {
       ufLogin.setError("server", { type: "server", message });
    }
 
-   const loginSubmitHandle = (e: FormEvent) => {
+   const loginSubmitHandle = () => {
       LoginAuthAction(dispatch, {
          username: ufLogin.getValues('login'),
          password: ufLogin.getValues('loginPassword'),
@@ -99,7 +99,7 @@ const DialogLogin: React.FC = () => {
       ufRegister.setError("server", { type: "server", message });
    }
 
-   const registerSubmitHandle = (e: FormEvent) => {
+   const registerSubmitHandle = () => {
       RegisterAuthAction(dispatch, {
          name: ufRegister.getValues('name'),
          phone: ufRegister.getValues('phone').replace(/\s/g, ''),

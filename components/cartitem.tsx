@@ -1,11 +1,10 @@
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField"
 import React from "react"
-import { CartAction, useCartContext } from "../contexts/cart-context";
 import MoneyFormat from "./money-format"
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { CartAction, useCartContext } from "../contexts";
 
-const CartItem: React.FC<any> = (item: any) => {
+const CartItem: React.FC<any> = (item) => {
    const cartRows = useCartContext().cartState[0];
    const dispatch = useCartContext().cartState[1];
 
@@ -19,6 +18,8 @@ const CartItem: React.FC<any> = (item: any) => {
    }
 
    const onClickHandle = (e: any) => {
+      console.log("remove");
+
       dispatch({
          type: CartAction.RemoveItem, payload: { id: item.id }
       })
@@ -26,29 +27,18 @@ const CartItem: React.FC<any> = (item: any) => {
 
    return (
       <>
-         <div className="cart-row" key={item.id}>
+         <div className="cart-row">
             <div className="cart-row__img-range" >
-               <img className="cart-row__img" src={`${process.env.STATIC_URL}/cards/${item.id}/${item.pic}`} alt="" />
+               <img className="cart-row__img" src={item.id ? `${process.env.STATIC_URL}/cards/${item.id}/${item.pic}` : ''} alt="" />
             </div>
-            <div>
+            <div style={{ flex: "1" }}>
                <p>{item.name}</p>
                <p>Код: {item.code}</p>
                <MoneyFormat {...{ value: item.price, className: 'price-value' }} />
             </div>
-            <div style={{ maxWidth: '80px' }}>
-               <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  type="number"
-                  InputLabelProps={{
-                     shrink: true,
-                  }}
-                  defaultValue={cartRows.find((item2: any) => (item2.id === item.id))?.amount}
-                  onChange={onChangeCountHandler}
-               />
-            </div>
+            <input type="number" style={{ width: "60px", outline: "none", margin: "0 10px 0 10px", padding: "3px" }} min="1" defaultValue={cartRows.find((item2: any) => (item2.id === item.id))?.amount} onChange={onChangeCountHandler} />
             <div>
-               <MoneyFormat {...{ value: item.price, className: 'price-value' }} />
+               <MoneyFormat {...{ value: item.price * cartRows.find((item2: any) => (item2.id === item.id))?.amount, className: 'price-value' }} />
             </div>
             <div>
                <IconButton aria-label="delete" component="span" onClick={onClickHandle}>

@@ -1,33 +1,38 @@
-import Link from "next/link"
 import React from "react"
-import { CartAction, useCartContext } from "../contexts/cart-context";
+import Link from "next/link"
 import MoneyFormat from "./money-format"
+import { CartAction, useCartContext } from "../contexts"
+import { makeHeadline } from "../src/utils";
 
-const MainProductCard: React.FC<any> = ({ id, code, name, price, priceold, pic }) => {
+const MainProductCard: React.FC<any> = ({ id, code, name, amount, price, priceold, pic, group, productinfo }) => {
+   const cartItem = useCartContext().cartState[0].find((item: any) => (item.id === id))
    const dispatch = useCartContext().cartState[1];
+   const ref = '/' + group + '/' + makeHeadline(id, productinfo)
 
    const onClickHandle = () => {
-      dispatch({ type: CartAction.AddItem, payload: { id } })
+      if (!cartItem || cartItem.amount < amount) {
+         dispatch({ type: CartAction.AddItem, payload: { id } })
+      }
    }
 
    return (
       <div className="main-product-card">
          <p className="product-card__code">{`Код: ${code}`}</p>
          <div className="product-card__view">
-            <Link href="/">
+            <Link href={ref}>
                <a className="product-card__ico">
                   <img src={`${process.env.STATIC_URL}/cards/${id}/${pic}`} className="product-card__img" alt="" />
                </a>
             </Link>
          </div>
-         <Link href="/">
+         <Link href={ref}>
             <a className="product-card__name">{name}</a>
          </Link>
          <div className="product-card__prices">
             {<div className="product-card__price-old">
                <MoneyFormat {...{ value: priceold, className: 'old-price-value', currency: false }} />
             </div>}
-            <img src={`${process.env.STATIC_URL}/icons/cart.svg`} className="product-card__cart-img" alt="" onClick={onClickHandle} />
+            <img src={`${process.env.STATIC_URL}/icons/${cartItem ? 'checklist.svg' : 'cart.svg'}`} className="product-card__cart-img" alt="" onClick={onClickHandle} />
          </div>
          <div className="product-card__price">
             <MoneyFormat {...{ value: price, className: 'price-value' }} />
@@ -35,4 +40,5 @@ const MainProductCard: React.FC<any> = ({ id, code, name, price, priceold, pic }
       </div>
    )
 }
+
 export default MainProductCard

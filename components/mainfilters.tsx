@@ -1,25 +1,15 @@
-import axios from "axios";
-import { useRouter } from "next/router";
 import React from "react";
-import useSWR from "swr";
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { MainFilterGroup } from ".";
 
-const MainFilters: React.FC = () => {
-   // const [filters, setFilters] = React.useState<{ [key: string]: string | any }>({});
-   const [filters, setFilters] = React.useState<any>({ arr: [] });
+const MainFilters: React.FC<any> = ({ cond, page, data }) => {
 
-   const router = useRouter();
-   const place = router.pathname.split("/")[1];
-
-   const fetcher = async (url: string) => await axios.get(url).then(response => response.data)
-   const { data } = useSWR('/products/filter/' + place, fetcher);
-
-   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.checked) setFilters({ arr: [...filters.arr, event.target.name] });
-      else setFilters({ arr: filters.arr.filter((el: any) => el !== event.target.name) });
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      page[1](1)
+      if (e.target.checked) cond[1]([...cond[0], e.target.name]);
+      else cond[1](cond[0].filter((el: any) => el !== e.target.name));
    };
 
    const getGroupedItems = () => {
@@ -57,10 +47,9 @@ const MainFilters: React.FC = () => {
                   Фільтр
                </ListSubheader>
             }
-         // className={classes.root}
          >
             {getGroupedItems().map((item: any) => (
-               <MainFilterGroup key={item.id} items={item} handleChange={handleChange} />
+               <MainFilterGroup key={item.id} cond={cond} items={item} handleChange={handleChange} />
             ))}
          </List>
       </>

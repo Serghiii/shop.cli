@@ -1,9 +1,9 @@
 import axios from 'axios';
 import useSWR from 'swr';
-import React, { MouseEvent, useRef, FormEvent, ChangeEventHandler } from 'react'
-import { useMainContext } from '../contexts';
-import { useCartContext } from '../contexts/cart-context';
+import React, { MouseEvent, useRef, FormEvent } from 'react'
+import { useCartContext, useMainContext } from '../contexts';
 import { CartItem } from '.';
+import MoneyFormat from './money-format';
 
 const DialogCart: React.FC = () => {
    const mainCtx = useMainContext();
@@ -24,6 +24,20 @@ const DialogCart: React.FC = () => {
       });
       return { data }
    }
+
+   const getTotalSum = (products: any, items: any) => {
+      try {
+         return items
+            .map(({ id, amount }: any) => ({
+               product: products?.find((p: any) => p.id === id),
+               amount,
+            }))
+            .map(({ product: { price }, amount }: any) => amount * price)
+            .reduce((acc: any, cur: any) => acc + cur, 0);
+      }
+      catch (e: any) { }
+   };
+
 
    const dialogBackdropMouseDownHandler = (e: MouseEvent<HTMLDivElement>) => {
       if ((e.target as HTMLElement).contains(backdrop.current)) {
@@ -88,12 +102,18 @@ const DialogCart: React.FC = () => {
       return (
          <div className="dialog-body cart">
             <form className="dialog-form" onSubmit={handleSubmit}>
-               {/* <div className="container"> */}
-               {cartRows?.map((item: any) => (
-                  <CartItem {...data?.find((item2: any) => (item2.id === item.id))} />
+               {data && cartRows?.map((item1: any) => (
+                  <CartItem {...data?.find((item2: any) => (item2.id === item1.id))} key={item1.id} />
                ))}
-               {/* </div> */}
-               <button className="custom-button">Оформити замовлення</button>
+               <div style={{ padding: "5px 20px 20px 0", textAlign: "right" }}>
+                  <span style={{ fontSize: "20px" }}>Всього: </span>
+                  <MoneyFormat {...{ value: data !== undefined ? getTotalSum(data, cartRows) : 0, className: 'price-value' }} />
+               </div>
+               <div style={{ float: "right", paddingRight: "20px" }}>
+                  <div style={{ maxWidth: "400px" }}>
+                     <button className="custom-button">Оформити замовлення</button>
+                  </div>
+               </div>
             </form >
          </div >
       )

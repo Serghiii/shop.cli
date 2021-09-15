@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useMainContext } from "../contexts";
 import Link from "next/link";
 
-const MainBreadcrumbs: React.FC<any> = () => {
+const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
    const mainCtx = useMainContext();
    const router = useRouter();
 
@@ -44,7 +44,7 @@ const MainBreadcrumbs: React.FC<any> = () => {
                <a><HomeIcon /></a>
             </Link>
             {items?.map((item: any, index: number, arr: any) => (
-               index >= arr.length - 1 ? (
+               ((index >= arr.length - 1) && (isProduct === false)) ? (
                   <Typography color="textPrimary" key={item.to}>{item.label}</Typography>
                ) : (
                   <Link key={item.to} href={`/${item.to}`}>

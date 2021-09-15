@@ -9,6 +9,7 @@ import axios from 'axios'
 import { ThemeProvider } from '@material-ui/core'
 import Head from 'next/head'
 import theme from '../src/theme';
+import CartProvider from '../contexts/cart-context'
 
 function App({ Component, pageProps }: AppProps) {
   axios.defaults.baseURL = process.env.API_URL;
@@ -30,7 +31,9 @@ function App({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <ThemeProvider theme={theme}>
           {/* <CssBaseline /> */}
-          <Component {...pageProps} />
+          <CartProvider>
+            <Component {...pageProps} />
+          </CartProvider>
         </ThemeProvider>
       </AuthProvider>
     </>
