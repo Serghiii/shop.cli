@@ -4,7 +4,7 @@ import React from "react"
 import { MainBreadcrumbs, MainFilters, MainProducts } from ".";
 import { arrToParams } from "../src/utils";
 
-const MainSmartphones: React.FC<any> = ({ group, params, data, pg }) => {
+const MainMobiles: React.FC<any> = ({ group, params, data, pg }) => {
    const [filters, setFilters] = React.useState<string[]>(params);
    const [page, setPage] = React.useState<number>(pg)
    const router = useRouter()
@@ -58,4 +58,4 @@ const MainSmartphones: React.FC<any> = ({ group, params, data, pg }) => {
       </main>
    )
 }
-export default MainSmartphones
+export default MainMobiles

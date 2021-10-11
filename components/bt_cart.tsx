@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useRef, useState } from 'react'
 import { useCartContext } from '../contexts';
 
@@ -33,4 +34,4 @@ const CartButton: React.FC<any> = props => {
    )
 }
 
-export default CartButton
+export default React.memo(CartButton)

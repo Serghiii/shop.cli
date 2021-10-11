@@ -4,7 +4,7 @@ export const extractId = (str: string) => {
 }
 
 export const extractPage = (strs: string[]) => {
-   let res = Number(strs?.find((el: string) => el.includes('page_'))?.split('_')[1])
+   const res = Number(strs?.find((el: string) => el.includes('page_'))?.split('_')[1])
    return res ? res : 1
 }
 

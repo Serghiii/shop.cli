@@ -29,4 +29,4 @@ const LandingProductCard: React.FC<any> = ({ id, name, price, priceold, pic, gro
       </div>
    )
 }
-export default LandingProductCard
+export default React.memo(LandingProductCard)

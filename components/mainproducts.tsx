@@ -9,8 +9,8 @@ import { arrToParams } from "../src/utils";
 const MainProducts: React.FC<any> = ({ group, cond, page }) => {
    const limit = 6
 
-   const fetcher = async (url: string) => await axios.get(url).then((response) => { if (page[0] > 1 && response.data.results.length <= 0) page[1](1); return response.data })
-   const { data } = useSWR(`/products/${group}?skip=${(page[0] - 1) * limit}&limit=${limit}${(cond[0].length ? '&' : '') + arrToParams(cond[0])}`, fetcher, { revalidateOnFocus: false });
+   const fetcher = async (url: string, page: number, setPage: (page: number) => {}, cond: []) => await axios.get(url + `?skip=${(page - 1) * limit}&limit=${limit}${(cond.length ? '&' : '') + arrToParams(cond)}`).then((response) => { if (page > 1 && response.data.results.length <= 0) setPage(1); return response.data })
+   const { data } = useSWR([`/products/${group}`, page[0], page[1], cond[0]], fetcher, { revalidateOnFocus: false });
 
    return (
       <>
@@ -27,4 +27,4 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
       </>
    )
 }
-export default MainProducts
+export default React.memo(MainProducts)

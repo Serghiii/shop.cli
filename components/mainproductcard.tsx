@@ -41,4 +41,4 @@ const MainProductCard: React.FC<any> = ({ id, code, name, amount, price, priceol
    )
 }
 
-export default MainProductCard
+export default React.memo(MainProductCard)

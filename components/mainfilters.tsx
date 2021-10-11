@@ -3,26 +3,34 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { MainFilterGroup } from ".";
+import useSWR from "swr";
+import axios from "axios";
 
-const MainFilters: React.FC<any> = ({ cond, page, data }) => {
+const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
+   const brandZone = cond[0].find((el: string) => el.includes('brand-')) !== undefined
+
+   const fetcher = async (url: string, params: []) => await axios.get(url + params.reduce((acc: string, curr: string) => (
+      (brandZone && curr.includes('brand-')) ? acc = acc + curr + '&' : (!brandZone && !curr.includes('brand-')) ? acc = acc + curr + '&' : acc
+   ), '?')).then(response => response.data)
+   const { data } = useSWR([`/products/filter/${group}/`, cond[0]], fetcher, { revalidateOnFocus: false })
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       page[1](1)
-      if (e.target.checked) cond[1]([...cond[0], e.target.name]);
-      else cond[1](cond[0].filter((el: any) => el !== e.target.name));
+      if (e.target.checked) cond[1]([...cond[0], e.target.name])
+      else cond[1](cond[0].filter((el: any) => el !== e.target.name))
    };
 
    const getGroupedItems = () => {
-      let Data: [{}] | any = []
+      let fData: [{}] | any = []
       let tmpId: any;
-      data?.forEach((el: any) => {
+      fdata?.forEach((el: any) => {
          if (tmpId !== el.id) {
-            let newData = data.filter((item: any) => item.id == el.id)
-            Data.push({ id: el.id, name: el.name, data: [...newData] })
+            let newData = fdata.filter((item: any) => item.id == el.id)
+            fData.push({ id: el.id, name: el.name, data: [...newData] })
             tmpId = el.id
          }
       });
-      return Data
+      return fData
    }
 
    const useStyles = makeStyles((theme: Theme) =>
@@ -34,7 +42,7 @@ const MainFilters: React.FC<any> = ({ cond, page, data }) => {
          },
       }),
    );
-   const classes = useStyles();
+   const classes = useStyles()
 
    return (
       <>
@@ -49,10 +57,15 @@ const MainFilters: React.FC<any> = ({ cond, page, data }) => {
             }
          >
             {getGroupedItems().map((item: any) => (
-               <MainFilterGroup key={item.id} cond={cond} items={item} handleChange={handleChange} />
+               <MainFilterGroup key={item.id}
+                  cond={cond}
+                  items={item}
+                  fitems={data}
+                  brandZone={brandZone}
+                  handleChange={handleChange} />
             ))}
          </List>
       </>
    )
 }
-export default MainFilters
+export default React.memo(MainFilters)

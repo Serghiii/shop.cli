@@ -2,8 +2,9 @@ import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
-const CheckBoxItem: React.FC<any> = ({ data, handleChange, checked }) => {
+const CheckBoxItem: React.FC<any> = ({ data, fdata, brandZone, checked, handleChange }) => {
    const [state, setState] = React.useState(checked)
+   let count = brandZone ? data.prop.includes('brand-') ? data.count : fdata?.count : data.prop.includes('brand-') ? fdata?.count : data.count
 
    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setState(!state)
@@ -21,9 +22,9 @@ const CheckBoxItem: React.FC<any> = ({ data, handleChange, checked }) => {
                   color="primary"
                />
             }
-            label={`${data.propname} (${data.count})`}
+            label={`${data.propname} (${count ? count : 0})`}
          />
       </>
    )
 }
-export default CheckBoxItem
+export default React.memo(CheckBoxItem)

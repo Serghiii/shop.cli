@@ -88,4 +88,4 @@ const ProfileButton: React.FC<any> = props => {
       </div>
    )
 }
-export default ProfileButton
+export default React.memo(ProfileButton)

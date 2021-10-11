@@ -1,13 +1,13 @@
 import axios from "axios";
 import { GetServerSideProps } from "next"
 import React from "react"
-import { MainLayout, MainSmartphone, MainSmartphones } from "../../components";
+import { MainLayout, MainMobile, MainMobiles } from "../../components";
 import { extractId, extractPage, paramsToArr } from "../../src/utils";
 
-const Smartphones: React.FC<any> = ({ params, ispage, data }) => {
+const Mobiles: React.FC<any> = ({ params, ispage, data }) => {
    return (
       <MainLayout title='Інтернет-магазин Евік'>
-         {ispage ? <MainSmartphone data={data} /> : <MainSmartphones group={'smartphones'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />}
+         {ispage ? <MainMobile data={data} /> : <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />}
       </MainLayout>
    )
 }
@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    let q: any
    if (ispage) {
       try {
-         q = await axios.get('/products/id/' + extractId(slug ? slug[0] : '') + '?ref=smartphones')
+         q = await axios.get('/products/id/' + extractId(slug ? slug[0] : '') + '?ref=mobiles')
          if (!q || q.data.length <= 0) {
             return {
                notFound: true
@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } catch (e) { }
    } else {
       try {
-         q = await axios.get('/products/filter/smartphones')
+         q = await axios.get('/products/filter/mobiles')
       } catch (e) { }
    }
 
@@ -41,4 +41,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    }
 }
 
-export default Smartphones
+export default Mobiles

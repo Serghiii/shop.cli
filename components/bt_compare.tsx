@@ -1,3 +1,5 @@
+import React from "react"
+
 const CompareButton: React.FC = () => {
    return (
       <div className="actions__compare">
@@ -6,4 +8,4 @@ const CompareButton: React.FC = () => {
    )
 }
 
-export default CompareButton
+export default React.memo(CompareButton)

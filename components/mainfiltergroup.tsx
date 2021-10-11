@@ -8,15 +8,15 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { CheckBoxItem } from ".";
 
-const MainFilterGroup: React.FC<any> = ({ cond, items, handleChange }) => {
-   const [open, setOpen] = React.useState(false);
+const MainFilterGroup: React.FC<any> = ({ cond, items, fitems, brandZone, handleChange }) => {
+   const [open, setOpen] = React.useState(false)
 
    React.useEffect(() => {
       setOpen(true)
    }, [])
 
    const handleClick = () => {
-      setOpen(!open);
+      setOpen(!open)
    };
 
    const useStyles = makeStyles((theme: Theme) =>
@@ -26,7 +26,7 @@ const MainFilterGroup: React.FC<any> = ({ cond, items, handleChange }) => {
          },
       }),
    );
-   const classes = useStyles();
+   const classes = useStyles()
 
    return (
       <>
@@ -38,7 +38,12 @@ const MainFilterGroup: React.FC<any> = ({ cond, items, handleChange }) => {
             <List component="div" disablePadding >
                {items.data.map((item: any) => (
                   <ListItem key={item.prop} button className={classes.nested}>
-                     <CheckBoxItem data={item} handleChange={handleChange} checked={cond[0].includes(item.prop)} />
+                     <CheckBoxItem
+                        data={item}
+                        fdata={fitems?.find((el: any) => el.prop == item.prop)}
+                        brandZone={brandZone}
+                        checked={cond[0].includes(item.prop)}
+                        handleChange={handleChange} />
                   </ListItem>
                ))}
             </List>

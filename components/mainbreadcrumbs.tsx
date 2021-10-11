@@ -70,4 +70,4 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
    )
 }
 
-export default MainBreadcrumbs
+export default React.memo(MainBreadcrumbs)
