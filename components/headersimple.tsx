@@ -1,9 +1,13 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 import { Logo } from './index'
+import { translate } from '../locales/translate';
 // import Image from 'next/image';
 // import Phone from '../public/icon/telephone.svg'
 
 const HeaderSimple: React.FC = () => {
+   const { locale } = useRouter()
+
    return (
       <header>
          <div className="wraper-top-simple">
@@ -14,7 +18,7 @@ const HeaderSimple: React.FC = () => {
                   </div>
                   <div className="top-right">
                      <div className="contact-simple">
-                        <p>Служба підтримки:</p>
+                        <p>{translate('support', locale)}</p>
                         <a href="tel:+380633821947">(063) 382-19-47</a>
                      </div>
                      {/* <div className="contact-simple-phone">

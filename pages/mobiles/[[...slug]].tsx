@@ -1,12 +1,13 @@
+import React from "react"
 import axios from "axios";
 import { GetServerSideProps } from "next"
-import React from "react"
 import { MainLayout, MainMobile, MainMobiles } from "../../components";
 import { extractId, extractPage, paramsToArr } from "../../src/utils";
 
+
 const Mobiles: React.FC<any> = ({ params, ispage, data }) => {
    return (
-      <MainLayout title='Інтернет-магазин Евік'>
+      <MainLayout>
          {ispage ? <MainMobile data={data} /> : <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />}
       </MainLayout>
    )

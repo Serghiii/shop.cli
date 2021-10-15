@@ -4,8 +4,11 @@ import Grid from "@material-ui/core/Grid"
 import axios from "axios"
 import useSWR from "swr"
 import { MainBreadcrumbs, MainGroupCard } from "."
+import { translate } from '../locales/translate';
+import { useRouter } from "next/router";
 
 const MainGroups: React.FC = () => {
+   const { locale } = useRouter()
 
    const fetcher = async (url: string) => await axios.get(url).then(response => response.data)
    const { data } = useSWR('groups', fetcher);
@@ -17,7 +20,7 @@ const MainGroups: React.FC = () => {
                <div className="breadcrumbs">
                   <MainBreadcrumbs />
                </div>
-               <h2 className="main-title">Смартфони, мобільні телефони, аксесуари</h2>
+               <h2 className="main-title">{translate('group.title', locale)}</h2>
                <div className="wrapper">
                   <Container maxWidth="xl">
                      <div style={{ marginTop: '3px' }}>

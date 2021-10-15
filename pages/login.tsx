@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { MainLogin, SimpleLayout } from "../components"
 import { useAuthContext } from "../contexts";
+import { translate } from "../locales/translate";
 
 const Login: React.FC = () => {
    const authCtx = useAuthContext().authState[0];
@@ -12,7 +13,7 @@ const Login: React.FC = () => {
    }
 
    return (
-      <SimpleLayout title='Вхід' footer={false} >
+      <SimpleLayout title={translate('auth.login.title', router.locale)} footer={false} >
          <MainLogin />
       </SimpleLayout >
    )

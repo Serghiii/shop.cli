@@ -1,4 +1,4 @@
-import React, { MouseEvent, FormEvent, useRef, useState, ChangeEvent } from "react";
+import React, { MouseEvent, useRef, useState, ChangeEvent } from "react";
 import InputMask from "react-input-mask";
 import { LoginAuthAction, RegisterAuthAction, useAuthContext, useMainContext } from "../contexts";
 import { useForm } from "react-hook-form";
@@ -8,9 +8,11 @@ import Alert from "@material-ui/lab/Alert";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
-import { Messages } from "../src/messages";
+import { translate } from '../locales/translate';
+import { useRouter } from "next/router";
 
 const DialogLogin: React.FC = () => {
+   const { locale } = useRouter()
    const mainCtx = useMainContext();
    const dispatch = useAuthContext().authState[1];
    const [Register, setRegister] = useState(false);
@@ -23,11 +25,11 @@ const DialogLogin: React.FC = () => {
 
    const loginSchema = yup.object().shape({
       login: yup.string().trim()
-         .required(Messages.ua.required)
-         .min(2, Messages.ua.login),
+         .required(translate('auth.messages.required', locale))
+         .min(2, translate('auth.messages.login', locale)),
       loginPassword: yup.string()
-         .required(Messages.ua.required)
-         .min(6, Messages.ua.password)
+         .required(translate('auth.messages.required', locale))
+         .min(6, translate('auth.messages.password', locale))
    });
 
    const ufLogin = useForm({
@@ -37,17 +39,17 @@ const DialogLogin: React.FC = () => {
 
    const registerSchema = yup.object().shape({
       name: yup.string().trim()
-         .required(Messages.ua.required)
-         .matches(/^[а-яА-ЯіІёЁ\s]+$/, "Введіть своє ім'я кирилицею"),
+         .required(translate('auth.messages.required', locale))
+         .matches(/^[а-яА-ЯіІёЁ\s]+$/, translate('auth.messages.login_cyr', locale)),
       phone: yup.string()
-         .matches(/^\+38\s[0-9,\s]+$/, Messages.ua.required)
-         .matches(/^\+38\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/, Messages.ua.phone),
+         .matches(/^\+38\s[0-9,\s]+$/, translate('auth.messages.required', locale))
+         .matches(/^\+38\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/, translate('auth.messages.phone', locale)),
       email: yup.string()
-         .required(Messages.ua.required)
-         .email(Messages.ua.email),
+         .required(translate('auth.messages.required', locale))
+         .email(translate('auth.messages.email', locale)),
       password: yup.string()
-         .required(Messages.ua.required)
-         .min(6, Messages.ua.password)
+         .required(translate('auth.messages.required', locale))
+         .min(6, translate('auth.messages.password', locale))
    });
 
    const ufRegister = useForm({
@@ -92,7 +94,7 @@ const DialogLogin: React.FC = () => {
          username: ufLogin.getValues('login'),
          password: ufLogin.getValues('loginPassword'),
          rememberme
-      }, setLoginError, closeClickHandler);
+      }, locale, setLoginError, closeClickHandler);
    }
 
    const setRegisterError = (message: string) => {
@@ -105,7 +107,7 @@ const DialogLogin: React.FC = () => {
          phone: ufRegister.getValues('phone').replace(/\s/g, ''),
          email: ufRegister.getValues('email'),
          password: ufRegister.getValues('password')
-      }, setRegisterError, closeClickHandler);
+      }, locale, setRegisterError, closeClickHandler);
    }
 
    const clearForm = (register: boolean) => {
@@ -138,7 +140,7 @@ const DialogLogin: React.FC = () => {
          <div className="dialog">
             <div className={`register-panel${Register ? " show" : ""}`}>
                <div className="dialog-header">
-                  <h2 className="dialog-header-title">Реєстрація</h2>
+                  <h2 className="dialog-header-title">{translate('auth.register.title', locale)}</h2>
                   <svg className="bt-close" onClick={closeClickHandler} viewBox="0 0 413.348 413.348" height="15px" width="15px">
                      <path d="m413.348 24.354-24.354-24.354-182.32 182.32-182.32-182.32-24.354 24.354 182.32 182.32-182.32 182.32 24.354 24.354 182.32-182.32 182.32 182.32 24.354-24.354-182.32-182.32z" />
                   </svg>
@@ -146,7 +148,7 @@ const DialogLogin: React.FC = () => {
                <div className="dialog-body login">
                   <form className="dialog-form" onSubmit={ufRegister.handleSubmit(registerSubmitHandle)}>
                      <div className="form-row">
-                        <label htmlFor="name" className="form-label">Ім&apos;я</label>
+                        <label htmlFor="name" className="form-label">{translate('auth.register.name', locale)}</label>
                         <input
                            {...ufRegister.register("name")}
                            id="name"
@@ -159,7 +161,7 @@ const DialogLogin: React.FC = () => {
                         </div>
                      </div>
                      <div className="form-row">
-                        <label htmlFor="phone" className="form-label">Номер телефону</label>
+                        <label htmlFor="phone" className="form-label">{translate('auth.register.phone', locale)}</label>
                         <InputMask
                            {...ufRegister.register("phone")}
                            id="phone"
@@ -173,7 +175,7 @@ const DialogLogin: React.FC = () => {
                         </div>
                      </div>
                      <div className="form-row">
-                        <label htmlFor="email" className="form-label">Ел. пошта</label>
+                        <label htmlFor="email" className="form-label">{translate('auth.register.email', locale)}</label>
                         <input
                            {...ufRegister.register("email")}
                            id="email"
@@ -186,7 +188,7 @@ const DialogLogin: React.FC = () => {
                         </div>
                      </div>
                      <div className="form-row">
-                        <label htmlFor="password" className="form-label">Пароль</label>
+                        <label htmlFor="password" className="form-label">{translate('auth.register.password', locale)}</label>
                         <input
                            {...ufRegister.register("password")}
                            id="password"
@@ -205,14 +207,14 @@ const DialogLogin: React.FC = () => {
                            {ufRegister.formState.errors.server?.message}
                         </Alert>}
                      </div>
-                     <button className="custom-button" disabled={!ufRegister.formState.isValid} >Зареєструватися</button>
+                     <button className="custom-button" disabled={!ufRegister.formState.isValid} >{translate('auth.register.register', locale)}</button>
                   </form>
-                  <button className="form-register" onClick={registerClickHandler}>Вхід</button>
+                  <button className="form-register" onClick={registerClickHandler}>{translate('auth.login.title', locale)}</button>
                </div>
             </div>
             <div className={`login-panel${!Register ? " show" : ""}`}>
                <div className="dialog-header">
-                  <h2 className="dialog-header-title">Вхід</h2>
+                  <h2 className="dialog-header-title">{translate('auth.login.title', locale)}</h2>
                   <svg className="bt-close" onClick={closeClickHandler} viewBox="0 0 413.348 413.348" height="15px" width="15px">
                      <path d="m413.348 24.354-24.354-24.354-182.32 182.32-182.32-182.32-24.354 24.354 182.32 182.32-182.32 182.32 24.354 24.354 182.32-182.32 182.32 182.32 24.354-24.354-182.32-182.32z" />
                   </svg>
@@ -220,7 +222,7 @@ const DialogLogin: React.FC = () => {
                <div className="dialog-body login">
                   <form className="dialog-form" onSubmit={ufLogin.handleSubmit(loginSubmitHandle)}>
                      <div className="form-row">
-                        <label htmlFor="auth-login" className="form-label">Електронна пошта або телефон</label>
+                        <label htmlFor="auth-login" className="form-label">{translate('auth.login.name', locale)}</label>
                         <input
                            {...ufLogin.register("login")}
                            id="auth-login"
@@ -233,7 +235,7 @@ const DialogLogin: React.FC = () => {
                         </div>
                      </div>
                      <div className="form-row">
-                        <label htmlFor="auth-pass" className="form-label">Пароль</label>
+                        <label htmlFor="auth-pass" className="form-label">{translate('auth.login.password', locale)}</label>
                         <input
                            {...ufLogin.register("loginPassword")}
                            id="auth-pass"
@@ -256,7 +258,7 @@ const DialogLogin: React.FC = () => {
                               checked={rememberme}
                               onChange={rememberMeOnChangeHandle}
                            />}
-                           label="Запам'ятати"
+                           label={translate('auth.login.rememberme', locale)}
                         />
                      </FormGroup>
                      <div className="form-row">
@@ -266,9 +268,9 @@ const DialogLogin: React.FC = () => {
                            {ufLogin.formState.errors.server?.message}
                         </Alert>}
                      </div>
-                     <button className="custom-button" disabled={!ufLogin.formState.isValid}>Увійти</button>
+                     <button className="custom-button" disabled={!ufLogin.formState.isValid}>{translate('auth.login.enter', locale)}</button>
                   </form>
-                  <button className="form-register" onClick={registerClickHandler}>Зареєструватися</button>
+                  <button className="form-register" onClick={registerClickHandler}>{translate('auth.register.title', locale)}</button>
                </div>
             </div>
             <style jsx>{`

@@ -3,11 +3,13 @@ import Link from "next/link"
 import MoneyFormat from "./money-format"
 import { CartAction, useCartContext } from "../contexts"
 import { makeHeadline } from "../src/utils";
+import { useRouter } from "next/router";
 
 const MainProductCard: React.FC<any> = ({ id, code, name, amount, price, priceold, pic, group, productinfo }) => {
    const cartItem = useCartContext().cartState[0].find((item: any) => (item.id === id))
    const dispatch = useCartContext().cartState[1];
-   const ref = '/' + group + '/' + makeHeadline(id, productinfo)
+   const { locale } = useRouter()
+   const ref = `/${group}/${makeHeadline(id, productinfo)}`
 
    const onClickHandle = () => {
       if (!cartItem || cartItem.amount < amount) {
@@ -19,13 +21,13 @@ const MainProductCard: React.FC<any> = ({ id, code, name, amount, price, priceol
       <div className="main-product-card">
          <p className="product-card__code">{`Код: ${code}`}</p>
          <div className="product-card__view">
-            <Link href={ref}>
+            <Link href={ref} locale={locale}>
                <a className="product-card__ico">
                   <img src={`${process.env.STATIC_URL}/cards/${id}/${pic}`} className="product-card__img" alt="" />
                </a>
             </Link>
          </div>
-         <Link href={ref}>
+         <Link href={ref} locale={locale}>
             <a className="product-card__name">{name}</a>
          </Link>
          <div className="product-card__prices">

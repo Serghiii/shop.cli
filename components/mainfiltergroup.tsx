@@ -7,8 +7,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { CheckBoxItem } from ".";
+import { useRouter } from "next/router";
 
 const MainFilterGroup: React.FC<any> = ({ cond, items, fitems, brandZone, handleChange }) => {
+   const { locale } = useRouter()
    const [open, setOpen] = React.useState(false)
 
    React.useEffect(() => {
@@ -31,7 +33,7 @@ const MainFilterGroup: React.FC<any> = ({ cond, items, fitems, brandZone, handle
    return (
       <>
          <ListItem button onClick={handleClick} >
-            <ListItemText primary={items.name} />
+            <ListItemText primary={locale == 'ru' ? items.name_ru : items.name} />
             {open ? <ExpandLess /> : <ExpandMore />}
          </ListItem>
          <Collapse in={open} timeout="auto" unmountOnExit>

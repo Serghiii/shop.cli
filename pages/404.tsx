@@ -3,8 +3,11 @@ import Image from 'next/image';
 import { HeaderSimple } from '../components'
 import Image404 from '../public/icon/404.svg'
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { translate } from '../locales/translate';
 
 const Custom404: React.FC = () => {
+   const { locale } = useRouter()
 
    return (
       <>
@@ -16,7 +19,7 @@ const Custom404: React.FC = () => {
             <div className="container-simple">
                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", margin: "0" }}>
                   <Image width={500} height={500} src={Image404} alt="" />
-                  <h2 className="paragraf">Сторінка не знайдена</h2>
+                  <h2 className="paragraf">{translate('404.not_found', locale)}</h2>
                </div>
                <style jsx>{`
                   .paragraf {

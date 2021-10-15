@@ -6,8 +6,10 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/router"
 
 const MainGroupCard: React.FC<any> = ({ item }) => {
+   const { locale } = useRouter()
    const [raised, setRaised] = useState(false);
 
    const useStyles = makeStyles((theme) => ({
@@ -35,7 +37,7 @@ const MainGroupCard: React.FC<any> = ({ item }) => {
                   </Box>
                   <CardContent>
                      <Typography variant="h6" align="center" color='textPrimary'>
-                        {item.name}
+                        {locale == 'ru' ? item.name_ru : item.name}
                      </Typography>
                   </CardContent>
                </CardActionArea>

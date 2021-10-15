@@ -7,8 +7,11 @@ import Link from 'next/link';
 import axios from 'axios';
 import useSWR from 'swr';
 import Avatar from '@material-ui/core/Avatar';
+import { translate } from '../locales/translate';
+import { useRouter } from 'next/router';
 
 const ProfileButton: React.FC<any> = props => {
+   const { locale } = useRouter()
    const authCtx = useAuthContext().authState[0];
    const dispatch = useAuthContext().authState[1];
    const [mounted, setMounted] = useState(false);
@@ -58,9 +61,9 @@ const ProfileButton: React.FC<any> = props => {
             )}
          </div>
          {mounted && authCtx.isLoggedIn ? (
-            <p>Вітаємо,<br />{textOverflow(data?.name)}</p>
+            <p>{translate('greeting', locale)}<br />{textOverflow(data?.name)}</p>
          ) : (
-            <p>Вітаємо,<br />увійдіть&nbsp;в&nbsp;кабінет</p>
+            <p>{translate('greeting', locale)}<br />{locale == 'ru' ? <span>войдите&nbsp;в&nbsp;кабинет</span> : <span>увійдіть&nbsp;в&nbsp;кабінет</span>}</p>
          )
          }
          <div ref={actionsProfileDropdown} className="actions__profile-dropdown">
@@ -71,7 +74,7 @@ const ProfileButton: React.FC<any> = props => {
                         <div className="link__icon" >
                            <Image src={User} alt="" />
                         </div>
-                        <span className="link__title">Профіль</span>
+                        <span className="link__title">{translate('auth.login.profile.title', locale)}</span>
                      </a>
                   </Link>
                </li>
@@ -80,7 +83,7 @@ const ProfileButton: React.FC<any> = props => {
                      <div className="link__icon" >
                         <Image src={Logout} alt="" />
                      </div>
-                     <span className="link__title">Вихід</span>
+                     <span className="link__title">{translate('auth.login.profile.exit', locale)}</span>
                   </div>
                </li>
             </ul>

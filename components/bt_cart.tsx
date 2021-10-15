@@ -29,9 +29,9 @@ const CartButton: React.FC<any> = props => {
    return (
       <div className="actions__cart" onClick={props.click} onMouseEnter={actionsCartMouseEnter} onMouseLeave={actionsCartMouseLeave}>
          <i className="actions__cart-icon"></i>
-         {(state && cart?.length > 0) && <div className="actions__cart-amount">{productsAmount()}</div>}
+         {(state && (cart?.length > 0)) && <div className="actions__cart-amount">{productsAmount()}</div>}
       </div>
    )
 }
 
-export default React.memo(CartButton)
+export default CartButton

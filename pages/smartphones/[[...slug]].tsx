@@ -6,7 +6,7 @@ import { extractId, extractPage, paramsToArr } from "../../src/utils";
 
 const Smartphones: React.FC<any> = ({ params, ispage, data }) => {
    return (
-      <MainLayout title='Інтернет-магазин Евік'>
+      <MainLayout>
          {ispage ? <MainSmartphone data={data} /> : <MainSmartphones group={'smartphones'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />}
       </MainLayout>
    )

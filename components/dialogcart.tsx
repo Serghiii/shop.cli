@@ -4,11 +4,14 @@ import React, { MouseEvent, useRef, FormEvent } from 'react'
 import { useCartContext, useMainContext } from '../contexts';
 import { CartItem } from '.';
 import MoneyFormat from './money-format';
+import { translate } from '../locales/translate';
+import { useRouter } from 'next/router';
 
 const DialogCart: React.FC = () => {
    const mainCtx = useMainContext();
    const cartRows = useCartContext().cartState[0];
    const backdrop = useRef<HTMLDivElement>(null);
+   const { locale } = useRouter()
    const mouseState = {
       Down: false,
       Up: false
@@ -81,7 +84,7 @@ const DialogCart: React.FC = () => {
                         <path d="m164.960938 300.003906h.023437c.019531 0 .039063-.003906.058594-.003906h271.957031c6.695312 0 12.582031-4.441406 14.421875-10.878906l60-210c1.292969-4.527344.386719-9.394532-2.445313-13.152344-2.835937-3.757812-7.269531-5.96875-11.976562-5.96875h-366.632812l-10.722657-48.253906c-1.527343-6.863282-7.613281-11.746094-14.644531-11.746094h-90c-8.285156 0-15 6.714844-15 15s6.714844 15 15 15h77.96875c1.898438 8.550781 51.3125 230.917969 54.15625 243.710938-15.941406 6.929687-27.125 22.824218-27.125 41.289062 0 24.8125 20.1875 45 45 45h272c8.285156 0 15-6.714844 15-15s-6.714844-15-15-15h-272c-8.269531 0-15-6.730469-15-15 0-8.257812 6.707031-14.976562 14.960938-14.996094zm312.152343-210.003906-51.429687 180h-248.652344l-40-180zm0 0" />
                         <path d="m150 405c0 24.8125 20.1875 45 45 45s45-20.1875 45-45-20.1875-45-45-45-45 20.1875-45 45zm45-15c8.269531 0 15 6.730469 15 15s-6.730469 15-15 15-15-6.730469-15-15 6.730469-15 15-15zm0 0" /><path d="m362 405c0 24.8125 20.1875 45 45 45s45-20.1875 45-45-20.1875-45-45-45-45 20.1875-45 45zm45-15c8.269531 0 15 6.730469 15 15s-6.730469 15-15 15-15-6.730469-15-15 6.730469-15 15-15zm0 0" />
                      </svg>
-                     <h2>Ваш кошик порожній</h2>
+                     <h2>{translate('cart.empty', locale)}</h2>
                   </div>
                </div>
             </div>
@@ -102,16 +105,16 @@ const DialogCart: React.FC = () => {
       return (
          <div className="dialog-body cart">
             <form className="dialog-form" onSubmit={handleSubmit}>
-               {data && cartRows?.map((item1: any) => (
+               {data !== undefined && cartRows?.map((item1: any) => (
                   <CartItem {...data?.find((item2: any) => (item2.id === item1.id))} key={item1.id} />
                ))}
                <div style={{ padding: "5px 20px 20px 0", textAlign: "right" }}>
-                  <span style={{ fontSize: "20px" }}>Всього: </span>
+                  <span style={{ fontSize: "20px" }}>{translate('cart.total', locale)}</span>
                   <MoneyFormat {...{ value: data !== undefined ? getTotalSum(data, cartRows) : 0, className: 'price-value' }} />
                </div>
                <div style={{ float: "right", paddingRight: "20px" }}>
                   <div style={{ maxWidth: "400px" }}>
-                     <button className="custom-button">Оформити замовлення</button>
+                     <button className="custom-button">{translate('cart.place_order', locale)}</button>
                   </div>
                </div>
             </form >
@@ -123,7 +126,7 @@ const DialogCart: React.FC = () => {
       <div ref={backdrop} className={`dialog-wrapper dialog-backdrop${mainCtx.stateCart[0] ? " show" : ""}`} onClick={dialogBackdropClickHandler} onMouseDown={dialogBackdropMouseDownHandler} onMouseUp={dialogBackdropMouseUpHandler}>
          <div className="dialog">
             <div className="dialog-header">
-               <h2 className="dialog-header-title">Кошик</h2>
+               <h2 className="dialog-header-title">{translate('cart.title', locale)}</h2>
                <svg className="bt-close" onClick={buttonCloseClickHandler} viewBox="0 0 413.348 413.348" height="15px" width="15px">
                   <path d="m413.348 24.354-24.354-24.354-182.32 182.32-182.32-182.32-24.354 24.354 182.32 182.32-182.32 182.32 24.354 24.354 182.32-182.32 182.32 182.32 24.354-24.354-182.32-182.32z" />
                </svg>

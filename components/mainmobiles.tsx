@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react"
 import { MainBreadcrumbs, MainFilters, MainProducts } from ".";
+import { translate } from "../locales/translate";
 import { arrToParams } from "../src/utils";
 
 const MainMobiles: React.FC<any> = ({ group, params, data, pg }) => {
@@ -23,16 +24,18 @@ const MainMobiles: React.FC<any> = ({ group, params, data, pg }) => {
 
    React.useEffect(() => {
       getParams(params)
+      // eslint-disable-next-line
    }, [])
 
    React.useEffect(() => {
-      router.push(
+      router.replace(
          {
             pathname: `/${group}/[[...slug]]`
          },
          '/' + group + (filters.length ? '/' : '') + arrToParams(filters, '/') + (page > 1 ? '/page_' + page : ''),
          { shallow: true }
       )
+      // eslint-disable-next-line
    }, [filters, page])
 
    return (
@@ -42,7 +45,7 @@ const MainMobiles: React.FC<any> = ({ group, params, data, pg }) => {
                <div className="breadcrumbs">
                   <MainBreadcrumbs />
                </div>
-               <h2 className="main-title">Смартфони</h2>
+               <h2 className="main-title">{translate('filter.group.title', router.locale)}</h2>
                <div className="main-products">
                   <div>
                      <section className="filters">

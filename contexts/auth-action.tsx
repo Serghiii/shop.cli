@@ -9,9 +9,9 @@ enum AuthAction {
    LogoutFail
 }
 
-const RegisterAuthAction = async (dispatch: any, userState: any, setErrorHandler: (message: string) => void, onSuccess: any = null) => {
+const RegisterAuthAction = async (dispatch: any, userState: any, lang: string = 'uk', setErrorHandler: (message: string) => void, onSuccess: any = null) => {
    try {
-      const { data } = await axios.post("auth/register", userState);
+      const { data } = await axios.post("auth/register", userState, { headers: { lang } });
       dispatch({ type: AuthAction.RegisterSuccess, payload: data });
       if (onSuccess) onSuccess();
    } catch (e: any) {
@@ -23,9 +23,9 @@ const RegisterAuthAction = async (dispatch: any, userState: any, setErrorHandler
    }
 };
 
-const LoginAuthAction = async (dispatch: any, loginState: any, setErrorHandler: (message: string) => void, onSuccess: any = null) => {
+const LoginAuthAction = async (dispatch: any, loginState: any, lang: string = 'uk', setErrorHandler: (message: string) => void, onSuccess: any = null) => {
    try {
-      const data = await axios.post("auth/login", loginState);
+      const data = await axios.post("auth/login", loginState, { headers: { lang } });
       dispatch({ type: AuthAction.LoginSuccess, payload: data.data });
       if (onSuccess) onSuccess();
    } catch (e: any) {

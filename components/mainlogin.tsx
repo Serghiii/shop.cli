@@ -9,19 +9,21 @@ import Alert from "@material-ui/lab/Alert";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
-import { Messages } from "../src/messages";
+import { translate } from '../locales/translate';
+import { useRouter } from "next/router";
 
 const MainLogin: React.FC = () => {
+   const { locale } = useRouter()
    const dispatch = useAuthContext().authState[1];
    const [rememberme, setRememberMe] = useState(false);
 
    const loginSchema = yup.object().shape({
       login: yup.string().trim()
-         .required(Messages.ua.required)
-         .min(2, Messages.ua.login),
+         .required(translate('auth.messages.required', locale))
+         .min(2, translate('auth.messages.login', locale)),
       loginPassword: yup.string()
-         .required(Messages.ua.required)
-         .min(6, Messages.ua.password)
+         .required(translate('auth.messages.required', locale))
+         .min(6, translate('auth.messages.password', locale))
    });
 
    const ufLogin = useForm({
@@ -43,7 +45,7 @@ const MainLogin: React.FC = () => {
          username: ufLogin.getValues('login'),
          password: ufLogin.getValues('loginPassword'),
          rememberme
-      }, setLoginError);
+      }, locale, setLoginError);
    }
 
    return (
@@ -51,10 +53,10 @@ const MainLogin: React.FC = () => {
          <div className="avatar-login">
             <Image src={User} alt="" />
          </div>
-         <h2>Вхід</h2>
+         <h2>{translate('auth.login.title', locale)}</h2>
          <form className="dialog-form" onSubmit={onSubmit}>
             <div className="form-row">
-               <label htmlFor="auth-login" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>Електронна пошта або телефон</label>
+               <label htmlFor="auth-login" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>{translate('auth.login.name', locale)}</label>
                <input
                   {...ufLogin.register("login")}
                   id="auth-login"
@@ -67,7 +69,7 @@ const MainLogin: React.FC = () => {
                </div>
             </div>
             <div className="form-row">
-               <label htmlFor="auth-pass" className="form-label">Пароль</label>
+               <label htmlFor="auth-pass" className="form-label">{translate('auth.login.password', locale)}</label>
                <input
                   {...ufLogin.register("loginPassword")}
                   id="auth-pass"
@@ -90,7 +92,7 @@ const MainLogin: React.FC = () => {
                      checked={rememberme}
                      onChange={rememberMeOnChangeHandle}
                   />}
-                  label="Запам'ятати"
+                  label={translate('auth.login.rememberme', locale)}
                />
             </FormGroup>
             <div className="form-row">
@@ -100,7 +102,7 @@ const MainLogin: React.FC = () => {
                   {ufLogin.formState.errors.server?.message}
                </Alert>}
             </div>
-            <button className="custom-button" disabled={!ufLogin.formState.isValid}>Увійти</button>
+            <button className="custom-button" disabled={!ufLogin.formState.isValid}>{translate('auth.login.enter', locale)}</button>
          </form>
       </div >
    )

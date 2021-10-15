@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { AppBar, Tab, Tabs } from "@material-ui/core";
 import { PasswordPanel, PhotoPanel, ProfilePanel } from "./index";
+import { translate } from '../../locales/translate';
+import { useRouter } from "next/router";
 
 const ProfileTabs: React.FC<any> = props => {
    const [value, setValue] = useState(0);
+   const { locale } = useRouter()
 
    interface TabPanelProps {
       children?: React.ReactNode;
@@ -53,9 +56,9 @@ const ProfileTabs: React.FC<any> = props => {
                variant="scrollable"
                scrollButtons="auto"
             >
-               <Tab label="Профіль" {...a11yProps(0)} />
-               <Tab label="Зміна паролю" {...a11yProps(1)} />
-               <Tab label="Фото" {...a11yProps(2)} />
+               <Tab label={translate('profile.tabs.title.name', locale)} {...a11yProps(0)} />
+               <Tab label={translate('profile.tabs.title.password', locale)} {...a11yProps(1)} />
+               <Tab label={translate('profile.tabs.title.photo', locale)} {...a11yProps(2)} />
             </Tabs>
          </AppBar>
          <TabPanel value={value} index={0}>

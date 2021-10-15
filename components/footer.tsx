@@ -1,9 +1,12 @@
 import React from 'react';
 import { DialogCart, DialogLogin } from './index'
 import { useMainContext } from '../contexts';
+import { translate } from '../locales/translate';
+import { useRouter } from 'next/router';
 
 const Footer: React.FC = () => {
    const mainCtx = useMainContext();
+   const { locale } = useRouter()
 
    const scrollUpClickHandler = () => {
       window.scrollTo({
@@ -12,14 +15,13 @@ const Footer: React.FC = () => {
          behavior: 'smooth'
       });
    };
-
    return (
       <>
          <footer>
             <div className="wraper-footer">
                <div className="container">
                   <div className="footer">
-                     <p>© Інтернет-магазин Евік 2020-2021</p>
+                     <p>{translate('footer.title', locale)}</p>
                      {/* <div className="widget">
                         <div className="evic-box">
                            <Logo />

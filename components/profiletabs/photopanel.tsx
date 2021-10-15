@@ -1,6 +1,10 @@
 import axios from "axios";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
+import Image from 'next/image';
+import Clouds from '../../public/icon/profile/clouds.svg'
+import { translate } from '../../locales/translate';
+import { useRouter } from "next/router";
 
 const PhotoPanel: React.FC<any> = (props) => {
    const [state, setState] = useState<any>({
@@ -8,13 +12,16 @@ const PhotoPanel: React.FC<any> = (props) => {
       scale: 1,
    });
    const [editor, setEditor] = useState(true);
+   const { locale } = useRouter()
+   const [file, setFile] = useState(translate('profile.tabs.panels.selectfile', locale));
 
    const profilePicChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (!e.target.files || !e.target.files[0]) return;
       const { type } = e.target.files[0];
       if ((type.endsWith('jpeg') || type.endsWith('png') || type.endsWith('jpg'))) {
          setState({ ...state, scale: 1, openCropper: true, Image: e.target.files[0], fileUploadErrors: [] });
-         setEditor(!editor);
+         setEditor(!editor)
+         setFile(e.target.files[0].name)
       }
    };
 
@@ -31,12 +38,12 @@ const PhotoPanel: React.FC<any> = (props) => {
    const SaveProfileSubmit = (e: any) => {
       e.preventDefault();
       const editor: any = state.editor;
-      if (editor) {
+      if (editor?.props.image !== undefined) {
          const Avatar = {
             avatar: editor?.getImageScaledToCanvas().toDataURL().replace(/^data:image\/\w+;base64,/, "")
          }
          if (Avatar.avatar) {
-            axios.post('user/changeavatar', Avatar).then((res) => {
+            axios.post('user/changeavatar', Avatar, { headers: { lang: locale } }).then((res) => {
                window.location.reload();
             })
          }
@@ -62,11 +69,46 @@ const PhotoPanel: React.FC<any> = (props) => {
                   </div>
                   <input style={{ width: '100%', marginTop: "8px", marginBottom: "20px" }} type="range" value={state.scale} name="points" min="1" max="10" step="0.1" onChange={onScaleChange} />
                </div>
-               <input style={{ marginBottom: "20px" }} type="file" name="profilePicBtn" accept="image/png, image/jpeg" onChange={profilePicChange} />
+               <div className="file-box">
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                     <label htmlFor="file" className="btn">
+                        <div className="file-icon">
+                           <Image src={Clouds} alt="" />
+                        </div>
+                     </label>
+                     <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <label className="file-name" title={file}>{file}</label>
+                     </div>
+                  </div>
+                  <input style={{ display: 'none' }} id="file" type="file" name="profilePicBtn" accept="image/png, image/jpeg" onChange={profilePicChange} />
+               </div>
                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <button className="custom-button-simple" disabled={false}>Зберегти</button>
+                  <button className="custom-button-simple" disabled={false}>{translate('profile.tabs.panels.save', locale)}</button>
                </div>
             </div>
+            <style jsx>{`
+               .btn {
+                  cursor: pointer;
+               }
+               .file-box {
+                  display: inline-block;
+                  height: auto;
+                  width: 100%;
+                  padding: 5px;
+                  margin-bottom: 20px;
+                  box-sizing: border-box;
+               }
+               .file-name {
+                  word-wrap: break-word;  
+               }
+               .file-icon {
+                  width: 23px;
+                  height: 23px;
+                  margin-right: 5px;
+                  opacity: 50%;
+               }
+            `}
+            </style>
          </form>
       </>
    )

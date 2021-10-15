@@ -5,8 +5,10 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { MainFilterGroup } from ".";
 import useSWR from "swr";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
+   const { locale } = useRouter()
    const brandZone = cond[0].find((el: string) => el.includes('brand-')) !== undefined
 
    const fetcher = async (url: string, params: []) => await axios.get(url + params.reduce((acc: string, curr: string) => (
@@ -26,7 +28,7 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
       fdata?.forEach((el: any) => {
          if (tmpId !== el.id) {
             let newData = fdata.filter((item: any) => item.id == el.id)
-            fData.push({ id: el.id, name: el.name, data: [...newData] })
+            fData.push({ id: el.id, name: el.name, name_ru: el.name_ru, data: [...newData] })
             tmpId = el.id
          }
       });
@@ -52,7 +54,7 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
             aria-labelledby="nested-list-subheader"
             subheader={
                <ListSubheader component="div" id="nested-list-subheader">
-                  Фільтр
+                  {locale == 'ru' ? 'Фильтр' : 'Фільтр'}
                </ListSubheader>
             }
          >

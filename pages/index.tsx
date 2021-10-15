@@ -3,7 +3,7 @@ import { Main, MainLayout } from '../components'
 
 const Home: React.FC = () => {
   return (
-    <MainLayout title='Інтернет-магазин Евік'>
+    <MainLayout>
       <Main />
     </MainLayout>
   )

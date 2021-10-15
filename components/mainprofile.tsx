@@ -7,6 +7,7 @@ import { ProfileTabs } from './profiletabs';
 import Image from 'next/image';
 import Logout from '../public/icon/profile/logout.svg'
 import Avatar from '@material-ui/core/Avatar';
+import { translate } from '../locales/translate';
 
 const MainProfile: React.FC = () => {
    const authCtx = useAuthContext().authState[0];
@@ -17,7 +18,7 @@ const MainProfile: React.FC = () => {
    const { data } = useSWR('user/profile', fetcher);
 
    if (typeof window !== 'undefined' && authCtx.isLoggedIn) {
-      document.title = 'Профіль: ' + data?.name;
+      document.title = (translate('profile.title', router.locale)) + ': ' + data?.name;
    }
 
    const exitClickHandler = () => {
@@ -35,7 +36,7 @@ const MainProfile: React.FC = () => {
             <div className="main-simple">
                <div className="profile-title-simple">
                   <div className="title-simple-h2">
-                     <h2>Профіль</h2>
+                     <h2>{translate('profile.title', router.locale)}</h2>
                   </div>
                   <div className="title-simple-avatar-wraper">
                      <div className="title-simple-avatar">
@@ -66,7 +67,7 @@ const MainProfile: React.FC = () => {
                         <div className="link__icon-simple">
                            <Image src={Logout} alt="" />
                         </div>
-                        <span className="link__title-simple">Вихід</span>
+                        <span className="link__title-simple">{translate('profile.exit', router.locale)}</span>
                      </div>
                   </div>
                </div>
