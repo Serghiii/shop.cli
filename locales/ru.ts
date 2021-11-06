@@ -7,6 +7,7 @@ export default {
          password: 'Пароль',
          rememberme: 'Запомнить',
          enter: 'Войти',
+         enter_google: 'Войти через Google',
          profile: [{
             title: 'Профиль',
             exit: 'Выход'

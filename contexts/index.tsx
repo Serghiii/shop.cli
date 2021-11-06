@@ -2,7 +2,8 @@ export {
    // ActionKind,
    RegisterAuthAction,
    LogOutAuthAction,
-   LoginAuthAction
+   LoginAuthAction,
+   GoogleAuthAction
 } from './auth-action'
 export { useAuthContext } from './auth-context'
 export { useMainContext } from './main-context'

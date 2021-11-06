@@ -8,13 +8,14 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
+   const [data, setData] = React.useState([])
    const { locale } = useRouter()
-   const brandZone = cond[0].find((el: string) => el.includes('brand-')) !== undefined
+   const brandZone = React.useMemo(() => { return cond[0].find((el: string) => el.includes('brand-')) !== undefined }, [cond])
 
    const fetcher = async (url: string, params: []) => await axios.get(url + params.reduce((acc: string, curr: string) => (
       (brandZone && curr.includes('brand-')) ? acc = acc + curr + '&' : (!brandZone && !curr.includes('brand-')) ? acc = acc + curr + '&' : acc
-   ), '?')).then(response => response.data)
-   const { data } = useSWR([`/products/filter/${group}/`, cond[0]], fetcher, { revalidateOnFocus: false })
+   ), '?')).then(response => setData(response.data))
+   useSWR([`/products/filter/${group}/`, cond[0]], fetcher, { revalidateOnFocus: false })
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       page[1](1)

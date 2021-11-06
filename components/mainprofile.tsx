@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useEffect } from 'react';
 import useSWR from 'swr';
 import { useRouter } from 'next/router'
 import { LogOutAuthAction, useAuthContext } from '../contexts';
@@ -10,25 +9,15 @@ import Avatar from '@material-ui/core/Avatar';
 import { translate } from '../locales/translate';
 
 const MainProfile: React.FC = () => {
-   const authCtx = useAuthContext().authState[0];
    const dispatch = useAuthContext().authState[1];
    const router = useRouter();
 
    const fetcher = async (url: string) => await axios.post(url).then(response => response.data)
    const { data } = useSWR('user/profile', fetcher);
 
-   if (typeof window !== 'undefined' && authCtx.isLoggedIn) {
-      document.title = (translate('profile.title', router.locale)) + ': ' + data?.name;
-   }
-
    const exitClickHandler = () => {
       LogOutAuthAction(dispatch);
    }
-
-   useEffect(() => {
-      if (!authCtx.isLoggedIn) router.push('/login');
-      // eslint-disable-next-line
-   }, [authCtx.isLoggedIn])
 
    return (
       <main>
@@ -43,7 +32,7 @@ const MainProfile: React.FC = () => {
                         <div className="avatar-simple">
                            <Avatar
                               alt="Аватар"
-                              src={data?.avatar?.trim().length ? `${process.env.STATIC_URL}/avatars/${data?.avatar}` : '/icon/profile/avatar-none.svg'}
+                              src={data?.avatar?.trim().length ? data?.avatar.includes('lh3.googleusercontent.com') ? data?.avatar : `${process.env.STATIC_URL}/avatars/${data?.avatar}` : '/icon/profile/avatar-none.svg'}
                               className="profile-avatar"
                            />
                            <style global jsx>{`

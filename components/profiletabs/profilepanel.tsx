@@ -19,7 +19,10 @@ const ProfilePanel: React.FC<any> = (props) => {
          .matches(/^[а-яА-ЯіІёЁ\s]+$/, translate('auth.messages.login_cyr', locale)),
       gender: yup.string()
          .required(translate('auth.messages.gender', locale))
-         .oneOf(['1', '2'], translate('auth.messages.gender', locale))
+         .oneOf(['1', '2'], translate('auth.messages.gender', locale)),
+      phone: yup.string()
+         .matches(/^\+38\s[0-9,\s]+$/, translate('auth.messages.required', locale))
+         .matches(/^\+38\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/, translate('auth.messages.phone', locale)),
    })
 
    const { register, handleSubmit, formState: { errors }, clearErrors, getValues, setValue, control } = useForm({
@@ -32,7 +35,10 @@ const ProfilePanel: React.FC<any> = (props) => {
    }, [gender])
 
    const onSubmit = () => {
-      axios.post('user/changeprofile', { name: getValues('name'), gender }, { headers: { lang: locale } }).then(() => {
+      let values = { name: getValues('name'), gender }
+      const phone = getValues('phone')?.replace(/\s/g, '')
+      if (props.phone !== phone)values = {...values, phone: phone}
+      axios.post('user/changeprofile', values, { headers: { lang: locale } }).then(() => {
          window.location.reload()
       })
    }
@@ -70,7 +76,21 @@ const ProfilePanel: React.FC<any> = (props) => {
             </div>
             <div className="form-row-simple">
                <label htmlFor="phone" className="form-label-simple">{translate('profile.tabs.panels.phone', locale)}</label>
-               <InputMask disabled id="phone" className="custom-input-simple phone-bounds" value={props.phone} mask="+38 999 999 99 99" maskPlaceholder='' alwaysShowMask={true} readOnly={true} ></InputMask>
+               <InputMask {...register("phone")}
+                  id="phone"
+                  disabled={props.phone?.length>0} 
+                  className="custom-input-simple phone-bounds"
+                  defaultValue={props.phone}
+                  name="phone"
+                  mask="+38 999 999 99 99"
+                  maskPlaceholder=''
+                  alwaysShowMask={true}
+                  readOnly={props.phone?.length>0}>
+               </InputMask>
+            </div>
+            <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
+               <div className="form-label-simple hidden-div"></div>
+               <div className="invalid-feedback">{errors.phone?.message}</div>
             </div>
             <div className="form-row-simple">
                <label htmlFor="email" className="form-label-simple">{translate('profile.tabs.panels.email', locale)}</label>

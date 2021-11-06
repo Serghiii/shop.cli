@@ -37,6 +37,20 @@ const LoginAuthAction = async (dispatch: any, loginState: any, lang: string = 'u
    }
 };
 
+const GoogleAuthAction = async (dispatch: any, loginState: any, lang: string = 'uk', setErrorHandler: (message: string) => void, onSuccess: any = null) => {
+   try {
+      const data = await axios.post("auth/google", loginState, { headers: { lang } });
+      dispatch({ type: AuthAction.LoginSuccess, payload: data.data });
+      if (onSuccess) onSuccess();
+   } catch (e: any) {
+      dispatch({
+         type: AuthAction.LoginFail,
+         payload: e.response ? e.response.data.message : e.message
+      });
+      setErrorHandler(e.response ? e.response.data.message : e.message);
+   }
+};
+
 const LogOutAuthAction = async (dispatch: any) => {
    try {
       dispatch({
@@ -55,5 +69,6 @@ export {
    AuthAction,
    RegisterAuthAction,
    LogOutAuthAction,
-   LoginAuthAction
+   LoginAuthAction,
+   GoogleAuthAction
 };

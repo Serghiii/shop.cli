@@ -4,7 +4,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const CheckBoxItem: React.FC<any> = ({ data, fdata, brandZone, checked, handleChange }) => {
    const [state, setState] = React.useState(checked)
-   let count = brandZone ? data.prop.includes('brand-') ? data.count : fdata?.count : data.prop.includes('brand-') ? fdata?.count : data.count
+   let count = React.useMemo(() => { return brandZone ? data.prop.includes('brand-') ? data.count : fdata?.count : data.prop.includes('brand-') ? fdata?.count : data.count }, [data, fdata])
 
    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setState(!state)

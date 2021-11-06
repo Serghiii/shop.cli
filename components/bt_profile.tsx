@@ -46,13 +46,13 @@ const ProfileButton: React.FC<any> = props => {
    }
 
    return (
-      <div className="actions__profile" onClick={props.click} onTouchStart={profileMouseEnterHandler} onTouchEnd={profileMouseLeaveHandler} onMouseEnter={profileMouseEnterHandler} onMouseLeave={profileMouseLeaveHandler}>
+      <div className="actions__profile" onClick={props.click} onMouseEnter={profileMouseEnterHandler} onMouseLeave={profileMouseLeaveHandler}>
          <div className="actions__profile-wrapper">
             {mounted && authCtx.isLoggedIn ? (
                <div className="avatar">
                   <Avatar
                      alt="Аватар"
-                     src={data?.avatar?.trim().length ? `${process.env.STATIC_URL}/avatars/${data?.avatar}` : '/icon/profile/avatar-none.svg'}
+                     src={data?.avatar?.trim().length ? data?.avatar.includes('lh3.googleusercontent.com') ? data?.avatar : `${process.env.STATIC_URL}/avatars/${data?.avatar}` : '/icon/profile/avatar-none.svg'}
                      style={{ height: 30, width: 30 }}
                   />
                </div>
@@ -66,7 +66,7 @@ const ProfileButton: React.FC<any> = props => {
             <p>{translate('greeting', locale)}<br />{locale == 'ru' ? <span>войдите&nbsp;в&nbsp;кабинет</span> : <span>увійдіть&nbsp;в&nbsp;кабінет</span>}</p>
          )
          }
-         <div ref={actionsProfileDropdown} className="actions__profile-dropdown">
+         <nav ref={actionsProfileDropdown} className="actions__profile-dropdown">
             <ul className="profile-list">
                <li className="profile-item">
                   <Link href="/profile">
@@ -87,7 +87,7 @@ const ProfileButton: React.FC<any> = props => {
                   </div>
                </li>
             </ul>
-         </div>
+         </nav>
       </div>
    )
 }
