@@ -1,6 +1,7 @@
-import { Breadcrumbs, Typography } from "@material-ui/core";
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import HomeIcon from '@material-ui/icons/Home';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import HomeIcon from '@mui/icons-material/Home';
 import React from "react";
 import { useRouter } from "next/router";
 import { useMainContext } from "../contexts";
@@ -70,4 +71,4 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
    )
 }
 
-export default React.memo(MainBreadcrumbs)
+export default MainBreadcrumbs

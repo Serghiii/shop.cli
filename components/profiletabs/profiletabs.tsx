@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { AppBar, Tab, Tabs } from "@material-ui/core";
+import AppBar from '@mui/material/AppBar';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+
 import { PasswordPanel, PhotoPanel, ProfilePanel } from "./index";
 import { translate } from '../../locales/translate';
 import { useRouter } from "next/router";

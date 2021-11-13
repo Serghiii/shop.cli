@@ -31,4 +31,4 @@ const HomeProductCard: React.FC<any> = ({ id, name, price, priceold, pic, group,
       </div>
    )
 }
-export default React.memo(HomeProductCard)
+export default HomeProductCard

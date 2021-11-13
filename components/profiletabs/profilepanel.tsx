@@ -4,7 +4,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { FormControlLabel, Radio, RadioGroup } from "@material-ui/core";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import { translate } from '../../locales/translate';
 import { useRouter } from "next/router";
 
@@ -36,9 +38,8 @@ const ProfilePanel: React.FC<any> = (props) => {
 
    const onSubmit = () => {
       let values = { name: getValues('name'), gender }
-      const phone = getValues('phone')?.replace(/\s/g, '')
-      if (props.phone !== phone)values = {...values, phone: phone}
-      axios.post('user/changeprofile', values, { headers: { lang: locale } }).then(() => {
+      const phone: any = getValues('phone')?.replace(/\s/g, '')
+      axios.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values, { headers: { lang: locale } }).then(() => {
          window.location.reload()
       })
    }
@@ -66,8 +67,8 @@ const ProfilePanel: React.FC<any> = (props) => {
                   value={gender}
                   onChange={onChangeGenderHandler}
                >
-                  <FormControlLabel value="1" control={<Radio color="primary" />} label={translate('profile.tabs.panels.gender.male', locale)} />
-                  <FormControlLabel value="2" control={<Radio color="primary" />} label={translate('profile.tabs.panels.gender.famale', locale)} />
+                  <FormControlLabel value="1" disabled={props.gender in ['1', '2']} control={<Radio color="primary" />} label={translate('profile.tabs.panels.gender.male', locale)} />
+                  <FormControlLabel value="2" disabled={props.gender in ['1', '2']} control={<Radio color="primary" />} label={translate('profile.tabs.panels.gender.famale', locale)} />
                </RadioGroup>
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
@@ -78,14 +79,14 @@ const ProfilePanel: React.FC<any> = (props) => {
                <label htmlFor="phone" className="form-label-simple">{translate('profile.tabs.panels.phone', locale)}</label>
                <InputMask {...register("phone")}
                   id="phone"
-                  disabled={props.phone?.length>0} 
+                  disabled={props.phone?.length > 0}
                   className="custom-input-simple phone-bounds"
                   defaultValue={props.phone}
                   name="phone"
                   mask="+38 999 999 99 99"
                   maskPlaceholder=''
                   alwaysShowMask={true}
-                  readOnly={props.phone?.length>0}>
+                  readOnly={props.phone?.length > 0}>
                </InputMask>
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>

@@ -1,34 +1,20 @@
 import React from "react";
-import List from '@material-ui/core/List';
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { CheckBoxItem } from ".";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useRouter } from "next/router";
+import { CheckBoxItem } from ".";
 
-const MainFilterGroup: React.FC<any> = ({ cond, items, fitems, brandZone, handleChange }) => {
+const MainFilterGroup: React.FC<any> = ({ cond, items, fitems, brandZone, brandZoneClick, handleChange }) => {
    const { locale } = useRouter()
-   const [open, setOpen] = React.useState(false)
-
-   React.useEffect(() => {
-      setOpen(true)
-   }, [])
+   const [open, setOpen] = React.useState(true)
 
    const handleClick = () => {
       setOpen(!open)
    };
-
-   const useStyles = makeStyles((theme: Theme) =>
-      createStyles({
-         nested: {
-            paddingLeft: theme.spacing(2),
-         },
-      }),
-   );
-   const classes = useStyles()
 
    return (
       <>
@@ -39,14 +25,14 @@ const MainFilterGroup: React.FC<any> = ({ cond, items, fitems, brandZone, handle
          <Collapse in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding >
                {items.data.map((item: any) => (
-                  <ListItem key={item.prop} button className={classes.nested}>
-                     <CheckBoxItem
-                        data={item}
-                        fdata={fitems?.find((el: any) => el.prop == item.prop)}
-                        brandZone={brandZone}
-                        checked={cond[0].includes(item.prop)}
-                        handleChange={handleChange} />
-                  </ListItem>
+                  < CheckBoxItem key={item.prop}
+                     data={item}
+                     fdata={fitems?.find((el: any) => el.prop == item.prop)}
+                     brandZone={brandZone}
+                     brandZoneClick={brandZoneClick}
+                     checked={cond[0].includes(item.prop)}
+                     handleChange={handleChange}
+                  />
                ))}
             </List>
          </Collapse>

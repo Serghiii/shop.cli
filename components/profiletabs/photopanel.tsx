@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
-import Image from 'next/image';
-import Clouds from '../../public/icon/profile/clouds.svg'
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { translate } from '../../locales/translate';
 import { useRouter } from "next/router";
 
@@ -73,7 +72,7 @@ const PhotoPanel: React.FC<any> = (props) => {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                      <label htmlFor="file" className="btn">
                         <div className="file-icon">
-                           <Image src={Clouds} alt="" />
+                           <FileDownloadIcon color="action" />
                         </div>
                      </label>
                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

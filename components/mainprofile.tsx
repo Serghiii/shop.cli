@@ -5,7 +5,7 @@ import { LogOutAuthAction, useAuthContext } from '../contexts';
 import { ProfileTabs } from './profiletabs';
 import Image from 'next/image';
 import Logout from '../public/icon/profile/logout.svg'
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@mui/material/Avatar';
 import { translate } from '../locales/translate';
 
 const MainProfile: React.FC = () => {

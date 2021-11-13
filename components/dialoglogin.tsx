@@ -4,10 +4,10 @@ import { LoginAuthAction, RegisterAuthAction, GoogleAuthAction, useAuthContext, 
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import Alert from "@material-ui/lab/Alert";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
+import Alert from '@mui/material/Alert';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
 import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
 import Image from 'next/image';
@@ -57,11 +57,20 @@ const DialogLogin: React.FC = () => {
       setRegister(!Register);
    }
 
+   const getAccessToken = (data: any) => {
+      let res = ''
+      for (let el of Object.keys(data)) {
+         res = data[el]['access_token']
+         if (res !== undefined) break
+      }
+      return res
+   }
+
    const googleClickHandler = () => {
       const GoogleAuth = gapi.auth2.getAuthInstance()
       GoogleAuth.signIn().then((data: any) => {
          GoogleAuthAction(dispatch, {
-            token: data.Zb.access_token,
+            token: getAccessToken(data)
          }, locale, (message) => { window.alert(message) }, closeClickHandler);
       }, (message) => { window.alert(message) })
    }

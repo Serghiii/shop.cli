@@ -18,8 +18,8 @@ $fontFamily: "Roboto";
 // Змінні
 $minWidth: 320px;
 $maxWidth: 1400;
-$maxWidthConteiner: 1370;
-$xl: $maxWidthConteiner + 30;
+$maxWidthContainer: 1370;
+$xl: $maxWidthContainer + 30;
 $lg: 991.98;
 $md: 767.98;
 $sm: 479.98;
@@ -69,7 +69,7 @@ a {
 // Головна сітка
 .container {
   // width: 100%; // для уникнення коллапсу
-  max-width: $maxWidthConteiner + px;
+  max-width: $maxWidthContainer + px;
   margin: 0 auto;
   // @media (max-width: $xl+px){
   //   max-width: 970px;

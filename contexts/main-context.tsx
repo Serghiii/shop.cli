@@ -3,6 +3,7 @@ import React, { Dispatch, RefObject, SetStateAction, useContext, useRef, useStat
 import useSWR from "swr";
 
 interface IStore {
+   isLoading: [boolean, Dispatch<SetStateAction<boolean>>];
    stateProfile: [boolean, Dispatch<SetStateAction<boolean>>];
    stateCart: [boolean, Dispatch<SetStateAction<boolean>>];
    Categories: RefObject<HTMLDivElement>;
@@ -17,6 +18,7 @@ const fetcherGroups = async (url: string) => await axios.get(url).then(response 
 
 const MainContext = React.createContext<IStore | undefined>(undefined);
 const MainProvider: React.FC = ({ children }) => {
+   const [isLoading, setIsLoading] = useState<boolean>(false); // стан завантаження
    const [stateProfile, setStateProfile] = useState<boolean>(false); // стан для профіля
    const [stateCart, setStateCart] = useState<boolean>(false); // стан для категорій
    const Categories = useRef<HTMLDivElement>(null);
@@ -25,13 +27,14 @@ const MainProvider: React.FC = ({ children }) => {
    const categoryItems = useSWR('categories', fetcherCategories).data;
    const groupItems = useSWR('groups', fetcherGroups).data;
    const store: IStore = {
+      isLoading: [isLoading, setIsLoading],
       stateProfile: [stateProfile, setStateProfile],
       stateCart: [stateCart, setStateCart],
       Categories: Categories,
       mainSwiper: mainSwiper,
       scrollUp: scrollUp,
       categoryItems: categoryItems,
-      groupItems: groupItems
+      groupItems: groupItems,
    };
    return (
       <MainContext.Provider value={store} >

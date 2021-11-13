@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  srv:
+    image: srv:shop
+    container_name: srv
+    ports:
+      - 7000:7000
+    restart: always
+  cli:
+    image: cli:shop
+    container_name: cli
+    ports:
+      - 3000:3000
+    restart: always
+    depends_on:
+      - srv

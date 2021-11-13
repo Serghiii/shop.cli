@@ -1,9 +1,8 @@
-import Box from "@material-ui/core/Box"
-import Card from "@material-ui/core/Card"
-import CardActionArea from "@material-ui/core/CardActionArea"
-import CardContent from "@material-ui/core/CardContent"
-import Typography from "@material-ui/core/Typography"
-import { makeStyles } from "@material-ui/core/styles"
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/router"
@@ -11,22 +10,12 @@ import { useRouter } from "next/router"
 const MainGroupCard: React.FC<any> = ({ item }) => {
    const { locale } = useRouter()
    const [raised, setRaised] = useState(false);
-
-   const useStyles = makeStyles((theme) => ({
-      card: {
-         width: 200,
-         height: '100%',
-      },
-   }))
-   const classes = useStyles();
-
    const toggleRaised = () => setRaised(!raised);
 
    return (
       <Link href={`/${item.ref}`} passHref>
          <Box width={200} height='100%'>
             <Card
-               className={classes.card}
                raised={raised}
                onMouseOver={toggleRaised}
                onMouseOut={toggleRaised}

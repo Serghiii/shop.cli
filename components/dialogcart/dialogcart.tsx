@@ -1,11 +1,8 @@
-import axios from 'axios';
-import useSWR from 'swr';
-import React, { MouseEvent, useRef, FormEvent } from 'react'
-import { useCartContext, useMainContext } from '../contexts';
-import { CartItem } from '.';
-import MoneyFormat from './money-format';
-import { translate } from '../locales/translate';
+import React, { MouseEvent, useRef } from 'react'
+import { useCartContext, useMainContext } from '../../contexts';
+import { translate } from '../../locales/translate';
 import { useRouter } from 'next/router';
+import { FullCart } from '.';
 
 const DialogCart: React.FC = () => {
    const mainCtx = useMainContext();
@@ -16,31 +13,6 @@ const DialogCart: React.FC = () => {
       Down: false,
       Up: false
    }
-
-   const fetcher = async (url: string) => await axios.post(url, getData()).then(response => response.data)
-   const { data } = useSWR('products/cart', fetcher);
-
-   const getData: any = () => {
-      let data: number[] = []
-      cartRows.forEach((el: any) => {
-         data.push(el.id)
-      });
-      return { data }
-   }
-
-   const getTotalSum = (products: any, items: any) => {
-      try {
-         return items
-            .map(({ id, amount }: any) => ({
-               product: products?.find((p: any) => p.id === id),
-               amount,
-            }))
-            .map(({ product: { price }, amount }: any) => amount * price)
-            .reduce((acc: any, cur: any) => acc + cur, 0);
-      }
-      catch (e: any) { }
-   };
-
 
    const dialogBackdropMouseDownHandler = (e: MouseEvent<HTMLDivElement>) => {
       if ((e.target as HTMLElement).contains(backdrop.current)) {
@@ -70,10 +42,6 @@ const DialogCart: React.FC = () => {
       mainCtx.mainSwiper.current?.removeAttribute('style');
    }
 
-   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-   }
-
    const EmptyCart = () => {
       return (
          <>
@@ -101,27 +69,6 @@ const DialogCart: React.FC = () => {
       )
    }
 
-   const ShowCart = () => {
-      return (
-         <div className="dialog-body cart">
-            <form className="dialog-form" onSubmit={handleSubmit}>
-               {data !== undefined && cartRows?.map((item1: any) => (
-                  <CartItem {...data?.find((item2: any) => (item2.id === item1.id))} key={item1.id} />
-               ))}
-               <div style={{ padding: "5px 20px 20px 0", textAlign: "right" }}>
-                  <span style={{ fontSize: "20px" }}>{translate('cart.total', locale)}</span>
-                  <MoneyFormat {...{ value: data !== undefined ? getTotalSum(data, cartRows) : 0, className: 'price-value' }} />
-               </div>
-               <div style={{ float: "right", paddingRight: "20px" }}>
-                  <div style={{ maxWidth: "400px" }}>
-                     <button className="custom-button">{translate('cart.place_order', locale)}</button>
-                  </div>
-               </div>
-            </form >
-         </div >
-      )
-   }
-
    return (
       <div ref={backdrop} className={`dialog-wrapper dialog-backdrop${mainCtx.stateCart[0] ? " show" : ""}`} onClick={dialogBackdropClickHandler} onMouseDown={dialogBackdropMouseDownHandler} onMouseUp={dialogBackdropMouseUpHandler}>
          <div className="dialog">
@@ -131,7 +78,7 @@ const DialogCart: React.FC = () => {
                   <path d="m413.348 24.354-24.354-24.354-182.32 182.32-182.32-182.32-24.354 24.354 182.32 182.32-182.32 182.32 24.354 24.354 182.32-182.32 182.32 182.32 24.354-24.354-182.32-182.32z" />
                </svg>
             </div>
-            {cartRows?.length > 0 ? <ShowCart /> : <EmptyCart />}
+            {cartRows?.length <= 0 ? <EmptyCart /> : <FullCart />}
          </div>
       </div>
    )

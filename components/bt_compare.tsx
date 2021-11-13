@@ -8,4 +8,4 @@ const CompareButton: React.FC = () => {
    )
 }
 
-export default React.memo(CompareButton)
+export default CompareButton

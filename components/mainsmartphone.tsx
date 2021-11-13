@@ -6,6 +6,7 @@ import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import axios from "axios";
+const ReactImageZoom = require('react-image-zoom');
 
 const MainSmartphone: React.FC<any> = ({ data }) => {
    const [extHtml, setExtHtml] = React.useState({ __html: '' })
@@ -32,8 +33,8 @@ const MainSmartphone: React.FC<any> = ({ data }) => {
                </div>
                <div className="product-card">
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                     <div style={{ width: '600px', height: '400px', display: 'flex', justifyContent: 'center' }}>
-                        <img src={`${process.env.STATIC_URL}/cards/${data[0].id}/${data[0].pic}`} className="product-card__big-img" alt="" />
+                     <div style={{ margin: '0 60px 0 60px', cursor: 'zoom-in' }}>
+                        <ReactImageZoom {...{ width: 270, height: 370, zoomWidth: 270, img: `${process.env.STATIC_URL}/cards/${data[0].id}/images/1.webp` }} />
                      </div>
                      <div style={{ paddingTop: '20px', minHeight: 'calc(100vh - 150px)', width: '100%' }}>
                         <div style={{ fontSize: '30px' }}>{data[0].name}</div>

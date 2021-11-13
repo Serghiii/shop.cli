@@ -17,8 +17,6 @@ export { default as Search } from './search'
 export { default as SideDrawer } from './sidedrawer'
 export { default as Categories } from "./categiries"
 export { default as ProfileButton } from './bt_profile'
-export { default as DialogCart } from './dialogcart'
-export { default as CartItem } from './cartitem'
 export { default as DialogLogin } from './dialoglogin'
 export { default as Slider } from './slider'
 export { default as HomeProductCard } from './homeproductcard'

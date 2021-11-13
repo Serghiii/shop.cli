@@ -1,5 +1,5 @@
-import { createTheme } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
+import { createTheme } from '@mui/material/styles';
+import { red } from '@mui/material/colors';
 
 const theme = createTheme({
    palette: {
@@ -16,14 +16,18 @@ const theme = createTheme({
          default: '#fff',
       },
    },
-   props: {
+   components: {
       MuiButtonBase: {
-         disableRipple: true,
+         defaultProps: {
+            disableRipple: true
+         },
       },
       MuiAppBar: {
-         style: {
-            background: 'transparent',
-            boxShadow: 'none'
+         defaultProps: {
+            style: {
+               background: 'transparent',
+               boxShadow: 'none'
+            }
          }
       },
    },

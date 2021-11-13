@@ -1,7 +1,6 @@
 import React from "react";
-import ListSubheader from '@material-ui/core/ListSubheader';
-import List from '@material-ui/core/List';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
 import { MainFilterGroup } from ".";
 import useSWR from "swr";
 import axios from "axios";
@@ -9,21 +8,27 @@ import { useRouter } from "next/router";
 
 const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
    const [data, setData] = React.useState([])
+   const [brandZoneClick, setBrandZoneClick] = React.useState(false) // відслідковує момент натискання у зоні бренд для запобігання бліків оновлення у зоні бренд
    const { locale } = useRouter()
-   const brandZone = React.useMemo(() => { return cond[0].find((el: string) => el.includes('brand-')) !== undefined }, [cond])
+   const brandZone = React.useMemo(() => {
+      return cond[0].find((el: string) => el.includes('brand-')) !== undefined
+   }, [cond])
 
-   const fetcher = async (url: string, params: []) => await axios.get(url + params.reduce((acc: string, curr: string) => (
-      (brandZone && curr.includes('brand-')) ? acc = acc + curr + '&' : (!brandZone && !curr.includes('brand-')) ? acc = acc + curr + '&' : acc
-   ), '?')).then(response => setData(response.data))
+   const fetcher = async (url: string, params: []) => {
+      await axios.get(url + params.reduce((acc: string, curr: string) => (
+         (brandZone && curr.includes('brand-')) ? acc = acc + curr + '&' : (!brandZone && !curr.includes('brand-')) ? acc = acc + curr + '&' : acc
+      ), '?')).then(response => { setData(response.data); setBrandZoneClick(false) })
+   }
    useSWR([`/products/filter/${group}/`, cond[0]], fetcher, { revalidateOnFocus: false })
 
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       page[1](1)
+      setBrandZoneClick(e.target.name.includes('brand-'))
       if (e.target.checked) cond[1]([...cond[0], e.target.name])
       else cond[1](cond[0].filter((el: any) => el !== e.target.name))
-   };
+   }, [cond, page])
 
-   const getGroupedItems = () => {
+   const getGroupedItems = React.useCallback(() => {
       let fData: [{}] | any = []
       let tmpId: any;
       fdata?.forEach((el: any) => {
@@ -34,23 +39,12 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
          }
       });
       return fData
-   }
-
-   const useStyles = makeStyles((theme: Theme) =>
-      createStyles({
-         root: {
-            // width: '100%',
-            // maxWidth: 300,
-            backgroundColor: theme.palette.background.paper
-         },
-      }),
-   );
-   const classes = useStyles()
+   }, [fdata])
 
    return (
       <>
          <List
-            className={classes.root}
+            sx={{ bgcolor: 'background.paper' }}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
@@ -65,6 +59,7 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
                   items={item}
                   fitems={data}
                   brandZone={brandZone}
+                  brandZoneClick={brandZoneClick}
                   handleChange={handleChange} />
             ))}
          </List>

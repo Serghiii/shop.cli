@@ -1,6 +1,6 @@
 import React from "react"
-import Container from "@material-ui/core/Container"
-import Grid from "@material-ui/core/Grid"
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import axios from "axios"
 import useSWR from "swr"
 import { MainBreadcrumbs, MainGroupCard } from "."
@@ -23,7 +23,7 @@ const MainGroups: React.FC = () => {
                <h2 className="main-title">{translate('group.title', locale)}</h2>
                <div className="wrapper">
                   <Container maxWidth="xl">
-                     <div style={{ marginTop: '3px' }}>
+                     <div style={{ marginTop: '3px', marginBottom: '10px' }}>
                         <Grid container spacing={3}>
                            {data?.map((item: any) => (
                               <Grid item key={item.id} >

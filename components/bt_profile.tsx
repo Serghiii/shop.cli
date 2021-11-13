@@ -6,7 +6,7 @@ import { useAuthContext, LogOutAuthAction } from '../contexts';
 import Link from 'next/link';
 import axios from 'axios';
 import useSWR from 'swr';
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@mui/material/Avatar';
 import { translate } from '../locales/translate';
 import { useRouter } from 'next/router';
 
@@ -91,4 +91,4 @@ const ProfileButton: React.FC<any> = props => {
       </div>
    )
 }
-export default React.memo(ProfileButton)
+export default ProfileButton

@@ -6,21 +6,13 @@ import type { AppProps } from 'next/app'
 import React from 'react'
 import { AuthProvider } from '../contexts'
 import axios from 'axios'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@mui/material/styles';
 import Head from 'next/head'
 import theme from '../src/theme';
 import CartProvider from '../contexts/cart-context'
 
 function App({ Component, pageProps }: AppProps) {
   axios.defaults.baseURL = process.env.API_URL;
-
-  React.useEffect(() => {
-    // Remove the server-side injected CSS.
-    const jssStyles: any = document.querySelector('#jss-server-side');
-    if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
-    }
-  }, []);
 
   return (
     <>
