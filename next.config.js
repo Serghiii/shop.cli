@@ -1,5 +1,10 @@
 module.exports = {
   reactStrictMode: true,
+  // for react 18 to use suspense
+  // experimental: {
+  //   concurrentFeatures: true,
+  //   serverComponents: true,
+  // },
   i18n: {
     locales: ['uk', 'ru'],
     defaultLocale: 'uk',

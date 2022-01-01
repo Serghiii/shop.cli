@@ -3,6 +3,8 @@ import React from "react";
 import useSWR from "swr";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+// import CircularProgress from '@mui/material/CircularProgress';
+// import Box from '@mui/material/Box';
 import { MainProductCard } from ".";
 import { arrToParams } from "../src/utils";
 
@@ -16,7 +18,7 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
             return response.data
          })
    }
-   const { data } = useSWR([`/products/${group}`, page[0], page[1], cond[0]], fetcher, { revalidateOnFocus: false });
+   const { data } = useSWR([`/products/${group}`, page[0], page[1], cond[0]], fetcher, { revalidateOnFocus: false/*, suspense: true*/ });
 
    const setPage = (e: any, val: any) => {
       page[1](val)
@@ -24,6 +26,7 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 
    return (
       <>
+         {/* <React.Suspense fallback={<Box sx={{ display: 'flex' }}><CircularProgress /></Box>}> */}
          <div className="main-product-cards">
             {data?.results.map((item: any) => (
                <MainProductCard key={item.id} {...item} group={group} />
@@ -34,6 +37,7 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
                {data?.count > 0 && <Pagination count={Math.ceil(data ? data.count / limit : 0)} page={page[0]} shape="rounded" onChange={setPage} />}
             </Stack>
          </div>
+         {/* </React.Suspense> */}
       </>
    )
 }
