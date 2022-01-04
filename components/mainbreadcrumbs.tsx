@@ -22,11 +22,11 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
       const group = getGroup(str)
       if (group) {
          const category = mainCtx.categoryItems?.find((el: any) => el.id == group.categoryId)
-         items.push({ to: category.ref, label: router.locale == 'ru' ? category.name_ru : category.name })
+         items.push({ to: category?.ref, label: router.locale == 'ru' ? category?.name_ru : category?.name })
          items.push({ to: group.ref, label: router.locale == 'ru' ? group.name_ru : group.name })
       } else {
          const category = getCategory(str)
-         if (category) items.push({ to: category.ref, label: router.locale == 'ru' ? category.name_ru : category.name })
+         if (category) items.push({ to: category?.ref, label: router.locale == 'ru' ? category?.name_ru : category?.name })
       }
    }
 

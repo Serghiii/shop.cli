@@ -1,14 +1,23 @@
 import React from "react"
 import axios from "axios";
+import useSWR from "swr";
 import { GetServerSideProps } from "next"
 import { MainLayout, MainMobile, MainMobiles } from "../../components";
 import { extractId, extractPage, paramsToArr } from "../../src/utils";
 
+const Mobiles: React.FC<any> = ({ params, ispage }) => {
+   const fetcher = async (url: string) => await axios.get(url).then(response => response.data);
+   const { data }: any = useSWR(
+      (ispage ? `/products/id/${extractId(params ? params[0] : '')}?ref=mobiles` : '/products/filter/mobiles'),
+      fetcher, { revalidateOnFocus: false }
+   );
 
-const Mobiles: React.FC<any> = ({ params, ispage, data }) => {
    return (
       <MainLayout>
-         {ispage ? <MainMobile data={data} /> : <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />}
+         {ispage ?
+            (data ? <MainMobile data={data} /> : <div>Loading...</div>) :
+            (data ? <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} /> : <div>Loading...</div>)
+         }
       </MainLayout>
    )
 }
@@ -21,24 +30,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ispage = (slug[0].slice(-5) === '.html')
    }
 
-   let q: any
    if (ispage) {
       try {
-         q = await axios.get('/products/id/' + extractId(slug ? slug[0] : '') + '?ref=mobiles')
-         if (!q || q.data.length <= 0) {
+         let q = await fetch(`${process.env.API_URL_EXT}/products/id/${extractId(slug ? slug[0] : '')}?ref=mobiles`)
+         if (!q.ok || (await q.json()).length === 0) {
             return {
                notFound: true
             }
          }
       } catch (e) { }
-   } else {
-      try {
-         q = await axios.get('/products/filter/mobiles')
-      } catch (e) { }
    }
 
    return {
-      props: { params: slug ? slug : null, ispage, data: q ? q.data : null },
+      props: { params: slug ? slug : null, ispage },
    }
 }
 

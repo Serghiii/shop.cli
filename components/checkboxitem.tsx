@@ -5,7 +5,7 @@ import ListItem from "@mui/material/ListItem";
 
 const CheckBoxItem: React.FC<any> = ({ data, fdata, brandZone, brandZoneClick, checked, handleChange }) => {
    const [state, setState] = React.useState(checked)
-   let count = (brandZone || brandZoneClick) ? (data.prop.includes('brand-') ? data.count : fdata?.count) : (data.prop.includes('brand-') ? fdata?.count : data.count)
+   let count = (brandZone || brandZoneClick) ? (data.prop.includes('brand-') ? data.count : fdata?.count) : (data.prop?.includes('brand-') ? fdata?.count : data.count)
 
    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setState(!state)
