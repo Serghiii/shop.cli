@@ -47,8 +47,7 @@ const MainSmartphones: React.FC<any> = ({ group, params, data, pg }) => {
                <div>params: {params}</div>
                {data?.map((item: any) => (
                   <div key={item.id}>{item.prop}</div>
-               ))}
- */}
+               ))} */}
                {/* <div>replace: {'/' + group + (filters.length ? '/' : '') + arrToParams(filters, '/') + (page > 1 ? '/page_' + page : '')}</div>
                <div>pg: {pg}</div> */}
                <div className="breadcrumbs">

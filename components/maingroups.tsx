@@ -21,19 +21,17 @@ const MainGroups: React.FC = () => {
                   <MainBreadcrumbs />
                </div>
                <h2 className="main-title">{translate('group.title', locale)}</h2>
-               <div className="wrapper">
-                  <Container maxWidth="xl">
-                     <div style={{ marginTop: '3px', marginBottom: '10px' }}>
-                        <Grid container spacing={3}>
-                           {data?.map((item: any) => (
-                              <Grid item key={item.id} >
-                                 <MainGroupCard item={item} />
-                              </Grid>
-                           ))}
-                        </Grid>
-                     </div>
-                  </Container>
-               </div>
+               <Container maxWidth="xl">
+                  <div style={{ marginTop: '3px', marginBottom: '10px' }}>
+                     <Grid container spacing={3}>
+                        {data?.map((item: any) => (
+                           <Grid item key={item.id} >
+                              <MainGroupCard item={item} />
+                           </Grid>
+                        ))}
+                     </Grid>
+                  </div>
+               </Container>
             </div>
          </div>
       </main >

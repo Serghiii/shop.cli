@@ -3,9 +3,7 @@ import React from "react";
 import useSWR from "swr";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-// import CircularProgress from '@mui/material/CircularProgress';
-// import Box from '@mui/material/Box';
-import { MainProductCard } from ".";
+import { Loading, MainProductCard } from ".";
 import { arrToParams } from "../src/utils";
 
 const MainProducts: React.FC<any> = ({ group, cond, page }) => {
@@ -26,18 +24,21 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 
    return (
       <>
-         {/* <React.Suspense fallback={<Box sx={{ display: 'flex' }}><CircularProgress /></Box>}> */}
-         <div className="main-product-cards">
-            {data?.results.map((item: any) => (
-               <MainProductCard key={item.id} {...item} group={group} />
-            ))}
-         </div>
-         <div style={{ display: "flex", justifyContent: "center" }}>
-            <Stack spacing={2}>
-               {data?.count > 0 && <Pagination count={Math.ceil(data ? data.count / limit : 0)} page={page[0]} shape="rounded" onChange={setPage} />}
-            </Stack>
-         </div>
-         {/* </React.Suspense> */}
+         {data ? (
+            <>
+               <div className="main-product-cards">
+                  {data?.results.map((item: any) => (
+                     <MainProductCard key={item.id} {...item} group={group} />
+                  ))}
+               </div>
+               <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Stack spacing={2}>
+                     {data?.count > 0 && <Pagination count={Math.ceil(data ? data.count / limit : 0)} page={page[0]} shape="rounded" onChange={setPage} />}
+                  </Stack>
+               </div>
+            </>
+         ) : (<Loading />)
+         }
       </>
    )
 }

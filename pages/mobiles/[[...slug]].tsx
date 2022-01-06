@@ -2,7 +2,7 @@ import React from "react"
 import axios from "axios";
 import useSWR from "swr";
 import { GetServerSideProps } from "next"
-import { MainLayout, MainMobile, MainMobiles } from "../../components";
+import { MainLayout, MainProductOne, MainMobiles } from "../../components";
 import { extractId, extractPage, paramsToArr } from "../../src/utils";
 
 const Mobiles: React.FC<any> = ({ params, ispage }) => {
@@ -15,8 +15,8 @@ const Mobiles: React.FC<any> = ({ params, ispage }) => {
    return (
       <MainLayout>
          {ispage ?
-            (data ? <MainMobile data={data} /> : <div>Loading...</div>) :
-            (data ? <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} /> : <div>Loading...</div>)
+            <MainProductOne data={data ? data[0] : null} /> :
+            <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />
          }
       </MainLayout>
    )
