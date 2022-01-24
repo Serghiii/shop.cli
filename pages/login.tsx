@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import { MainLogin, SimpleLayout } from "../components"
-import { useAuthContext } from "../contexts";
 import { translate } from "../locales/translate";
 
 const Login: React.FC = () => {
-   const authCtx = useAuthContext().authState[0];
+   const auth = useSelector((state: any) => state.auth);
    const router = useRouter();
 
-   if (typeof window !== 'undefined' && authCtx.isLoggedIn) {
+   if (typeof window !== 'undefined' && auth.isLoggedIn) {
       router.push('/profile');
       return (<></>)
    }

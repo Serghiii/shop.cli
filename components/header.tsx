@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useAuthContext, useMainContext } from '../contexts';
+import { useSelector } from 'react-redux';
+import { useMainContext } from '../contexts';
 import {
    CartButton, CompareButton, ProfileButton, MenuCategoriesButton, MenuSideDrawerButton, Language,
    Locality, Logo, Phones, Search, SideDrawer
 } from './index';
 
 const Header: React.FC = () => {
-   const authCtx = useAuthContext().authState[0];
+   const auth = useSelector((state: any) => state.auth);
    const mainCtx = useMainContext();
    const [stateDarawer, setStateDarawer] = useState<boolean>(false);
    const hdTop = useRef<HTMLDivElement>(null);
@@ -35,7 +36,7 @@ const Header: React.FC = () => {
 
    const profileClickHandler = () => {
       // авторизація
-      if (authCtx.isLoggedIn) {
+      if (auth.isLoggedIn) {
 
       } else {
          let padding = '0';

@@ -1,22 +1,24 @@
 import axios from 'axios';
 import useSWR from 'swr';
 import { useRouter } from 'next/router'
-import { LogOutAuthAction, useAuthContext } from '../contexts';
 import { ProfileTabs } from './profiletabs';
 import Image from 'next/image';
 import Logout from '../public/icon/profile/logout.svg'
 import Avatar from '@mui/material/Avatar';
 import { translate } from '../locales/translate';
+import { LogOutAuthAction } from "../redux";
+import { useDispatch } from 'react-redux';
+
 
 const MainProfile: React.FC = () => {
-   const dispatch = useAuthContext().authState[1];
+   const dispatch = useDispatch();
    const router = useRouter();
 
    const fetcher = async (url: string) => await axios.post(url).then(response => response.data)
    const { data } = useSWR('user/profile', fetcher);
 
    const exitClickHandler = () => {
-      LogOutAuthAction(dispatch);
+      dispatch(LogOutAuthAction());
    }
 
    return (

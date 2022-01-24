@@ -1,8 +1,7 @@
 import axios from 'axios';
 import decode from 'jwt-decode';
 import { useCookie } from "next-cookie";
-import React, { Dispatch, useContext, useReducer } from "react";
-import { AuthAction } from './auth-action';
+import { AuthAction } from './types'
 
 type Action = {
    type: AuthAction,
@@ -40,7 +39,7 @@ const getAuthState = () => {
 
 const newAuth = getAuthState();
 
-function reducer(state: State = newAuth, action: Action) {
+const authreducer = (state: State = newAuth, action: Action) => {
    const cookies = useCookie();
    switch (action.type) {
       case AuthAction.LoginSuccess:
@@ -66,29 +65,4 @@ function reducer(state: State = newAuth, action: Action) {
    }
 }
 
-interface IStore {
-   authState: [State, Dispatch<Action>];
-}
-
-const AuthContext = React.createContext<IStore | undefined>(undefined);
-const AuthProvider: React.FC = ({ children }) => {
-   const [state, dispatch] = useReducer(reducer, newAuth)
-   const store: IStore = {
-      authState: [state, dispatch]
-   }
-   return (
-      <AuthContext.Provider value={store} >
-         {children}
-      </AuthContext.Provider>
-   )
-}
-
-export const useAuthContext = () => {
-   const authContext = useContext(AuthContext)
-   if (!authContext) {
-      throw new Error('useAuthContext must be used within the AuthContext.Provider');
-   }
-   return authContext;
-}
-
-export default AuthProvider
+export default authreducer

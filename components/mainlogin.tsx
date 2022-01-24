@@ -1,7 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState } from "react"
 import Image from 'next/image';
 import User from '../public/icon/profile/user-login.svg';
-import { LoginAuthAction, useAuthContext } from "../contexts";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
@@ -11,10 +10,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
+import { LoginAuthAction } from "../redux";
+import { useDispatch } from "react-redux";
 
 const MainLogin: React.FC = () => {
    const { locale } = useRouter()
-   const dispatch = useAuthContext().authState[1];
+   const dispatch = useDispatch();
    const [rememberme, setRememberMe] = useState(false);
 
    const loginSchema = yup.object().shape({
@@ -41,11 +42,11 @@ const MainLogin: React.FC = () => {
 
    const onSubmit = (e: FormEvent) => {
       e.preventDefault();
-      LoginAuthAction(dispatch, {
+      dispatch(LoginAuthAction({
          username: ufLogin.getValues('login'),
          password: ufLogin.getValues('loginPassword'),
          rememberme
-      }, locale, setLoginError);
+      }, locale, setLoginError));
    }
 
    return (

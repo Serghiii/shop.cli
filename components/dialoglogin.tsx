@@ -1,6 +1,7 @@
 import React, { MouseEvent, useRef, useState, ChangeEvent, useEffect } from "react";
 import InputMask from "react-input-mask";
-import { LoginAuthAction, RegisterAuthAction, GoogleAuthAction, useAuthContext, useMainContext } from "../contexts";
+import { useMainContext } from "../contexts";
+import { LoginAuthAction, RegisterAuthAction, GoogleAuthAction } from "../redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
@@ -12,11 +13,13 @@ import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
 import Image from 'next/image';
 import GoogleIcon from '../public/icon/google.svg'
+import { useDispatch, useSelector } from "react-redux";
 
 const DialogLogin: React.FC = () => {
    const { locale } = useRouter()
    const mainCtx = useMainContext();
-   const dispatch = useAuthContext().authState[1];
+   const dispatch = useDispatch();
+   const auth = useSelector((state: any) => state.auth);
    const [Register, setRegister] = useState(false);
    const backdrop = useRef<HTMLDivElement>(null);
    const mouseState = {
@@ -69,9 +72,9 @@ const DialogLogin: React.FC = () => {
    const googleClickHandler = () => {
       const GoogleAuth = gapi.auth2.getAuthInstance()
       GoogleAuth.signIn().then((data: any) => {
-         GoogleAuthAction(dispatch, {
+         dispatch(GoogleAuthAction({
             token: getAccessToken(data)
-         }, locale, (message) => { window.alert(message) }, closeClickHandler);
+         }, locale, (message) => { window.alert(message) }, closeClickHandler));
       }, (message) => { window.alert(message) })
    }
 
@@ -105,11 +108,11 @@ const DialogLogin: React.FC = () => {
       }
 
       const loginSubmitHandle = () => {
-         LoginAuthAction(dispatch, {
+         dispatch(LoginAuthAction({
             username: ufLogin.getValues('login'),
             password: ufLogin.getValues('loginPassword'),
             rememberme
-         }, locale, setLoginError, closeClickHandler);
+         }, locale, setLoginError, closeClickHandler));
       }
 
       const rememberMeOnChangeHandle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -214,12 +217,12 @@ const DialogLogin: React.FC = () => {
       }
 
       const registerSubmitHandle = () => {
-         RegisterAuthAction(dispatch, {
+         dispatch(RegisterAuthAction({
             name: ufRegister.getValues('name'),
             phone: ufRegister.getValues('phone').replace(/\s/g, ''),
             email: ufRegister.getValues('email'),
             password: ufRegister.getValues('password')
-         }, locale, setRegisterError, closeClickHandler);
+         }, locale, setRegisterError, closeClickHandler));
       }
 
       return (
