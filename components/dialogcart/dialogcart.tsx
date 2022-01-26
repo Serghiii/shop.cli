@@ -1,12 +1,13 @@
 import React, { MouseEvent, useRef } from 'react'
-import { useCartContext, useMainContext } from '../../contexts';
+import { useMainContext } from '../../contexts';
 import { translate } from '../../locales/translate';
 import { useRouter } from 'next/router';
 import { FullCart } from '.';
+import { useSelector } from 'react-redux';
 
 const DialogCart: React.FC = () => {
    const mainCtx = useMainContext();
-   const cartRows = useCartContext().cartState[0];
+   const cartRows = useSelector((state: any) => state.cart);
    const backdrop = useRef<HTMLDivElement>(null);
    const { locale } = useRouter()
    const mouseState = {

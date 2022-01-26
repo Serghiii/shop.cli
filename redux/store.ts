@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
-import { composeWithDevTools } from '@redux-devtools/extension'
+// import { composeWithDevTools } from '@redux-devtools/extension'
+import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
-import authreducer from './auth-reducer'
+import { authreducer, cartreducer } from '.'
 // import autherrorreducer from './autherrorreducer'
 
 let store: any
@@ -10,6 +11,7 @@ let store: any
 const reducers = combineReducers({
    auth: authreducer,
    // autherror: autherrorreducer,
+   cart: cartreducer
 });
 
 function initStore(initialState: any) {

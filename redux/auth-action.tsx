@@ -20,6 +20,8 @@ const RegisterAuthAction = (userState: any, lang: string = 'uk', setErrorHandler
 const LoginAuthAction = (loginState: any, lang: string = 'uk', setErrorHandler: (message: string) => void, onSuccess: any = null) => {
    return async (dispatch: any) => {
       try {
+         console.log('login', loginState);
+
          const data = await axios.post("auth/login", loginState, { headers: { lang } });
          dispatch({ type: AuthAction.LoginSuccess, payload: data.data });
          if (onSuccess) onSuccess();
@@ -66,7 +68,6 @@ const LogOutAuthAction = () => {
 };
 
 export {
-   AuthAction,
    RegisterAuthAction,
    LogOutAuthAction,
    LoginAuthAction,

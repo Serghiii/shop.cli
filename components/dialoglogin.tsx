@@ -19,7 +19,7 @@ const DialogLogin: React.FC = () => {
    const { locale } = useRouter()
    const mainCtx = useMainContext();
    const dispatch = useDispatch();
-   const auth = useSelector((state: any) => state.auth);
+   // const auth = useSelector((state: any) => state.auth);
    const [Register, setRegister] = useState(false);
    const backdrop = useRef<HTMLDivElement>(null);
    const mouseState = {

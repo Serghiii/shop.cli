@@ -1,13 +1,14 @@
 import React from "react"
 import Link from "next/link"
 import MoneyFormat from "./money-format"
-import { CartAction, useCartContext } from "../contexts"
 import { makeHeadline } from "../src/utils";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { CartAction } from "../redux";
 
 const MainProductCard: React.FC<any> = ({ id, code, name, amount, price, priceold, pic, group, productinfo }) => {
-   const cartItem = useCartContext().cartState[0].find((item: any) => (item.id === id))
-   const dispatch = useCartContext().cartState[1];
+   const cartItem = useSelector((state: any) => state.cart).find((item: any) => (item.id === id));
+   const dispatch = useDispatch();
    const { locale } = useRouter()
    const ref = `/${group}/${makeHeadline(id, productinfo)}`
 

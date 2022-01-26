@@ -16,7 +16,6 @@
     "@hookform/resolvers": "^2.6.1",
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.0.0",
-    "@redux-devtools/extension": "^3.1.0",
     "@types/gapi.auth2": "^0.0.55",
     "@types/react-avatar-editor": "^10.3.6",
     "@types/react-input-mask": "^3.0.1",
@@ -32,6 +31,7 @@
     "react-input-mask": "^3.0.0-alpha.2",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
     "sass": "^1.35.2",
     "swiper": "^6.7.5",
@@ -39,6 +39,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/node": "^17.0.12",
     "@types/react": "17.0.14",
     "eslint": "7.30.0",
     "eslint-config-next": "^0.2.4",

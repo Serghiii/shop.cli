@@ -8,7 +8,6 @@ import axios from 'axios'
 import { ThemeProvider } from '@mui/material/styles';
 import Head from 'next/head'
 import theme from '../src/theme';
-import CartProvider from '../contexts/cart-context'
 import { Provider } from 'react-redux'
 import { useStore } from '../redux/store'
 
@@ -23,14 +22,12 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="utf-8" />
       </Head>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          {/* <CssBaseline /> */}
-          <CartProvider>
-            <Component {...pageProps} />
-          </CartProvider>
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={theme}>
+        {/* <CssBaseline /> */}
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
+      </ThemeProvider>
     </>
   )
 }

@@ -1,17 +1,18 @@
 import React from "react"
 import { MainBreadcrumbs } from ".";
-import { CartAction, useCartContext } from "../contexts";
 import MoneyFormat from "./money-format"
 import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { CartAction } from "../redux";
 const ReactImageZoom = require('react-image-zoom');
 
 const MainProductOne: React.FC<any> = ({ data }) => {
    const [extHtml, setExtHtml] = React.useState({ __html: '' })
-   const cartItem = useCartContext().cartState[0].find((item: any) => (item.id === data?.id))
-   const dispatch = useCartContext().cartState[1];
+   const cartItem = useSelector((state: any) => state.cart).find((item: any) => (item.id === data?.id))
+   const dispatch = useDispatch();
    const { locale } = useRouter()
 
    const fetcher = async (url: string) => await axios.get(url).then((response) => { setExtHtml({ __html: response.data }) })

@@ -3,14 +3,14 @@ import axios from 'axios';
 import useSWR from 'swr';
 import { useRouter } from "next/router";
 import MoneyFormat from '../money-format';
-import { useCartContext } from '../../contexts';
 import { translate } from "../../locales/translate"
 import { CartItem } from '.';
+import { useDispatch, useSelector } from "react-redux";
 
 const FullCart = () => {
    const [data, setData] = React.useState<any>(undefined)
-   const cartRows = useCartContext().cartState[0];
-   const dispatch = useCartContext().cartState[1];
+   const cartRows = useSelector((state: any) => state.cart);
+   const dispatch = useDispatch();
    const { locale } = useRouter()
 
    const getIDs: any = () => {
@@ -45,9 +45,9 @@ const FullCart = () => {
       catch (e: any) { }
    };
 
-   const doAction = React.useCallback((action: any) => {
+   const doAction = (action: any) => {
       dispatch(action)
-   }, [dispatch])
+   }
 
    return (
       <div className="dialog-body cart">

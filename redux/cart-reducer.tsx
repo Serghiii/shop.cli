@@ -1,10 +1,4 @@
-import React, { Dispatch, useContext, useReducer } from "react";
-
-export enum CartAction {
-   AddItem,
-   AdjustAmount,
-   RemoveItem
-}
+import { CartAction } from ".";
 
 type Action = {
    type: CartAction,
@@ -30,9 +24,9 @@ const getCart = () => {
 export const MAX_AMOUNT_PER_ITEM = 99;
 const initialState: [] = getCart() || [];
 
-function reducer(state: any, action: any) {
+const cartreducer = (state: State[] = initialState, action: Action) => {
    let cartState;
-   const { id } = action.payload;
+   const id = action.payload?.id;
    switch (action.type) {
       case CartAction.AddItem:
          const entry = state.find((item: any) => item.id === id);
@@ -72,29 +66,4 @@ function reducer(state: any, action: any) {
    }
 }
 
-interface IStore {
-   cartState: [State, Dispatch<Action>];
-}
-
-const CartContext = React.createContext<any | undefined>(undefined);
-const CartProvider: React.FC = ({ children }: any) => {
-   const [state, dispatch] = useReducer(reducer, initialState);
-   const store: IStore = {
-      cartState: [state, dispatch]
-   }
-   return (
-      <CartContext.Provider value={store}>
-         {children}
-      </CartContext.Provider>
-   );
-};
-
-export const useCartContext = () => {
-   const cartContext = useContext(CartContext)
-   if (!cartContext) {
-      throw new Error('useCartContext must be used within the CartContext.Provider');
-   }
-   return cartContext;
-}
-
-export default CartProvider
+export default cartreducer

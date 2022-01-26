@@ -2,7 +2,7 @@ import React from "react"
 import MoneyFormat from "../money-format"
 import IconButton from '@mui/material/IconButton';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { CartAction } from "../../contexts";
+import { CartAction } from "../../redux";
 
 const CartItem: React.FC<any> = ({ data, doAction }) => {
 
