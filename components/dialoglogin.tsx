@@ -14,12 +14,12 @@ import { useRouter } from "next/router";
 import Image from 'next/image';
 import GoogleIcon from '../public/icon/google.svg'
 import { useDispatch, useSelector } from "react-redux";
+import { AuthAction } from "../redux";
 
 const DialogLogin: React.FC = () => {
    const { locale } = useRouter()
    const mainCtx = useMainContext();
    const dispatch = useDispatch();
-   // const auth = useSelector((state: any) => state.auth);
    const [Register, setRegister] = useState(false);
    const backdrop = useRef<HTMLDivElement>(null);
    const mouseState = {
@@ -57,6 +57,7 @@ const DialogLogin: React.FC = () => {
 
    const registerClickHandler = (e: MouseEvent) => {
       e.preventDefault();
+      dispatch({ type: AuthAction.UpdateFail, payload: '' })
       setRegister(!Register);
    }
 
@@ -69,15 +70,6 @@ const DialogLogin: React.FC = () => {
       return res
    }
 
-   const googleClickHandler = () => {
-      const GoogleAuth = gapi.auth2.getAuthInstance()
-      GoogleAuth.signIn().then((data: any) => {
-         dispatch(GoogleAuthAction({
-            token: getAccessToken(data)
-         }, locale, (message) => { window.alert(message) }, closeClickHandler));
-      }, (message) => { window.alert(message) })
-   }
-
    useEffect(() => {
       gapi.load('auth2', () => {
          gapi.auth2.init({
@@ -88,6 +80,7 @@ const DialogLogin: React.FC = () => {
 
    const LoginForm = () => {
       const [rememberme, setRememberMe] = useState(false);
+      const autherr = useSelector((state: any) => state.autherr);
 
       const loginSchema = yup.object().shape({
          login: yup.string().trim()
@@ -103,16 +96,23 @@ const DialogLogin: React.FC = () => {
          resolver: yupResolver(loginSchema)
       });
 
-      const setLoginError = (message: string) => {
-         ufLogin.setError("server", { type: "server", message });
-      }
-
-      const loginSubmitHandle = () => {
+      const loginSubmitHandle = (e: any) => {
          dispatch(LoginAuthAction({
             username: ufLogin.getValues('login'),
             password: ufLogin.getValues('loginPassword'),
             rememberme
-         }, locale, setLoginError, closeClickHandler));
+         }, closeClickHandler));
+      }
+
+      const googleClickHandler = () => {
+         const GoogleAuth = gapi.auth2.getAuthInstance()
+         GoogleAuth.signIn().then((data: any) => {
+            dispatch(GoogleAuthAction({
+               token: getAccessToken(data)
+            }, closeClickHandler));
+         }, (message) => {
+            dispatch({ type: AuthAction.UpdateFail, payload: message.error })
+         })
       }
 
       const rememberMeOnChangeHandle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -170,10 +170,12 @@ const DialogLogin: React.FC = () => {
                      />
                   </FormGroup>
                   <div className="form-row">
-                     {ufLogin.formState.errors.server && <Alert
+                     {autherr.message && <Alert
                         severity="error"
-                        onClose={() => { ufLogin.clearErrors(); }}>
-                        {ufLogin.formState.errors.server?.message}
+                        onClose={() => {
+                           dispatch({ type: AuthAction.UpdateFail, payload: '' })
+                        }}>
+                        {autherr.message}
                      </Alert>}
                   </div>
                   <button className="custom-button" disabled={!ufLogin.formState.isValid}>{translate('auth.login.enter', locale)}</button>
@@ -191,6 +193,7 @@ const DialogLogin: React.FC = () => {
    }
 
    const RegisterForm = () => {
+      const autherr = useSelector((state: any) => state.autherr);
 
       const registerSchema = yup.object().shape({
          name: yup.string().trim()
@@ -212,17 +215,13 @@ const DialogLogin: React.FC = () => {
          resolver: yupResolver(registerSchema)
       });
 
-      const setRegisterError = (message: string) => {
-         ufRegister.setError("server", { type: "server", message });
-      }
-
       const registerSubmitHandle = () => {
          dispatch(RegisterAuthAction({
             name: ufRegister.getValues('name'),
             phone: ufRegister.getValues('phone').replace(/\s/g, ''),
             email: ufRegister.getValues('email'),
             password: ufRegister.getValues('password')
-         }, locale, setRegisterError, closeClickHandler));
+         }, closeClickHandler));
       }
 
       return (
@@ -288,11 +287,20 @@ const DialogLogin: React.FC = () => {
                         {<p className="error-message">{ufRegister.formState.errors.password?.message}</p>}
                      </div>
                   </div>
-                  <div className="form-row">
+                  {/* <div className="form-row">
                      {ufRegister.formState.errors.server && <Alert
                         severity="error"
                         onClose={() => { ufRegister.clearErrors(); }}>
                         {ufRegister.formState.errors.server?.message}
+                     </Alert>}
+                  </div> */}
+                  <div className="form-row">
+                     {autherr.message && <Alert
+                        severity="error"
+                        onClose={() => {
+                           dispatch({ type: AuthAction.UpdateFail, payload: '' })
+                        }}>
+                        {autherr.message}
                      </Alert>}
                   </div>
                   <button className="custom-button" disabled={!ufRegister.formState.isValid} >{translate('auth.register.register', locale)}</button>

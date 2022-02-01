@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useMainContext } from '../contexts';
 import {
    CartButton, CompareButton, ProfileButton, MenuCategoriesButton, MenuSideDrawerButton, Language,
-   Locality, Logo, Phones, Search, SideDrawer
+   Logo, Phones, Search, SideDrawer
 } from './index';
 
 const Header: React.FC = () => {
@@ -150,7 +150,6 @@ const Header: React.FC = () => {
                      <Phones />
                   </div>
                   <div className="top-right">
-                     <Locality />
                      <Language />
                   </div>
                </div>

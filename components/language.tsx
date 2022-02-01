@@ -1,3 +1,4 @@
+import axios from "axios"
 import { useCookie } from "next-cookie"
 import Link from "next/link"
 import { useRouter } from "next/router"

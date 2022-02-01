@@ -10,9 +10,11 @@ import Head from 'next/head'
 import theme from '../src/theme';
 import { Provider } from 'react-redux'
 import { useStore } from '../redux/store'
+import { useRouter } from 'next/router'
 
 function App({ Component, pageProps }: AppProps) {
   axios.defaults.baseURL = process.env.API_URL;
+  axios.defaults.headers.common['Accept-Language'] = useRouter().locale;
 
   const store = useStore(pageProps.initialReduxState)
 

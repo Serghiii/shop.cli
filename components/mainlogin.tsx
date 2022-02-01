@@ -10,12 +10,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
-import { LoginAuthAction } from "../redux";
-import { useDispatch } from "react-redux";
+import { AuthAction, LoginAuthAction } from "../redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const MainLogin: React.FC = () => {
    const { locale } = useRouter()
    const dispatch = useDispatch();
+   const autherr = useSelector((state: any) => state.autherr);
    const [rememberme, setRememberMe] = useState(false);
 
    const loginSchema = yup.object().shape({
@@ -36,17 +37,13 @@ const MainLogin: React.FC = () => {
       setRememberMe(e.target.checked);
    }
 
-   const setLoginError = (message: string) => {
-      ufLogin.setError("server", { type: "server", message });
-   }
-
    const onSubmit = (e: FormEvent) => {
       e.preventDefault();
       dispatch(LoginAuthAction({
          username: ufLogin.getValues('login'),
          password: ufLogin.getValues('loginPassword'),
          rememberme
-      }, locale, setLoginError));
+      }, locale));
    }
 
    return (
@@ -97,10 +94,10 @@ const MainLogin: React.FC = () => {
                />
             </FormGroup>
             <div className="form-row">
-               {ufLogin.formState.errors.server && <Alert
+               {autherr.message && <Alert
                   severity="error"
-                  onClose={() => { ufLogin.clearErrors(); }}>
-                  {ufLogin.formState.errors.server?.message}
+                  onClose={() => { dispatch({ type: AuthAction.UpdateFail, payload: '' }) }}>
+                  {autherr.message}
                </Alert>}
             </div>
             <button className="custom-button" disabled={!ufLogin.formState.isValid}>{translate('auth.login.enter', locale)}</button>

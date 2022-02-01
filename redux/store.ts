@@ -3,14 +3,13 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 // import { composeWithDevTools } from '@redux-devtools/extension'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
-import { authreducer, cartreducer } from '.'
-// import autherrorreducer from './autherrorreducer'
+import { authreducer, autherrorreducer, cartreducer } from '.'
 
 let store: any
 
 const reducers = combineReducers({
    auth: authreducer,
-   // autherror: autherrorreducer,
+   autherr: autherrorreducer,
    cart: cartreducer
 });
 

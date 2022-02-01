@@ -4,7 +4,8 @@ export enum AuthAction {
    LogoutSuccess = 3,
    RegisterFail = 4,
    LoginFail = 5,
-   LogoutFail = 6
+   LogoutFail = 6,
+   UpdateFail = 7
 }
 
 export enum CartAction {
