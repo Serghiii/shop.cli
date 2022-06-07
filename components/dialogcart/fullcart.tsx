@@ -5,13 +5,20 @@ import { useRouter } from "next/router";
 import MoneyFormat from '../money-format';
 import { translate } from "../../locales/translate"
 import { CartItem } from '.';
+import { Loading } from "../.";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 
 const FullCart = () => {
    const [data, setData] = React.useState<any>(undefined)
    const cartRows = useSelector((state: any) => state.cart);
    const dispatch = useDispatch();
    const { locale } = useRouter()
+
+   let status = {
+      hidden: { opacity: 0 },
+      show: { opacity: 1 },
+   };
 
    const getIDs: any = () => {
       let data: number[] = []
@@ -52,18 +59,27 @@ const FullCart = () => {
    return (
       <div className="dialog-body cart">
          <form className="dialog-form" onSubmit={handleSubmit}>
-            {data !== undefined && cartRows?.map((item: any) => (
-               <CartItem data={getData(item)} doAction={doAction} key={item.id} />
-            ))}
-            <div style={{ padding: "5px 20px 20px 0", textAlign: "right" }}>
-               <span style={{ fontSize: "20px" }}>{translate('cart.total', locale)}</span>
-               <MoneyFormat {...{ value: data !== undefined ? getTotalSum(data, cartRows) : 0, className: 'price-value' }} />
-            </div>
-            <div style={{ float: "right", paddingRight: "20px" }}>
-               <div style={{ maxWidth: "400px" }}>
-                  <button className="custom-button">{translate('cart.place_order', locale)}</button>
-               </div>
-            </div>
+            {data ? (
+               <motion.div
+                  variants={status}
+                  initial="hidden"
+                  animate="show"
+               >
+                  {data !== undefined &&
+                     cartRows?.map((item: any) => (
+                        <CartItem data={getData(item)} doAction={doAction} key={item.id} />
+                     ))}
+                  <div style={{ padding: "5px 20px 20px 0", textAlign: "right" }}>
+                     <span style={{ fontSize: "20px" }}>{translate('cart.total', locale)}</span>
+                     <MoneyFormat {...{ value: data !== undefined ? getTotalSum(data, cartRows) : 0, className: 'price-value' }} />
+                  </div>
+                  <div style={{ float: "right", paddingRight: "20px" }}>
+                     <div style={{ maxWidth: "400px" }}>
+                        <button className="custom-button">{translate('cart.place_order', locale)}</button>
+                     </div>
+                  </div>
+               </motion.div>
+            ) : (<Loading />)}
          </form >
       </div >
    )

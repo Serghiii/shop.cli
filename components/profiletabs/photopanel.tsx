@@ -29,7 +29,7 @@ const PhotoPanel: React.FC<any> = (props) => {
       setState({ ...state, scale });
    };
 
-   const setEditorRef = useCallback((editor) => {
+   const setEditorRef = useCallback((editor: any) => {
       setState({ ...state, editor });
       // eslint-disable-next-line
    }, [editor]);

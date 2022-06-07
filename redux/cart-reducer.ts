@@ -1,3 +1,4 @@
+import axios from "axios";
 import { CartAction } from ".";
 
 type Action = {
@@ -20,6 +21,26 @@ const getCart = () => {
    }
    return JSON.parse(cart)
 }
+
+const getIDs: any = (cartRows: number[]) => {
+   let data: number[] = []
+   cartRows.forEach((el: any) => {
+      data.push(el.id)
+   });
+   return { data }
+}
+
+const getData: any = (ids: number[]) => {
+   let res: any = []
+   axios.post('products/cart', ids).then(({ data }) => {
+      data.forEach((el: any) => {
+         res.push(el)
+      })
+   })
+   return res
+}
+
+axios.defaults.baseURL = process.env.API_URL;
 
 export const MAX_AMOUNT_PER_ITEM = 99;
 const initialState: [] = getCart() || [];

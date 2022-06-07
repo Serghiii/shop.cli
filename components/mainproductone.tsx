@@ -7,7 +7,8 @@ import useSWR from "swr";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { CartAction } from "../redux";
-const ReactImageZoom = require('react-image-zoom');
+import InnerImageZoom from 'react-inner-image-zoom'
+import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css'
 
 const MainProductOne: React.FC<any> = ({ data }) => {
    const [extHtml, setExtHtml] = React.useState({ __html: '' })
@@ -34,10 +35,10 @@ const MainProductOne: React.FC<any> = ({ data }) => {
                </div>
                <div className="product-card">
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                     <div style={{ margin: '0 60px 0 60px', cursor: 'zoom-in' }}>
-                        {data ?
-                           <ReactImageZoom {...{ width: 270, height: 370, zoomWidth: 270, img: `${process.env.STATIC_URL}/cards/${data?.id}/images/1.webp` }} />
-                           : <div style={{ width: '270px', height: '370px' }}></div>
+                     <div style={{ margin: '0 60px 0 60px' }}>
+                        {data ? (
+                           <InnerImageZoom src={`${process.env.STATIC_URL}/cards/${data?.id}/images/1.webp`} zoomType={'hover'} width={270} height={370} hideHint={true} />
+                        ) : (<div style={{ width: '270px', height: '370px' }}></div>)
                         }
                      </div>
                      <div style={{ paddingTop: '20px', minHeight: 'calc(100vh - 150px)', width: '100%' }}>

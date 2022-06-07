@@ -2,7 +2,7 @@ module.exports = {
   reactStrictMode: true,
   // for react 18 to use suspense
   // experimental: {
-  //   concurrentFeatures: true,
+  //   runtime: 'nodejs',
   //   serverComponents: true,
   // },
   i18n: {

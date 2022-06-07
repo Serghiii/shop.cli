@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { legacy_createStore as createStore, applyMiddleware, combineReducers } from 'redux'
 // import { composeWithDevTools } from '@redux-devtools/extension'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'

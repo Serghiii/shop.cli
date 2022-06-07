@@ -16,7 +16,10 @@ const fetcherCategories = async (url: string) => await axios.get(url).then(respo
 const fetcherGroups = async (url: string) => await axios.get(url).then(response => response.data)
 
 const MainContext = React.createContext<IStore | undefined>(undefined);
-const MainProvider: React.FC = ({ children }) => {
+type Props = {
+   children?: React.ReactNode
+};
+const MainProvider: React.FC<Props> = ({ children }) => {
    const [stateProfile, setStateProfile] = useState<boolean>(false); // стан для профіля
    const [stateCart, setStateCart] = useState<boolean>(false); // стан для категорій
    const Categories = useRef<HTMLDivElement>(null);
