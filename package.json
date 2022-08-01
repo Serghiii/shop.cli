@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^2.6.1",
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.0.0",
+    "@reduxjs/toolkit": "^1.8.3",
     "@types/gapi.auth2": "^0.0.56",
     "@types/react": "^18.0.10",
     "@types/react-avatar-editor": "^12.0.0",

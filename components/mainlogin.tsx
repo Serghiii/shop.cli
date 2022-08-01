@@ -10,13 +10,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
-import { AuthAction, LoginAuthAction } from "../redux";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector, LoginAuthAction, ErrorUpdate } from "../redux";
 
 const MainLogin: React.FC = () => {
    const { locale } = useRouter()
-   const dispatch = useDispatch();
-   const autherr = useSelector((state: any) => state.autherr);
+   const dispatch = useAppDispatch();
+   const auth = useAppSelector((state: any) => state.auth);
    const [rememberme, setRememberMe] = useState(false);
 
    const loginSchema = yup.object().shape({
@@ -28,7 +27,7 @@ const MainLogin: React.FC = () => {
          .min(6, translate('auth.messages.password', locale))
    });
 
-   const ufLogin = useForm({
+   const { register, formState: { errors, isValid }, getValues } = useForm({
       mode: "onChange",
       resolver: yupResolver(loginSchema)
    });
@@ -40,10 +39,10 @@ const MainLogin: React.FC = () => {
    const onSubmit = (e: FormEvent) => {
       e.preventDefault();
       dispatch(LoginAuthAction({
-         username: ufLogin.getValues('login'),
-         password: ufLogin.getValues('loginPassword'),
+         username: getValues('login'),
+         password: getValues('loginPassword'),
          rememberme
-      }, locale));
+      }));
    }
 
    return (
@@ -56,27 +55,27 @@ const MainLogin: React.FC = () => {
             <div className="form-row">
                <label htmlFor="auth-login" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>{translate('auth.login.name', locale)}</label>
                <input
-                  {...ufLogin.register("login")}
+                  {...register("login")}
                   id="auth-login"
-                  className={`custom-input${ufLogin.formState.errors.login ? ' error-color' : ''}`}
+                  className={`custom-input${errors.login ? ' error-color' : ''}`}
                   type="text"
                   maxLength={50}
                />
                <div className="error-row">
-                  {<p className="error-message">{ufLogin.formState.errors.login?.message}</p>}
+                  <p className="error-message">{`${errors.login ? errors.login.message : ''}`}</p>
                </div>
             </div>
             <div className="form-row">
                <label htmlFor="auth-pass" className="form-label">{translate('auth.login.password', locale)}</label>
                <input
-                  {...ufLogin.register("loginPassword")}
+                  {...register("loginPassword")}
                   id="auth-pass"
-                  className={`custom-input${ufLogin.formState.errors.loginPassword ? ' error-color' : ''}`}
+                  className={`custom-input${errors.loginPassword ? ' error-color' : ''}`}
                   type="password"
                   maxLength={500}
                />
                <div className="error-row">
-                  {<p className="error-message">{ufLogin.formState.errors.loginPassword?.message}</p>}
+                  <p className="error-message">{`${errors.loginPassword ? errors.loginPassword.message : ''}`}</p>
                </div>
             </div>
             <FormGroup row>
@@ -94,13 +93,13 @@ const MainLogin: React.FC = () => {
                />
             </FormGroup>
             <div className="form-row">
-               {autherr.message && <Alert
+               {auth.error.message && <Alert
                   severity="error"
-                  onClose={() => { dispatch({ type: AuthAction.UpdateFail, payload: '' }) }}>
-                  {autherr.message}
+                  onClose={() => { dispatch(ErrorUpdate({ code: '', message: '' })) }}>
+                  {translate('server.' + auth.error.code, locale, auth.error.message)}
                </Alert>}
             </div>
-            <button className="custom-button" disabled={!ufLogin.formState.isValid}>{translate('auth.login.enter', locale)}</button>
+            <button className="custom-button" disabled={!isValid}>{translate('auth.login.enter', locale)}</button>
          </form>
       </div >
    )

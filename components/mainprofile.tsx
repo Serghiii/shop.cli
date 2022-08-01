@@ -6,19 +6,18 @@ import Image from 'next/image';
 import Logout from '../public/icon/profile/logout.svg'
 import Avatar from '@mui/material/Avatar';
 import { translate } from '../locales/translate';
-import { LogOutAuthAction } from "../redux";
-import { useDispatch } from 'react-redux';
+import { useAppDispatch, LogoutAuthAction } from "../redux";
 
 
 const MainProfile: React.FC = () => {
-   const dispatch = useDispatch();
+   const dispatch = useAppDispatch();
    const router = useRouter();
 
    const fetcher = async (url: string) => await axios.post(url).then(response => response.data)
    const { data } = useSWR('user/profile', fetcher);
 
    const exitClickHandler = () => {
-      dispatch(LogOutAuthAction());
+      dispatch(LogoutAuthAction());
    }
 
    return (

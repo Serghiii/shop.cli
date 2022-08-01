@@ -8,35 +8,33 @@ import useSWR from 'swr';
 import Avatar from '@mui/material/Avatar';
 import { translate } from '../locales/translate';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { LogOutAuthAction } from "../redux";
-
+import { useAppDispatch, useAppSelector, LogoutAuthAction } from "../redux";
 
 const ProfileButton: React.FC<any> = props => {
    const { locale } = useRouter()
-   const auth = useSelector((state: any) => state.auth);
-   const dispatch = useDispatch();
+   const auth = useAppSelector((state: any) => state.auth);
+   const dispatch = useAppDispatch();
    const [mounted, setMounted] = useState(false);
    const actionsProfileDropdown = useRef<HTMLDivElement>(null);
    const Show: string = "show";
 
    const fetcher = async (url: string) => await axios.post(url).then(response => response.data)
-   const { data }: any = useSWR(auth.isLoggedIn ? 'user/profile' : null, fetcher);
+   const { data }: any = useSWR(auth.user.isLoggedIn ? 'user/profile' : null, fetcher);
 
    useEffect(() => {
       setMounted(true)
    }, [])
 
    const profileMouseEnterHandler = () => {
-      if (auth.isLoggedIn) actionsProfileDropdown.current?.classList.add(Show);
+      if (auth.user.isLoggedIn) actionsProfileDropdown.current?.classList.add(Show);
    }
 
    const profileMouseLeaveHandler = () => {
-      if (auth.isLoggedIn) actionsProfileDropdown.current?.classList.remove(Show);
+      if (auth.user.isLoggedIn) actionsProfileDropdown.current?.classList.remove(Show);
    }
 
    const exitClickHandler = () => {
-      dispatch(LogOutAuthAction())
+      dispatch(LogoutAuthAction())
       actionsProfileDropdown.current?.classList.remove(Show);
    }
 
@@ -50,7 +48,7 @@ const ProfileButton: React.FC<any> = props => {
    return (
       <div className="actions__profile" onClick={props.click} onMouseEnter={profileMouseEnterHandler} onMouseLeave={profileMouseLeaveHandler}>
          <div className="actions__profile-wrapper">
-            {mounted && auth.isLoggedIn ? (
+            {mounted && auth.user.isLoggedIn ? (
                <div className="avatar">
                   <Avatar
                      alt="Аватар"
@@ -62,7 +60,7 @@ const ProfileButton: React.FC<any> = props => {
                <i className="actions__profile-icon"></i>
             )}
          </div>
-         {mounted && auth.isLoggedIn ? (
+         {mounted && auth.user.isLoggedIn ? (
             <p>{translate('greeting', locale)}<br />{textOverflow(data?.name)}</p>
          ) : (
             <p>{translate('greeting', locale)}<br />{locale == 'ru' ? <span>войдите&nbsp;в&nbsp;кабинет</span> : <span>увійдіть&nbsp;в&nbsp;кабінет</span>}</p>
@@ -93,4 +91,5 @@ const ProfileButton: React.FC<any> = props => {
       </div>
    )
 }
+
 export default ProfileButton

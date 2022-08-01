@@ -22,9 +22,7 @@ const Main: React.FC = () => {
                   <Slider />
                </div>
                <div className="main-sections">
-                  {/* <Suspense fallback={<div>Loading....</div>}> */}
                   <NewGoods data={data} />
-                  {/* </Suspense> */}
                </div>
             </div>
          </div>

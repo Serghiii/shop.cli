@@ -39,7 +39,7 @@ const ProfilePanel: React.FC<any> = (props) => {
    const onSubmit = () => {
       let values = { name: getValues('name'), gender }
       const phone: any = getValues('phone')?.replace(/\s/g, '')
-      axios.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values, { headers: { lang: locale } }).then(() => {
+      axios.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values).then(() => {
          window.location.reload()
       })
    }
@@ -58,7 +58,7 @@ const ProfilePanel: React.FC<any> = (props) => {
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
                <div className="form-label-simple hidden-div"></div>
-               <div className="invalid-feedback">{errors.name?.message}</div>
+               <div className="invalid-feedback">{`${errors.name ? errors.name.message : ''}`}</div>
             </div>
             <div className="form-row-simple">
                <label className="form-label-simple">{translate('profile.tabs.panels.gender.name', locale)}</label>
@@ -73,7 +73,7 @@ const ProfilePanel: React.FC<any> = (props) => {
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
                <div className="form-label-simple hidden-div"></div>
-               <div className="invalid-feedback">{errors.gender?.message}</div>
+               <div className="invalid-feedback">{`${errors.gender ? errors.gender.message : ''}`}</div>
             </div>
             <div className="form-row-simple">
                <label htmlFor="phone" className="form-label-simple">{translate('profile.tabs.panels.phone', locale)}</label>
@@ -91,7 +91,7 @@ const ProfilePanel: React.FC<any> = (props) => {
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
                <div className="form-label-simple hidden-div"></div>
-               <div className="invalid-feedback">{errors.phone?.message}</div>
+               <div className="invalid-feedback">{`${errors.phone ? errors.phone.message : ''}`}</div>
             </div>
             <div className="form-row-simple">
                <label htmlFor="email" className="form-label-simple">{translate('profile.tabs.panels.email', locale)}</label>

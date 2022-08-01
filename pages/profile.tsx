@@ -1,30 +1,32 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../redux";
 import { MainProfile, SimpleLayout } from "../components"
 import { translate } from '../locales/translate';
 
 const Profile: React.FC = () => {
-   const auth = useSelector((state: any) => state.auth);
+   const [showing, setShowing] = useState(false);
+
+   const auth = useAppSelector((state: any) => state.auth);
    const router = useRouter();
 
    useEffect(() => {
-      if (!auth.isLoggedIn) router.push('/login');
-      // eslint-disable-next-line
-   }, [auth.isLoggedIn])
+      setShowing(true);
+   }, []);
 
-   const FullPage = () => {
-      return (
-         <SimpleLayout title={`${translate('auth.login.profile.title', router.locale)}: ${auth.name}`} footer={true} >
-            <MainProfile />
-         </SimpleLayout >
-      )
+   if (!showing) {
+      return null;
    }
 
-   if (auth.isLoggedIn) return (<>{<FullPage />}</>)
+   if (showing && !auth.user.isLoggedIn) {
+      router.push('/login')
+      return (<></>)
+   }
 
    return (
-      <></>
+      <SimpleLayout title={`${translate('auth.login.profile.title', router.locale)}: ${auth.user.name}`} footer={true} >
+         <MainProfile />
+      </SimpleLayout >
    )
 }
 

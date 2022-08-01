@@ -1,18 +1,18 @@
 import React from "react"
 import axios from 'axios';
 import useSWR from 'swr';
-import { useRouter } from "next/router";
 import MoneyFormat from '../money-format';
+import { useRouter } from "next/router";
 import { translate } from "../../locales/translate"
 import { CartItem } from '.';
 import { Loading } from "../.";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../redux";
 import { motion } from "framer-motion";
 
 const FullCart = () => {
    const [data, setData] = React.useState<any>(undefined)
-   const cartRows = useSelector((state: any) => state.cart);
-   const dispatch = useDispatch();
+   const cartRows = useAppSelector((state: any) => state.cart)
+   const dispatch = useAppDispatch()
    const { locale } = useRouter()
 
    let status = {
@@ -32,7 +32,7 @@ const FullCart = () => {
    useSWR('products/cart', fetcher);
 
    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+      e.preventDefault()
    }
 
    const getData = (item: any) => {
@@ -84,4 +84,5 @@ const FullCart = () => {
       </div >
    )
 }
+
 export default FullCart

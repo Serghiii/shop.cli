@@ -1,19 +1,18 @@
 import React from "react"
-import { MainBreadcrumbs } from ".";
+import { MainBreadcrumbs } from "."
 import MoneyFormat from "./money-format"
-import { translate } from '../locales/translate';
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { CartAction } from "../redux";
+import { translate } from '../locales/translate'
+import { useRouter } from "next/router"
+import useSWR from "swr"
+import axios from "axios"
+import { useAppDispatch, useAppSelector, AddItem } from "../redux";
 import InnerImageZoom from 'react-inner-image-zoom'
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css'
 
 const MainProductOne: React.FC<any> = ({ data }) => {
    const [extHtml, setExtHtml] = React.useState({ __html: '' })
-   const cartItem = useSelector((state: any) => state.cart).find((item: any) => (item.id === data?.id))
-   const dispatch = useDispatch();
+   const cartItem = useAppSelector((state: any) => state.cart).find((item: any) => (item.id === data?.id))
+   const dispatch = useAppDispatch()
    const { locale } = useRouter()
 
    const fetcher = async (url: string) => await axios.get(url).then((response) => { setExtHtml({ __html: response.data }) })
@@ -22,7 +21,7 @@ const MainProductOne: React.FC<any> = ({ data }) => {
    const onClickHandle = () => {
       if (!cartItem || cartItem.amount < data?.amount) {
          const id = data?.id
-         dispatch({ type: CartAction.AddItem, payload: { id } })
+         dispatch(AddItem({ amount: 0, id }))
       }
    }
 

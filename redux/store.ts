@@ -1,49 +1,19 @@
-import { useMemo } from 'react'
-import { legacy_createStore as createStore, applyMiddleware, combineReducers } from 'redux'
-// import { composeWithDevTools } from '@redux-devtools/extension'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import thunkMiddleware from 'redux-thunk'
-import { authreducer, autherrorreducer, cartreducer } from '.'
+import { configureStore } from '@reduxjs/toolkit'
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import authReducer from './authSlice'
+import cartReducer from './cartSlice'
 
-let store: any
+const store = configureStore({
+   reducer: {
+      auth: authReducer,
+      cart: cartReducer,
+   },
+})
 
-const reducers = combineReducers({
-   auth: authreducer,
-   autherr: autherrorreducer,
-   cart: cartreducer
-});
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 
-function initStore(initialState: any) {
-   return createStore(
-      reducers,
-      initialState,
-      composeWithDevTools(applyMiddleware(thunkMiddleware))
-   )
-}
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
-export const initializeStore = (preloadedState: any) => {
-   let _store = store ?? initStore(preloadedState)
-
-   // After navigating to a page with an initial Redux state, merge that state
-   // with the current state in the store, and create a new store
-   if (preloadedState && store) {
-      _store = initStore({
-         ...store.getState(),
-         ...preloadedState,
-      })
-      // Reset the current store
-      store = undefined
-   }
-
-   // For SSG and SSR always create a new store
-   if (typeof window === 'undefined') return _store
-   // Create the store once in the client
-   if (!store) store = _store
-
-   return _store
-}
-
-export function useStore(initialState: any) {
-   const store = useMemo(() => initializeStore(initialState), [initialState])
-   return store
-}
+export default store

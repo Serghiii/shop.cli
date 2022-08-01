@@ -1,9 +1,9 @@
 import React from 'react';
 import { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../redux';
 
 const CartButton: React.FC<any> = props => {
-   const cart = useSelector((state: any) => state.cart)
+   const cart = useAppSelector((state: any) => state.cart)
 
    const [state, setState] = useState(false)
 

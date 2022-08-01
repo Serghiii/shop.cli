@@ -21,7 +21,7 @@ const PasswordPanel: React.FC = () => {
    });
 
    const onSubmit = () => {
-      axios.post('user/changepassword', { password: getValues('password') }, { headers: { lang: locale } }).then(() => {
+      axios.post('user/changepassword', { password: getValues('password') }).then(() => {
          window.location.reload();
       })
    }
@@ -34,7 +34,7 @@ const PasswordPanel: React.FC = () => {
          </div>
          <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
             <div className="form-label-simple hidden-div"></div>
-            <div className="invalid-feedback">{errors.password?.message}</div>
+            <div className="invalid-feedback">{`${errors.password ? errors.password.message : ''}`}</div>
          </div>
          <div className="form-row-simple">
             <label htmlFor="confirmPassword" className="form-label-simple">{translate('profile.tabs.panels.reppassword', locale)}</label>
@@ -42,7 +42,7 @@ const PasswordPanel: React.FC = () => {
          </div>
          <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
             <div className="form-label-simple hidden-div"></div>
-            <div className="invalid-feedback">{errors.cpassword?.message}</div>
+            <div className="invalid-feedback">{`${errors.password ? errors.password.message : ''}`}</div>
          </div>
          <div className="form-row-simple">
             <div className="form-label-simple"></div>

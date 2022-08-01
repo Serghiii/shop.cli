@@ -42,7 +42,7 @@ const PhotoPanel: React.FC<any> = (props) => {
             avatar: editor?.getImageScaledToCanvas().toDataURL().replace(/^data:image\/\w+;base64,/, "")
          }
          if (Avatar.avatar) {
-            axios.post('user/changeavatar', Avatar, { headers: { lang: locale } }).then((res) => {
+            axios.post('user/changeavatar', Avatar).then((res) => {
                window.location.reload();
             })
          }

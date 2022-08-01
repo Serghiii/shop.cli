@@ -8,27 +8,26 @@ import axios from 'axios'
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../src/theme';
 import { Provider } from 'react-redux'
-import { useStore } from '../redux/store'
-import { useRouter } from 'next/router'
+import { store } from '../redux'
+// import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 function App({ Component, pageProps }: AppProps) {
   axios.defaults.baseURL = process.env.API_URL;
-  axios.defaults.headers.common['Accept-Language'] = useRouter().locale;
-
-  const store = useStore(pageProps.initialReduxState)
+  // axios.defaults.headers.common['Accept-Language'] = String(useRouter().locale);
 
   return (
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <ThemeProvider theme={theme}>
-        {/* <CssBaseline /> */}
-        <Provider store={store}>
-          <Component {...pageProps} />
-        </Provider>
-      </ThemeProvider>
+      <React.StrictMode>
+        <ThemeProvider theme={theme}>
+          <Provider store={store}>
+            <Component {...pageProps} />
+          </Provider>
+        </ThemeProvider>
+      </React.StrictMode>
     </>
   )
 }

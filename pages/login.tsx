@@ -1,14 +1,25 @@
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { MainLogin, SimpleLayout } from "../components"
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../redux";
+import { MainLogin, SimpleLayout } from "../components";
 import { translate } from "../locales/translate";
 
 const Login: React.FC = () => {
-   const auth = useSelector((state: any) => state.auth);
-   const router = useRouter();
+   const [showing, setShowing] = useState(false);
 
-   if (typeof window !== 'undefined' && auth.isLoggedIn) {
-      router.push('/profile');
+   const auth = useAppSelector((state: any) => state.auth)
+   const router = useRouter()
+
+   useEffect(() => {
+      setShowing(true);
+   }, []);
+
+   if (!showing) {
+      return null;
+   }
+
+   if (showing && auth.user.isLoggedIn) {
+      router.push('/profile')
       return (<></>)
    }
 
@@ -18,4 +29,5 @@ const Login: React.FC = () => {
       </SimpleLayout >
    )
 }
+
 export default Login

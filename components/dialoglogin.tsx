@@ -1,7 +1,6 @@
 import React, { MouseEvent, useRef, useState, ChangeEvent, useEffect } from "react";
 import InputMask from "react-input-mask";
 import { useMainContext } from "../contexts";
-import { LoginAuthAction, RegisterAuthAction, GoogleAuthAction } from "../redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
@@ -12,14 +11,13 @@ import FormGroup from '@mui/material/FormGroup';
 import { translate } from '../locales/translate';
 import { useRouter } from "next/router";
 import Image from 'next/image';
-import GoogleIcon from '../public/icon/google.svg'
-import { useDispatch, useSelector } from "react-redux";
-import { AuthAction } from "../redux";
+import GoogleIcon from '../public/icon/google.svg';
+import { useAppDispatch, useAppSelector, LoginAuthAction, RegisterAuthAction, GoogleAuthAction, ErrorUpdate } from "../redux";
 
 const DialogLogin: React.FC = () => {
    const { locale } = useRouter()
    const mainCtx = useMainContext();
-   const dispatch = useDispatch();
+   const dispatch = useAppDispatch();
    const [Register, setRegister] = useState(false);
    const backdrop = useRef<HTMLDivElement>(null);
    const mouseState = {
@@ -57,7 +55,7 @@ const DialogLogin: React.FC = () => {
 
    const registerClickHandler = (e: MouseEvent) => {
       e.preventDefault();
-      dispatch({ type: AuthAction.UpdateFail, payload: '' })
+      dispatch(ErrorUpdate({ code: '', message: '' }))
       setRegister(!Register);
    }
 
@@ -71,16 +69,18 @@ const DialogLogin: React.FC = () => {
    }
 
    useEffect(() => {
+      dispatch(ErrorUpdate({ code: '', message: '' }))
       gapi.load('auth2', () => {
          gapi.auth2.init({
             client_id: process.env.GOOGLE_ID
          })
       })
+      // eslint-disable-next-line
    }, [])
 
    const LoginForm = () => {
-      const [rememberme, setRememberMe] = useState(false);
-      const autherr = useSelector((state: any) => state.autherr);
+      const [rememberme, setRememberMe] = useState(false)
+      const auth = useAppSelector((state: any) => state.auth)
 
       const loginSchema = yup.object().shape({
          login: yup.string().trim()
@@ -91,27 +91,32 @@ const DialogLogin: React.FC = () => {
             .min(6, translate('auth.messages.password', locale))
       });
 
-      const ufLogin = useForm({
+      const { register, formState: { errors, isValid }, handleSubmit, getValues } = useForm({
          mode: "onChange",
          resolver: yupResolver(loginSchema)
       });
 
-      const loginSubmitHandle = (e: any) => {
-         dispatch(LoginAuthAction({
-            username: ufLogin.getValues('login'),
-            password: ufLogin.getValues('loginPassword'),
+      const loginSubmitHandle = async () => {
+         const resultAction = await dispatch(LoginAuthAction({
+            username: getValues('login'),
+            password: getValues('loginPassword'),
             rememberme
-         }, closeClickHandler));
+         }))
+         if (LoginAuthAction.fulfilled.match(resultAction)) {
+            closeClickHandler()
+         }
       }
 
-      const googleClickHandler = () => {
-         const GoogleAuth = gapi.auth2.getAuthInstance()
-         GoogleAuth.signIn().then((data: any) => {
-            dispatch(GoogleAuthAction({
-               token: getAccessToken(data)
-            }, closeClickHandler));
+      const googleClickHandler = async () => {
+         const GoogleAuth = await gapi.auth2.getAuthInstance()
+         await GoogleAuth.signIn().then((data: any) => {
+            dispatch(GoogleAuthAction({ token: getAccessToken(data) })).then(resultAction => {
+               if (GoogleAuthAction.fulfilled.match(resultAction)) {
+                  closeClickHandler()
+               }
+            })
          }, (message) => {
-            dispatch({ type: AuthAction.UpdateFail, payload: message.error })
+            dispatch(ErrorUpdate({ code: '', message: message.error }))
          })
       }
 
@@ -128,31 +133,31 @@ const DialogLogin: React.FC = () => {
                </svg>
             </div>
             <div className="dialog-body login">
-               <form className="dialog-form" onSubmit={ufLogin.handleSubmit(loginSubmitHandle)}>
+               <form className="dialog-form" onSubmit={handleSubmit(loginSubmitHandle)}>
                   <div className="form-row">
                      <label htmlFor="auth-login" className="form-label">{translate('auth.login.name', locale)}</label>
                      <input
-                        {...ufLogin.register("login")}
+                        {...register("login")}
                         id="auth-login"
-                        className={`custom-input${ufLogin.formState.errors.login ? ' error-color' : ''}`}
+                        className={`custom-input${errors.login ? ' error-color' : ''}`}
                         type="text"
                         maxLength={50}
                      />
                      <div className="error-row">
-                        {<p className="error-message">{ufLogin.formState.errors.login?.message}</p>}
+                        <p className="error-message">{`${errors.login ? errors.login.message : ''}`}</p>
                      </div>
                   </div>
                   <div className="form-row">
                      <label htmlFor="auth-pass" className="form-label">{translate('auth.login.password', locale)}</label>
                      <input
-                        {...ufLogin.register("loginPassword")}
+                        {...register("loginPassword")}
                         id="auth-pass"
-                        className={`custom-input${ufLogin.formState.errors.loginPassword ? ' error-color' : ''}`}
+                        className={`custom-input${errors.loginPassword ? ' error-color' : ''}`}
                         type="password"
                         maxLength={500}
                      />
                      <div className="error-row">
-                        {<p className="error-message">{ufLogin.formState.errors.loginPassword?.message}</p>}
+                        <p className="error-message">{`${errors.loginPassword ? errors.loginPassword.message : ''}`}</p>
                      </div>
                   </div>
                   <FormGroup row>
@@ -170,17 +175,17 @@ const DialogLogin: React.FC = () => {
                      />
                   </FormGroup>
                   <div className="form-row">
-                     {autherr.message && <Alert
+                     {auth.error?.message && <Alert
                         severity="error"
                         onClose={() => {
-                           dispatch({ type: AuthAction.UpdateFail, payload: '' })
+                           dispatch(ErrorUpdate({ code: '', message: '' }))
                         }}>
-                        {autherr.message}
+                        {translate('server.' + auth.error.code, locale, auth.error.message)}
                      </Alert>}
                   </div>
-                  <button className="custom-button" disabled={!ufLogin.formState.isValid}>{translate('auth.login.enter', locale)}</button>
+                  <button className="custom-button" disabled={!isValid}>{translate('auth.login.enter', locale)}</button>
                </form>
-               <button className="custom-button" disabled={ufLogin.formState.isValid} onClick={googleClickHandler}>
+               <button className="custom-button" disabled={isValid} onClick={googleClickHandler}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                      <Image width={18} height={18} src={GoogleIcon} alt="" />
                      <span style={{ paddingLeft: '6px' }}>{translate('auth.login.enter_google', locale)}</span>
@@ -193,7 +198,7 @@ const DialogLogin: React.FC = () => {
    }
 
    const RegisterForm = () => {
-      const autherr = useSelector((state: any) => state.autherr);
+      const auth = useAppSelector((state: any) => state.auth)
 
       const registerSchema = yup.object().shape({
          name: yup.string().trim()
@@ -210,18 +215,23 @@ const DialogLogin: React.FC = () => {
             .min(6, translate('auth.messages.password', locale))
       });
 
-      const ufRegister = useForm({
+      const { register, formState: { errors, isValid }, handleSubmit, getValues } = useForm({
          mode: "onChange",
          resolver: yupResolver(registerSchema)
       });
 
-      const registerSubmitHandle = () => {
-         dispatch(RegisterAuthAction({
-            name: ufRegister.getValues('name'),
-            phone: ufRegister.getValues('phone').replace(/\s/g, ''),
-            email: ufRegister.getValues('email'),
-            password: ufRegister.getValues('password')
-         }, closeClickHandler));
+      const registerSubmitHandle = async () => {
+         const resultAction = await dispatch(RegisterAuthAction({
+            name: getValues('name'),
+            phone: getValues('phone').replace(/\s/g, ''),
+            email: getValues('email'),
+            password: getValues('password'),
+            activation_on: translate('server.mail.activation_on', locale),
+            activation_ref: translate('server.mail.activation_ref', locale)
+         }))
+         if (RegisterAuthAction.fulfilled.match(resultAction)) {
+            closeClickHandler()
+         }
       }
 
       return (
@@ -233,77 +243,70 @@ const DialogLogin: React.FC = () => {
                </svg>
             </div>
             <div className="dialog-body login">
-               <form className="dialog-form" onSubmit={ufRegister.handleSubmit(registerSubmitHandle)}>
+               <form className="dialog-form" onSubmit={handleSubmit(registerSubmitHandle)}>
                   <div className="form-row">
                      <label htmlFor="name" className="form-label">{translate('auth.register.name', locale)}</label>
                      <input
-                        {...ufRegister.register("name")}
+                        {...register("name")}
                         id="name"
-                        className={`custom-input${ufRegister.formState.errors.name ? ' error-color' : ''}`}
+                        className={`custom-input${errors.name ? ' error-color' : ''}`}
                         type="text"
                         maxLength={50}
                      />
                      <div className="error-row">
-                        {<p className="error-message">{ufRegister.formState.errors.name?.message}</p>}
+                        <p className="error-message">{`${errors.name ? errors.name.message : ''}`}</p>
                      </div>
                   </div>
                   <div className="form-row">
                      <label htmlFor="phone" className="form-label">{translate('auth.register.phone', locale)}</label>
                      <InputMask
-                        {...ufRegister.register("phone")}
+                        {...register("phone")}
                         id="phone"
-                        className={`custom-input${ufRegister.formState.errors.phone ? ' error-color' : ''}`}
+                        className={`custom-input${errors.phone ? ' error-color' : ''}`}
                         mask="+38 999 999 99 99"
                         maskPlaceholder=''
                         alwaysShowMask={true}
                      />
                      <div className="error-row">
-                        {<p className="error-message">{ufRegister.formState.errors.phone?.message}</p>}
+                        <p className="error-message">{`${errors.phone ? errors.phone.message : ''}`}</p>
                      </div>
                   </div>
                   <div className="form-row">
                      <label htmlFor="email" className="form-label">{translate('auth.register.email', locale)}</label>
                      <input
-                        {...ufRegister.register("email")}
+                        {...register("email")}
                         id="email"
-                        className={`custom-input${ufRegister.formState.errors.email ? ' error-color' : ''}`}
+                        className={`custom-input${errors.email ? ' error-color' : ''}`}
                         type="email"
                         maxLength={50}
                      />
                      <div className="error-row">
-                        {<p className="error-message">{ufRegister.formState.errors.email?.message}</p>}
+                        <p className="error-message">{`${errors.email ? errors.email.message : ''}`}</p>
                      </div>
                   </div>
                   <div className="form-row">
                      <label htmlFor="password" className="form-label">{translate('auth.register.password', locale)}</label>
                      <input
-                        {...ufRegister.register("password")}
+                        {...register("password")}
                         id="password"
-                        className={`custom-input${ufRegister.formState.errors.password ? ' error-color' : ''}`}
+                        className={`custom-input${errors.password ? ' error-color' : ''}`}
                         type="password"
                         maxLength={500}
                      />
                      <div className="error-row">
-                        {<p className="error-message">{ufRegister.formState.errors.password?.message}</p>}
+                        <p className="error-message">{`${errors.password ? errors.password.message : ''}`}</p>
                      </div>
                   </div>
-                  {/* <div className="form-row">
-                     {ufRegister.formState.errors.server && <Alert
-                        severity="error"
-                        onClose={() => { ufRegister.clearErrors(); }}>
-                        {ufRegister.formState.errors.server?.message}
-                     </Alert>}
-                  </div> */}
                   <div className="form-row">
-                     {autherr.message && <Alert
+                     {auth.error?.message && <Alert
                         severity="error"
                         onClose={() => {
-                           dispatch({ type: AuthAction.UpdateFail, payload: '' })
+                           dispatch(ErrorUpdate({ code: '', message: '' }))
                         }}>
-                        {autherr.message}
+                        {translate('server.' + auth.error.code, locale, auth.error.message)}
                      </Alert>}
                   </div>
-                  <button className="custom-button" disabled={!ufRegister.formState.isValid} >{translate('auth.register.register', locale)}</button>
+                  <button className="custom-button" disabled={!isValid} >{translate('auth.register.register', locale)}</button>
                </form>
                <button className="form-register" onClick={registerClickHandler}>{translate('auth.login.title', locale)}</button>
             </div>
@@ -312,11 +315,13 @@ const DialogLogin: React.FC = () => {
    }
 
    return (
-      <div ref={backdrop} className={`dialog-wrapper dialog-backdrop${mainCtx.stateProfile[0] ? " show" : ""}`} onClick={backdropClickHandler} onMouseDown={backdropMouseDownHandler} onMouseUp={backdropMouseUpHandler}>
-         <div className="dialog">
-            {Register ? <RegisterForm /> : <LoginForm />}
-         </div>
-      </div >
+      <>
+         <div ref={backdrop} className={`dialog-wrapper dialog-backdrop${mainCtx.stateProfile[0] ? " show" : ""}`} onClick={backdropClickHandler} onMouseDown={backdropMouseDownHandler} onMouseUp={backdropMouseUpHandler}>
+            <div className="dialog">
+               {Register ? <RegisterForm /> : <LoginForm />}
+            </div>
+         </div >
+      </>
    )
 }
 

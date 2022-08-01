@@ -2,7 +2,7 @@ import React from "react"
 import MoneyFormat from "../money-format"
 import IconButton from '@mui/material/IconButton';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { CartAction } from "../../redux";
+import { AdjustAmount, RemoveItem } from "../../redux";
 
 const CartItem: React.FC<any> = ({ data, doAction }) => {
 
@@ -10,11 +10,11 @@ const CartItem: React.FC<any> = ({ data, doAction }) => {
       if (e.target.value <= 0) e.target.value = 1
       if (e.target.value > data.amount) e.target.value = data.amount
       const val: number = e.target.value
-      doAction({ type: CartAction.AdjustAmount, payload: { id: data.id, amount: val } })
+      doAction(AdjustAmount({ id: data.id, amount: val }))
    }
 
    const onClickHandle = (e: any) => {
-      doAction({ type: CartAction.RemoveItem, payload: { id: data.id } })
+      doAction(RemoveItem({ id: data.id, amount: 0 }))
    }
 
    return (
