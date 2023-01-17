@@ -19,7 +19,7 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
          (brandZone && curr.includes('brand-')) ? acc = acc + curr + '&' : (!brandZone && !curr.includes('brand-')) ? acc = acc + curr + '&' : acc
       ), '?')).then(response => { setData(response.data); setBrandZoneClick(false) })
    }
-   useSWR([`/products/filter/${group}/`, cond[0]], fetcher, { revalidateOnFocus: false })
+   useSWR([`/products/filter/${group}/`, cond[0]], fetcher)
 
    const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       page[1](1)

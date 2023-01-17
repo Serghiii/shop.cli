@@ -7,16 +7,17 @@ import { Loading, MainProductCard } from ".";
 import { arrToParams } from "../src/utils";
 
 const MainProducts: React.FC<any> = ({ group, cond, page }) => {
-   const limit = 6
+   const limit: number = 6
+   const url: string = `/products/${group}?skip=${(page[0] - 1) * limit}&limit=${limit}${(cond[0].length ? ('&' + arrToParams(cond[0])) : '')}`
 
-   const fetcher = async (url: string, page: number, setPage: (page: number) => {}, cond: []) => {
-      return await axios.get(url + `?skip=${(page - 1) * limit}&limit=${limit}${(cond.length ? '&' : '') + arrToParams(cond)}`)
+   const fetcher = async (url: string) => {
+      return await axios.get(url)
          .then((response) => {
-            if (page > 1 && response.data.results.length <= 0) setPage(1);
+            if (page[0] > 1 && response.data.results.length <= 0) page[1](1);
             return response.data
          })
    }
-   const { data } = useSWR([`/products/${group}`, page[0], page[1], cond[0]], fetcher, { revalidateOnFocus: false/*, suspense: true*/ });
+   const { data, error } = useSWR(url, fetcher);
 
    const setPage = (e: any, val: any) => {
       page[1](val)
@@ -37,7 +38,7 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
                   </Stack>
                </div>
             </>
-         ) : (<Loading />)
+         ) : error ? (<p>error</p>) : (<Loading />)
          }
       </>
    )

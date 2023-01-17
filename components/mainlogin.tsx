@@ -48,7 +48,7 @@ const MainLogin: React.FC = () => {
    return (
       <div className="form-login">
          <div className="avatar-login">
-            <Image src={User} alt="" />
+            <Image src={User} alt="" width={80} />
          </div>
          <h2>{translate('auth.login.title', locale)}</h2>
          <form className="dialog-form" onSubmit={onSubmit}>

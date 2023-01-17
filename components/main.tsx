@@ -10,7 +10,7 @@ const Main: React.FC = () => {
    const mainCtx = useMainContext();
 
    const fetcher = async (url: string) => await axios.get(url).then(response => response.data)
-   const { data } = useSWR('products/new/12', fetcher, { revalidateOnFocus: false });
+   const { data } = useSWR('products/new/12', fetcher);
 
    return (
       <main>

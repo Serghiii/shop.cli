@@ -9,8 +9,8 @@ const Smartphones: React.FC<any> = ({ params, ispage }) => {
    const fetcher = async (url: string) => await axios.get(url).then(response => response.data);
    const { data }: any = useSWR(
       (ispage ? `/products/id/${extractId(params ? params[0] : '')}?ref=smartphones` : '/products/filter/smartphones'),
-      fetcher, { revalidateOnFocus: false }
-   );
+      fetcher
+   )
 
    return (
       <MainLayout>

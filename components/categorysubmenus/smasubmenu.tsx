@@ -50,46 +50,46 @@ const SmaSubmenu: React.FC = () => {
                   <p className="submenu-item__title">{items[t].phones.title}</p>
                </li>
                <li className="submenu-item">
-                  <Link href="/smartphones" locale={locale}>
-                     <a className="submenu-item__link">{items[t].phones.content.smartphones}</a>
+                  <Link href="/smartphones" locale={locale} className="submenu-item__link">
+                     {items[t].phones.content.smartphones}
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/mobiles" locale={locale}>
-                     <a className="submenu-item__link">{items[t].phones.content.mobiles}</a>
+                  <Link href="/mobiles" locale={locale} className="submenu-item__link">
+                     {items[t].phones.content.mobiles}
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/phones" locale={locale}>
-                     <a className="submenu-item__link">{items[t].phones.content.phones}</a>
+                  <Link href="/phones" locale={locale} className="submenu-item__link">
+                     {items[t].phones.content.phones}
                   </Link>
                </li>
                <li className="submenu-item">
                   <p className="submenu-item__title">{items[t].acsesuary.title}</p>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">{items[t].acsesuary.content.chohly}</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     {items[t].acsesuary.content.chohly}
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">{items[t].acsesuary.content.sklo}</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     {items[t].acsesuary.content.sklo}
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">{items[t].acsesuary.content.batarei}</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     {items[t].acsesuary.content.batarei}
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">{items[t].acsesuary.content.navushnyky}</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     {items[t].acsesuary.content.navushnyky}
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">{items[t].acsesuary.content.akustyka}</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     {items[t].acsesuary.content.akustyka}
                   </Link>
                </li>
             </ul>
@@ -98,53 +98,53 @@ const SmaSubmenu: React.FC = () => {
                   <p className="submenu-item__title">{items[t].brendy.title}</p>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Apple</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Apple
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Samsung</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Samsung
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Realme</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Realme
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Xiaomi</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Xiaomi
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">OnePlus</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     OnePlus
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">OPPO</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     OPPO
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Huawei</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Huawei
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">ZTE</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     ZTE
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Vivo</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Vivo
                   </Link>
                </li>
                <li className="submenu-item">
-                  <Link href="/" locale={locale}>
-                     <a className="submenu-item__link">Motorola</a>
+                  <Link href="/" locale={locale} className="submenu-item__link">
+                     Motorola
                   </Link>
                </li>
             </ul>

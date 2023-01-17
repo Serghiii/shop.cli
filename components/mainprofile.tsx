@@ -55,7 +55,7 @@ const MainProfile: React.FC = () => {
                   <div className="title-simple-exit-wraper">
                      <div className="title-simple-exit" onClick={exitClickHandler}>
                         <div className="link__icon-simple">
-                           <Image src={Logout} alt="" />
+                           <Image src={Logout} alt="" width={13} height={13} />
                         </div>
                         <span className="link__title-simple">{translate('profile.exit', router.locale)}</span>
                      </div>

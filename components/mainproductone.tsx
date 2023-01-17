@@ -16,7 +16,7 @@ const MainProductOne: React.FC<any> = ({ data }) => {
    const { locale } = useRouter()
 
    const fetcher = async (url: string) => await axios.get(url).then((response) => { setExtHtml({ __html: response.data }) })
-   useSWR(`${process.env.STATIC_URL}/cards/${data?.id}/description/${data?.id}_${locale}.html`, fetcher, { revalidateOnFocus: false });
+   useSWR(`${process.env.STATIC_URL}/cards/${data?.id}/description/${data?.id}_${locale}.html`, fetcher);
 
    const onClickHandle = () => {
       if (!cartItem || cartItem.amount < data?.amount) {

@@ -11,14 +11,12 @@ const HomeProductCard: React.FC<any> = ({ id, name, price, priceold, pic, group,
    return (
       <div className="main-product-card">
          <div className="product-card__view">
-            <Link href={ref} locale={locale}>
-               <a className="product-card__ico">
-                  <img src={`${process.env.STATIC_URL}/cards/${id}/${pic}`} className="product-card__img" alt="" />
-               </a>
+            <Link href={ref} locale={locale} className="product-card__ico">
+               <img src={`${process.env.STATIC_URL}/cards/${id}/${pic}`} className="product-card__img" alt="" />
             </Link>
          </div>
-         <Link href={ref} locale={locale}>
-            <a className="product-card__name">{name}</a>
+         <Link href={ref} locale={locale} className="product-card__name">
+            {name}
          </Link>
          <div className="product-card__prices">
             {<div className="product-card__price-old">

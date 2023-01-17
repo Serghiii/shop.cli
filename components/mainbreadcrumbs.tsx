@@ -42,14 +42,14 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
       <>
          <Breadcrumbs className="breadcrumb-ol" aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
             <Link href="/">
-               <a><HomeIcon /></a>
+               <HomeIcon />
             </Link>
             {items?.map((item: any, index: number, arr: any) => (
                ((index >= arr.length - 1) && (isProduct === false)) ? (
                   <Typography color="textPrimary" key={item.to}>{item.label}</Typography>
                ) : (
                   <Link key={item.to} href={`/${item.to}`}>
-                     <a>{item.label}</a>
+                     {item.label}
                   </Link>
                )
             ))}

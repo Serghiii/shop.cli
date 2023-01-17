@@ -69,19 +69,17 @@ const ProfileButton: React.FC<any> = props => {
          <nav ref={actionsProfileDropdown} className="actions__profile-dropdown">
             <ul className="profile-list">
                <li className="profile-item">
-                  <Link href="/profile">
-                     <a className="profile-item__link" target="_blank" rel="nofollow">
-                        <div className="link__icon" >
-                           <Image src={User} alt="" />
-                        </div>
-                        <span className="link__title">{translate('auth.login.profile.title', locale)}</span>
-                     </a>
+                  <Link href="/profile" className="profile-item__link" target="_blank" rel="nofollow">
+                     <div className="link__icon" >
+                        <Image src={User} alt="" width={13} height={13} />
+                     </div>
+                     <span className="link__title">{translate('auth.login.profile.title', locale)}</span>
                   </Link>
                </li>
                <li className="profile-item">
                   <div className="profile-item__link" onClick={exitClickHandler} >
                      <div className="link__icon" >
-                        <Image src={Logout} alt="" />
+                        <Image src={Logout} alt="" width={13} height={13} />
                      </div>
                      <span className="link__title">{translate('auth.login.profile.exit', locale)}</span>
                   </div>

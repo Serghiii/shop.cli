@@ -18,16 +18,16 @@ const Language: React.FC<any> = props => {
          <li className={props.mobile ? 'language__item-mobile' : 'language__item'}>
             {locale === 'ru' ?
                (<span>Рус</span>) :
-               (<Link href={asPath} locale={'ru'}>
-                  <a lang='ru' onClick={onClick}>Рус</a>
+               (<Link href={asPath} locale={'ru'} lang='ru' onClick={onClick}>
+                  Рус
                </Link>)
             }
          </li>
          <li className={props.mobile ? 'language__item-mobile' : 'language__item'}>
             {locale === 'uk' ?
                (<span>Укр</span>) :
-               (<Link href={asPath} locale={'uk'}>
-                  <a lang='uk' onClick={onClick}>Укр</a>
+               (<Link href={asPath} locale={'uk'} lang='uk' onClick={onClick}>
+                  Укр
                </Link>)
             }
          </li>
