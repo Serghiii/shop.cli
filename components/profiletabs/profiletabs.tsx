@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-
-import { PasswordPanel, PhotoPanel, ProfilePanel } from "./index";
 import { translate } from '../../locales/translate';
 import { useRouter } from "next/router";
+import ProfilePanel from "./profilepanel";
+import PasswordPanel from "./passwordpanel";
+import PhotoPanel from "./photopanel";
 
 const ProfileTabs: React.FC<any> = props => {
    const [value, setValue] = useState(0);

@@ -1,13 +1,13 @@
 import React from "react"
-import axios from "axios";
-import useSWR from "swr";
+import axios from "axios"
+import useSWR from "swr"
 import { GetServerSideProps } from "next"
-import { MainLayout, MainProductOne, MainMobiles } from "../../components";
-import { extractId, extractPage, paramsToArr } from "../../src/utils";
+import { MainLayout, MainMobiles, ProductOne } from "../../components"
+import { extractId, extractPage, paramsToArr } from "../../src/utils"
 
 const Mobiles: React.FC<any> = ({ params, ispage }) => {
    const fetcher = async (url: string) => await axios.get(url).then(response => response.data);
-   const { data }: any = useSWR(
+   const { data, error }: any = useSWR(
       (ispage ? `/products/id/${extractId(params ? params[0] : '')}?ref=mobiles` : '/products/filter/mobiles'),
       fetcher
    )
@@ -15,8 +15,8 @@ const Mobiles: React.FC<any> = ({ params, ispage }) => {
    return (
       <MainLayout>
          {ispage ?
-            <MainProductOne data={data ? data[0] : null} /> :
-            <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} />
+            <ProductOne data={data ? data[0] : null} error={error} /> :
+            <MainMobiles group={'mobiles'} params={paramsToArr(params)} data={data} pg={extractPage(params)} error={error} />
          }
       </MainLayout>
    )

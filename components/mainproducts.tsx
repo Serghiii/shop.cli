@@ -1,10 +1,10 @@
-import axios from "axios";
-import React from "react";
-import useSWR from "swr";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import { Loading, MainProductCard } from ".";
-import { arrToParams } from "../src/utils";
+import axios from "axios"
+import React from "react"
+import useSWR from "swr"
+import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
+import { MainProductCard } from "."
+import { arrToParams } from "../src/utils"
 
 const MainProducts: React.FC<any> = ({ group, cond, page }) => {
    const limit: number = 6
@@ -25,7 +25,8 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 
    return (
       <>
-         {data ? (
+         {error && <p>{error.message}</p>}
+         {data &&
             <>
                <div className="main-product-cards">
                   {data?.results.map((item: any) => (
@@ -38,9 +39,9 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
                   </Stack>
                </div>
             </>
-         ) : error ? (<p>error</p>) : (<Loading />)
          }
       </>
    )
 }
+
 export default React.memo(MainProducts)

@@ -93,7 +93,7 @@ const MainLogin: React.FC = () => {
                />
             </FormGroup>
             <div className="form-row">
-               {auth.error.message && <Alert
+               {auth.error?.message && <Alert
                   severity="error"
                   onClose={() => { dispatch(ErrorUpdate({ code: '', message: '' })) }}>
                   {translate('server.' + auth.error.code, locale, auth.error.message)}

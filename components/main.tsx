@@ -1,10 +1,13 @@
-import axios from 'axios';
+import axios from 'axios'
 import { Categories, Slider } from './'
-import { useMainContext } from '../contexts';
-import useSWR from 'swr';
-import React from 'react';
+import { useMainContext } from '../contexts'
+import useSWR from 'swr'
 import dynamic from 'next/dynamic'
-const NewGoods = dynamic(() => import('./newgoods'))
+const NewGoods = dynamic(() => import('./newgoods')
+   // eslint-disable-next-line react/display-name
+   .catch(err => { return () => <p>{err.message}</p> }),
+   { /*loading: () => <Loading />,*/ ssr: false }
+)
 
 const Main: React.FC = () => {
    const mainCtx = useMainContext();
@@ -22,11 +25,14 @@ const Main: React.FC = () => {
                   <Slider />
                </div>
                <div className="main-sections">
-                  <NewGoods data={data} />
+                  <section className="main-new-goods">
+                     <NewGoods data={data} />
+                  </section>
                </div>
             </div>
          </div>
       </main >
    )
 }
+
 export default Main

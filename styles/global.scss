@@ -410,10 +410,10 @@ header {
    height: 30px;
    border-radius: 50%;
    &-simple {
-      position: relative;
+      position: absolute;
       width: 100px;
       height: 100px;
-      top: -13px;
+      top:15px;
       border-radius: 50%;
       border: 2px solid lightgrey;
       z-index: 1000;
@@ -822,6 +822,8 @@ header {
 .main-simple {
    display: flex;
    flex-direction: column;
+   overflow-y: auto;
+   height: 100vh;
    width: 100%;
    padding: 0 25px;
    border-left: 1px solid lightgray;
@@ -1059,6 +1061,12 @@ header {
       height: 80px;
       width: 80px;
       margin-right: 5px;
+   }
+   &__inpit-amount {
+      width: 60px;
+      outline: none;
+      margin: 0 10px 0 10px;
+      padding: 3px;
    }
    & p {
       margin: 0;

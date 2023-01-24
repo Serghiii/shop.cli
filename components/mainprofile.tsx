@@ -1,13 +1,14 @@
+'use client'
+
 import axios from 'axios';
 import useSWR from 'swr';
 import { useRouter } from 'next/router'
-import { ProfileTabs } from './profiletabs';
+import { ProfileTabs } from '.';
 import Image from 'next/image';
 import Logout from '../public/icon/profile/logout.svg'
 import Avatar from '@mui/material/Avatar';
 import { translate } from '../locales/translate';
 import { useAppDispatch, LogoutAuthAction } from "../redux";
-
 
 const MainProfile: React.FC = () => {
    const dispatch = useAppDispatch();

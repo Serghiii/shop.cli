@@ -1,9 +1,11 @@
-import axios from "axios";
-import React, { ChangeEvent, useCallback, useState } from "react";
-import AvatarEditor from "react-avatar-editor";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { translate } from '../../locales/translate';
-import { useRouter } from "next/router";
+import axios from "axios"
+import React, { ChangeEvent, useCallback, useState } from "react"
+import AvatarEditor from "react-avatar-editor"
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import { translate } from '../../locales/translate'
+import { useRouter } from "next/router"
+// import Jimp from "jimp"
+// import sharp from "sharp"
 
 const PhotoPanel: React.FC<any> = (props) => {
    const [state, setState] = useState<any>({
@@ -34,6 +36,12 @@ const PhotoPanel: React.FC<any> = (props) => {
       // eslint-disable-next-line
    }, [editor]);
 
+   // const changeQuality: any = (buffer: any) => {
+   //    return Jimp.read(Buffer.from(buffer, 'base64')).then((image: any) => {
+   //       return image.quality(10) //.toString('base64')
+   //    })
+   // }
+
    const SaveProfileSubmit = (e: any) => {
       e.preventDefault();
       const editor: any = state.editor;
@@ -42,9 +50,19 @@ const PhotoPanel: React.FC<any> = (props) => {
             avatar: editor?.getImageScaledToCanvas().toDataURL().replace(/^data:image\/\w+;base64,/, "")
          }
          if (Avatar.avatar) {
-            axios.post('user/changeavatar', Avatar).then((res) => {
-               window.location.reload();
-            })
+            axios.post('user/changeavatar',
+               Avatar
+               // Buffer.from(Avatar.avatar, 'base64')
+               // await changeQuality(Avatar.avatar)
+               // sharp(Avatar.avatar).jpeg({
+               //    quality: 10,
+               //    chromaSubsampling: '4:4:4',
+               //    force: true,
+               // }).toBuffer()
+            )
+               .then((res) => {
+                  window.location.reload();
+               })
          }
       }
    }

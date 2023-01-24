@@ -5,7 +5,7 @@ import { MainBreadcrumbs, MainFilters, MainProducts } from ".";
 import { translate } from "../locales/translate";
 import { arrToParams } from "../src/utils";
 
-const MainMobiles: React.FC<any> = ({ group, params, data, pg }) => {
+const MainMobiles: React.FC<any> = ({ group, params, data, pg, error }) => {
    const [filters, setFilters] = React.useState<string[]>(params);
    const [page, setPage] = React.useState<number>(pg)
    const router = useRouter()
@@ -40,24 +40,27 @@ const MainMobiles: React.FC<any> = ({ group, params, data, pg }) => {
 
    return (
       <main>
-         <div className="container">
-            <div className="main">
-               <div className="breadcrumbs">
-                  <MainBreadcrumbs />
-               </div>
-               <h2 className="main-title">{translate('filter.group.title', router.locale)}</h2>
-               <div className="main-products">
-                  <div>
-                     <section className="filters">
-                        <MainFilters group={group} cond={[filters, setFilters]} page={[page, setPage]} fdata={data} />
-                     </section>
+         {error && <p>{error.message}</p>}
+         {data &&
+            <div className="container">
+               <div className="main">
+                  <div className="breadcrumbs">
+                     <MainBreadcrumbs />
                   </div>
-                  <div className="products">
-                     <MainProducts group={group} cond={[filters, setFilters]} page={[page, setPage]} />
+                  <h2 className="main-title">{translate('filter.group.title', router.locale)}</h2>
+                  <div className="main-products">
+                     <div>
+                        <section className="filters">
+                           <MainFilters group={group} cond={[filters, setFilters]} page={[page, setPage]} fdata={data} />
+                        </section>
+                     </div>
+                     <div className="products">
+                        <MainProducts group={group} cond={[filters, setFilters]} page={[page, setPage]} />
+                     </div>
                   </div>
                </div>
             </div>
-         </div>
+         }
       </main>
    )
 }

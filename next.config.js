@@ -1,10 +1,5 @@
 module.exports = {
   reactStrictMode: true,
-  // for react 18 to use suspense
-  // experimental: {
-  //   runtime: 'nodejs',
-  //   serverComponents: true,
-  // },
   i18n: {
     locales: ['uk', 'ru'],
     defaultLocale: 'uk',
@@ -16,6 +11,6 @@ module.exports = {
     GOOGLE_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
   },
   images: {
-    domains: ['localhost', '194.44.130.38'],
+    domains: ['localhost', '194.44.130.38']
   }
 }

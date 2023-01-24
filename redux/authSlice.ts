@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from "axios";
-import decode from 'jwt-decode';
-import { useCookie } from 'next-cookie';
+import axios from "axios"
+import decode from 'jwt-decode'
+import { useCookie } from 'next-cookie'
 
 interface User {
    name: string,
@@ -32,14 +32,14 @@ interface Auth {
 }
 
 interface Error {
-   code: string,
+   code?: string,
    message: string
 }
 
 interface AuthState {
    user: Auth,
    isLoading: boolean,
-   error: Error
+   error: Error | null
 }
 
 const initialState: AuthState = {
@@ -50,53 +50,44 @@ const initialState: AuthState = {
       avatar: ''
    },
    isLoading: false,
-   error: {
-      code: '',
-      message: ''
-   }
+   error: null
 };
 
 const getAuthState = () => {
    const cookies = useCookie();
-   const user: Auth = cookies.get("auth");
+   const user: Auth = cookies.get("auth")
    try {
       const decoded: any = decode(user.token);
       if (decoded.exp < Date.now() / 1000) {
-         return initialState;
+         return initialState
       }
-      axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`
       return <AuthState>{
          user,
          isLoading: false,
-         error: {
-            code: '',
-            message: ''
-         }
+         error: null
       }
    } catch (e) {
-      return initialState;
+      return initialState
    }
 }
 
 const setLogin = (token: string): AuthState => {
-   const decoded: any = decode(token);
+   const decoded: any = decode(token)
    const user: Auth = {
       isLoggedIn: true,
       token: token,
       name: decoded.profile.name,
       avatar: decoded.profile.avatar
-   };
+   }
    axios.defaults.headers.common[
       "Authorization"
-   ] = `Bearer ${token}`;
-   useCookie().set("auth", user, { expires: new Date(decoded.exp * 1000) });
+   ] = `Bearer ${token}`
+   useCookie().set("auth", user, { expires: new Date(decoded.exp * 1000) })
    return <AuthState>{
       user,
       isLoading: false,
-      error: {
-         code: '',
-         message: ''
-      }
+      error: null
    }
 }
 
@@ -168,7 +159,7 @@ export const authSlice = createSlice({
       builder
          .addCase(RegisterAuthAction.fulfilled, (state) => {
             state.isLoading = false
-            state.error = { code: '', message: '' }
+            state.error = null
          })
          .addCase(RegisterAuthAction.pending, (state) => {
             state.isLoading = true

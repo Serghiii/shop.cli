@@ -1,9 +1,9 @@
 import React from 'react';
 import { DialogLogin } from '.'
-import { useMainContext } from '../contexts';
-import { translate } from '../locales/translate';
-import { useRouter } from 'next/router';
-import { DialogCart } from './dialogcart';
+import { useMainContext } from '../contexts'
+import { translate } from '../locales/translate'
+import { useRouter } from 'next/router'
+import { DialogCart } from '.'
 
 const Footer: React.FC = () => {
    const mainCtx = useMainContext();

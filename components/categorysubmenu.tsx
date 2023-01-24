@@ -2,7 +2,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import React from "react"
 
-const SmaSubmenu: React.FC = () => {
+const CategorySubmenu: React.FC = () => {
    const { locale } = useRouter()
    const t = locale === 'ru' ? 'ru' : 'uk'
 
@@ -152,4 +152,4 @@ const SmaSubmenu: React.FC = () => {
       </div>
    )
 }
-export default SmaSubmenu
+export default CategorySubmenu

@@ -1,22 +1,22 @@
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Typography from '@mui/material/Typography';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import HomeIcon from '@mui/icons-material/Home';
-import React from "react";
-import { useRouter } from "next/router";
-import { useMainContext } from "../contexts";
-import Link from "next/link";
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Typography from '@mui/material/Typography'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import HomeIcon from '@mui/icons-material/Home'
+import React from "react"
+import { useRouter } from "next/router"
+import { useMainContext } from "../contexts"
+import Link from "next/link"
 
 const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
-   const mainCtx = useMainContext();
-   const router = useRouter();
+   const mainCtx = useMainContext()
+   const router = useRouter()
 
-   let items: any = [];
-   let parts = router.pathname.split("/");
-   const place = parts[parts.length - 1];
-   parts = parts.slice(1, parts.length - 1);
-   parts.forEach(item => { getItem(item) });
-   getItem(place);
+   let items: any = []
+   let parts = router.pathname.split("/")
+   const place = parts[parts.length - 1]
+   parts = parts.slice(1, parts.length - 1)
+   parts.forEach(item => { getItem(item) })
+   getItem(place)
 
    function getItem(str: string) {
       const group = getGroup(str)

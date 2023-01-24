@@ -1,8 +1,8 @@
 import React from "react"
 import MoneyFormat from "../money-format"
-import IconButton from '@mui/material/IconButton';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { AdjustAmount, RemoveItem } from "../../redux";
+import IconButton from '@mui/material/IconButton'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import { AdjustAmount, RemoveItem } from "../../redux"
 
 const CartItem: React.FC<any> = ({ data, doAction }) => {
 
@@ -14,7 +14,7 @@ const CartItem: React.FC<any> = ({ data, doAction }) => {
    }
 
    const onClickHandle = (e: any) => {
-      doAction(RemoveItem({ id: data.id, amount: 0 }))
+      doAction(RemoveItem(data.id))
    }
 
    return (
@@ -28,12 +28,13 @@ const CartItem: React.FC<any> = ({ data, doAction }) => {
                <p>Код: {data.code}</p>
                <MoneyFormat {...{ value: data.price, className: 'price-value' }} />
             </div>
-            <input type="number" style={{ width: "60px", outline: "none", margin: "0 10px 0 10px", padding: "3px" }} min="1" max={data.amount} defaultValue={data.iamount} onChange={onChangeCountHandler} />
+            <input type="number" className="cart-row__inpit-amount" autoComplete="off"
+               min="1" max={data.amount} defaultValue={data.iamount} onChange={onChangeCountHandler} />
             <div>
                <MoneyFormat {...{ value: data.price * data.iamount, className: 'price-value' }} />
             </div>
             <div>
-               <IconButton aria-label="delete" component="span" onClick={onClickHandle}>
+               <IconButton aria-label="delete" component="span" disableRipple={false} onClick={onClickHandle}>
                   <DeleteForeverIcon color="action" />
                </IconButton>
             </div>

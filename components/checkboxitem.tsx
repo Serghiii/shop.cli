@@ -1,23 +1,34 @@
-import React from "react";
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import ListItem from "@mui/material/ListItem";
+import React from "react"
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import ListItemButton from "@mui/material/ListItemButton"
 
-const CheckBoxItem: React.FC<any> = ({ data, fdata, brandZone, brandZoneClick, checked, handleChange }) => {
+const CheckBoxItem: React.FC<any> = ({ loading, data, fdata, brandZone, brandZoneClick, checked, handleChange }) => {
    const [state, setState] = React.useState(checked)
    let count = (brandZone || brandZoneClick) ? (data.prop.includes('brand-') ? data.count : fdata?.count) : (data.prop?.includes('brand-') ? fdata?.count : data.count)
 
    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (loading) return
       setState(!state)
       handleChange(e)
    }
 
+   const def = {
+      cursor: 'pointer'
+   }
+
+   const wait = {
+      cursor: 'wait'
+   }
+
    return (
       <>
-         <ListItem button>
+         <ListItemButton >
             <FormControlLabel
+               sx={loading ? wait : def}
                control={
                   <Checkbox
+                     sx={loading ? wait : def}
                      checked={state}
                      onChange={handleOnChange}
                      name={data.prop}
@@ -26,8 +37,9 @@ const CheckBoxItem: React.FC<any> = ({ data, fdata, brandZone, brandZoneClick, c
                }
                label={`${data.propname} (${count ? count : 0})`}
             />
-         </ListItem>
+         </ListItemButton>
       </>
    )
 }
-export default React.memo(CheckBoxItem)
+
+export default CheckBoxItem
