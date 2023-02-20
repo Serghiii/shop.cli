@@ -1,11 +1,11 @@
+.vscode
+.git
+.gitignore
+node_modules
+Dockerfile
 components
 context
 locales
 pages
 src
 styles
-node_modules
-.vscode
-.git
-.gitignore
-Dockerfile

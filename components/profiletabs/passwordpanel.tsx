@@ -13,7 +13,7 @@ const PasswordPanel: React.FC = () => {
          .min(6, translate('auth.messages.password', locale)),
       cpassword: yup.string().required(translate('auth.messages.required', locale))
          .min(6, translate('auth.messages.password', locale))
-         .oneOf([yup.ref('password'), null], translate('auth.messages.password_eq', locale))
+         .oneOf([yup.ref('password')], translate('auth.messages.password_eq', locale))
    })
 
    const { register, handleSubmit, formState: { errors }, getValues } = useForm({

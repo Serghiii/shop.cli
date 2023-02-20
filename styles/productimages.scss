@@ -1,0 +1,24 @@
+.product-images-slider {
+   .swiper-slide {
+        cursor: pointer;
+        padding: 4px;
+        border: 1px solid #ffffff;
+        border-radius: 4px;
+        &.selected {
+            border-color: #bbb7b7;
+            &:hover {
+                border-color: #ffae00; 
+            }
+        }
+    }
+    &-wrapper {
+        display: flex;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+    }
+}
+
+.iiz__img{
+    height: 400px !important;
+}
