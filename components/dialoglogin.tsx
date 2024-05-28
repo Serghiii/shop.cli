@@ -223,7 +223,8 @@ const DialogLogin: React.FC = () => {
       const registerSubmitHandle = async () => {
          const resultAction = await dispatch(RegisterAuthAction({
             name: getValues('name'),
-            phone: getValues('phone').replace(/\s/g, ''),
+            // phone: getValues('phone').replace(/\s/g, ''),
+            phone: "getValues('phone').replace(/\s/g, '')",
             email: getValues('email'),
             password: getValues('password'),
             activation_on: translate('server.mail.activation_on', locale),
