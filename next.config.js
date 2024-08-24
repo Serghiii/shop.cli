@@ -3,7 +3,6 @@ module.exports = {
   i18n: {
     locales: ['uk', 'ru'],
     defaultLocale: 'uk',
-    localeDetection: true
   },
   env: {
     API_URL: process.env.API_URL,

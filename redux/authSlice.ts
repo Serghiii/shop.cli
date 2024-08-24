@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios"
-import decode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { useCookie } from 'next-cookie'
 
 interface User {
@@ -57,7 +57,7 @@ const getAuthState = () => {
    const cookies = useCookie();
    const user: Auth = cookies.get("auth")
    try {
-      const decoded: any = decode(user.token);
+      const decoded: any = jwtDecode(user.token);
       if (decoded.exp < Date.now() / 1000) {
          return initialState
       }
@@ -73,7 +73,7 @@ const getAuthState = () => {
 }
 
 const setLogin = (token: string): AuthState => {
-   const decoded: any = decode(token)
+   const decoded: any = jwtDecode(token)
    const user: Auth = {
       isLoggedIn: true,
       token: token,
