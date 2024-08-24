@@ -1,7 +1,7 @@
 import { useState } from "react"
 import InnerImageZoom from "react-inner-image-zoom"
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css'
-import { Navigation, Pagination } from "swiper"
+import { Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 const ProductImages: React.FC<any> = ({ id, data }) => {
