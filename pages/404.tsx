@@ -1,6 +1,4 @@
 'use client'
-
-import React from 'react'
 import Image from 'next/image';
 import { HeaderSimple } from '../components'
 import Image404 from '../public/icon/404.svg'

@@ -50,7 +50,7 @@ const DialogCart: React.FC = () => {
                   <path d="m413.348 24.354-24.354-24.354-182.32 182.32-182.32-182.32-24.354 24.354 182.32 182.32-182.32 182.32 24.354 24.354 182.32-182.32 182.32 182.32 24.354-24.354-182.32-182.32z" />
                </svg>
             </div>
-            <DrawCart />
+            <DrawCart closeDialog={buttonCloseClickHandler}/>
          </div>
       </div>
    )

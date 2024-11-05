@@ -27,7 +27,7 @@ const ProfilePanel: React.FC<any> = (props) => {
          .matches(/^\+38\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/, translate('auth.messages.phone', locale)),
    })
 
-   const { register, handleSubmit, formState: { errors }, clearErrors, getValues, setValue, control } = useForm({
+   const { register, handleSubmit, formState: { errors }, clearErrors, getValues, setValue } = useForm({
       resolver: yupResolver(validationSchema)
    });
 

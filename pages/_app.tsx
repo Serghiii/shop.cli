@@ -1,4 +1,6 @@
+import '../styles/normalize.scss'
 import '../styles/styles.scss'
+import '../styles/global.scss'
 import '../styles/productimages.scss'
 import 'swiper/scss'
 import 'swiper/scss/navigation'

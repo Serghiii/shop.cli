@@ -28,6 +28,9 @@ const ProductOne: React.FC<any> = ({ data, error }) => {
             amount: data.amount,
             pic: data.pic,
             iamount: 1,
+            dcount: data.dcount,
+            dpercent: data.dpercent,
+            firm: data.firmid
          }))
       }
    }

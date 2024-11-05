@@ -1,4 +1,3 @@
-import React from "react"
 import { MainGroups, MainLayout } from "../components"
 
 const Smartphones: React.FC = () => {

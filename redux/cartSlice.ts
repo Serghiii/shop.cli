@@ -13,7 +13,10 @@ interface Cart extends LsCart {
    iamount: number,
    price: number,
    priceold: number,
-   pic: string
+   dcount: number,
+   dpercent:number,
+   pic: string,
+   firm: {}
 }
 
 interface CartState {

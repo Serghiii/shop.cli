@@ -31,7 +31,7 @@ const CartItem: React.FC<any> = ({ data, doAction }) => {
             <input type="number" className="cart-row__inpit-amount" autoComplete="off"
                min="1" max={data.amount} defaultValue={data.iamount} onChange={onChangeCountHandler} />
             <div>
-               <MoneyFormat {...{ value: data.price * data.iamount, className: 'price-value' }} />
+               <MoneyFormat {...{ value: data.iamount >= data.dcount? data.price*data.iamount - (data.price*data.iamount*data.dpercent)/100 : data.price*data.iamount, className: 'price-value' }} />
             </div>
             <div>
                <IconButton aria-label="delete" component="span" disableRipple={false} onClick={onClickHandle}>
