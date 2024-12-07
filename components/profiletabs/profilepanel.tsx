@@ -1,8 +1,8 @@
 import axios from "axios";
-import InputMask from "react-input-mask";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { InputMask } from '@react-input/mask';
 import React, { ChangeEvent, useEffect, useState } from "react";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -33,10 +33,9 @@ const ProfilePanel: React.FC<any> = (props) => {
 
    useEffect(() => {
       setValue('gender', gender)
-      // eslint-disable-next-line
    }, [gender])
 
-   const onSubmit = () => {
+   const onSubmitHandler = () => {
       let values = { name: getValues('name'), gender }
       const phone: any = getValues('phone')?.replace(/\s/g, '')
       axios.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values).then(() => {
@@ -51,7 +50,7 @@ const ProfilePanel: React.FC<any> = (props) => {
 
    return (
       <>
-         <form className="dialog-form-simple" onSubmit={handleSubmit(onSubmit)}>
+         <form className="dialog-form-simple" onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="form-row-simple">
                <label htmlFor="name" className="form-label-simple">{translate('profile.tabs.panels.pib', locale)}</label>
                <input {...register("name")} id="name" className="custom-input-simple" defaultValue={props.name} type="text" maxLength={50} name="name" />
@@ -77,17 +76,18 @@ const ProfilePanel: React.FC<any> = (props) => {
             </div>
             <div className="form-row-simple">
                <label htmlFor="phone" className="form-label-simple">{translate('profile.tabs.panels.phone', locale)}</label>
-               <InputMask {...register("phone")}
+               <InputMask
+                  {...register("phone")}
                   id="phone"
                   disabled={props.phone?.length > 0}
                   className="custom-input-simple phone-bounds"
                   defaultValue={props.phone}
                   name="phone"
-                  mask="+38 999 999 99 99"
-                  maskPlaceholder=''
-                  alwaysShowMask={true}
-                  readOnly={props.phone?.length > 0}>
-               </InputMask>
+                  mask="+38 ___ ___ __ __"
+                  replacement={{ _: /\d/ }}
+                  showMask={true}
+                  readOnly={props.phone?.length > 0}
+                  />
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
                <div className="form-label-simple hidden-div"></div>

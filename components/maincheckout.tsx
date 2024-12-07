@@ -2,26 +2,25 @@ import { useRouter } from "next/router"
 import { translate } from "../locales/translate"
 import { GetCartAction, RemoveItem, useAppDispatch, useAppSelector } from "../redux"
 import axios from "axios"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import InputMask from "react-input-mask"
+import { IMaskInput } from 'react-imask'
 import { ChangeEvent, useEffect, useState } from "react"
 import MoneyFormat from "./money-format"
 import RadioGroup from "@mui/material/RadioGroup"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Radio from "@mui/material/Radio"
-import FormLabel from "@mui/material/FormLabel"
 import FormControl from "@mui/material/FormControl"
-    
 
 interface Details {
     fio: string,
     phone: string | undefined,
     city: string,
-    shipping: {
+    shipping?: {
         company: string,
-        dep_index: string
+        dep?: string,
+        index?: string
     }
     payment?: string
 }
@@ -49,46 +48,58 @@ const MainCheckout: React.FC = () => {
     const [Shipping, setShipping] = useState<string>('')
     const [DepIndex, setDepIndex] = useState<string>('')
     const posts: string[] = ['Нова пошта', 'Укрпошта']
-
+    const mask: string[] = ['+{38}(000)000-00-00']
+    
     const checkoutSchema = yup.object().shape({
         fio: yup.string().trim()
-           .required(translate('checkout.messages.required', locale)),
-        phone: yup.string()
-           .matches(/^\+38\s[0-9,\s]+$/, translate('checkout.messages.required', locale))
-           .matches(/^\+38\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/, translate('checkout.messages.phone', locale)),
-        city: yup.string().trim()
-           .required(translate('checkout.messages.required', locale)),
-        shipping: yup.string()
+            .required(translate('checkout.messages.required', locale)),
+        phone: yup.string().trim()
             .required(translate('checkout.messages.required', locale))
-            .oneOf(posts, translate('checkout.messages.shipping', locale)),
-     });
+            .matches(/^\+38\([0-9,\),-]+$/, translate('checkout.messages.required', locale))
+            .matches(/^\+38\(\d{3}\)\d{3}\-\d{2}\-\d{2}$/, translate('checkout.messages.phone', locale)),
+        city: yup.string().trim()
+            .required(translate('checkout.messages.required', locale)),
+        shipping: yup.string()
+            .required(translate('checkout.messages.shipping', locale)),
+        payment: yup.string()
+            .required(translate('checkout.messages.paymant', locale))
+    });
   
-    const { register, formState: { errors, isValid }, clearErrors, getValues, setValue } = useForm({
+    const { control, register, formState: { errors, isValid }, clearErrors, getValues, watch } = useForm({
         mode: "onChange",
-        resolver: yupResolver(checkoutSchema)
+        resolver: yupResolver(checkoutSchema),
+        defaultValues: {
+            shipping: ''
+        }
      });
-       
+
+    const shipping = watch('shipping')
+
     if (!cart.started) {
         dispatch(GetCartAction(cart))
     }
 
     useEffect(() => {
         if (cart.started) setCart(getDataFromCart())
+    // eslint-disable-next-line        
     }, [cart.started])
     
     useEffect(() => {
-        setValue('shipping', Shipping)
-    }, [Shipping])
-  
+        setShipping(shipping)
+        setDepIndex('')
+    }, [shipping])
+
     const getDetails = (): Details => {
         const res: Details = {
             fio: getValues('fio'),
             phone: getValues('phone'),
             city: getValues('city'),
-            shipping: {
+            shipping: getValues('shipping').length ? {
                 company: getValues('shipping'),
-                dep_index: DepIndex
-            }
+                dep: getValues('shipping').includes(posts[0])? DepIndex : undefined,
+                index: getValues('shipping').includes(posts[1])? DepIndex : undefined
+            } : undefined,
+            payment: getValues('payment').length ? getValues('payment') : undefined
         }
         return res
     }
@@ -112,7 +123,7 @@ const MainCheckout: React.FC = () => {
 
     const clearCart = (items:ODetails[]) => (items.forEach((item:ODetails) => dispatch(RemoveItem(item.id))))
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (Cart.length > 0) {
             const data:Order = postOrder({ details: JSON.stringify(getDetails()), odetails: Cart})
@@ -120,23 +131,17 @@ const MainCheckout: React.FC = () => {
         }
     }
 
-    const onChangeShippingHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setShipping(e.target.value)
-        clearErrors('shipping')
-        setDepIndex('')
-    }
-
-    const onChangeDepIndex = (e: ChangeEvent<HTMLInputElement>) => {
+    const onChangeDepIndexHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setDepIndex(e.target.value)
     }
 
     return (
         <main>
             <div className="container-simple">
-                <div className="main-simple">
-                    <div className="dialog-body checkout">
+                <div className="main">
+                    <div className="dialog-body">
                         <h2>{translate('checkout.title', locale)}</h2>
-                        <form className="dialog-form" onSubmit={handleSubmit}>
+                        <form className="dialog-form" onSubmit={onSubmitHandler}>
                             <div className="checkout_frame">
                                 <div className="form-row">
                                     <label htmlFor="fio" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>{translate('checkout.fio', locale)}</label>
@@ -153,13 +158,16 @@ const MainCheckout: React.FC = () => {
                                 </div>
                                 <div className="form-row">
                                     <label htmlFor="phone" className="form-label">{translate('checkout.phone', locale)}</label>
-                                    <InputMask
-                                        {...register("phone")}
-                                        id="phone"
-                                        className={`checkout-input${errors.phone ? ' error-color' : ''} phone`}
-                                        mask="+38 999 999 99 99"
-                                        maskPlaceholder=''
-                                        alwaysShowMask={true}
+                                    <Controller
+                                        control={control}
+                                        name='phone'
+                                        render={({field}) => (
+                                            <IMaskInput
+                                                {...field}
+                                                className={`checkout-input${errors.phone ? ' error-color' : ''} phone`}
+                                                mask={mask[0]}
+                                            />
+                                        )}
                                     />
                                     <div className="error-row">
                                         <p className="error-message">{`${errors.phone ? errors.phone.message : ''}`}</p>
@@ -171,7 +179,6 @@ const MainCheckout: React.FC = () => {
                                         {...register("city")}
                                         id="city"
                                         className={`checkout-input${errors.city ? ' error-color' : ''}`}
-                                        // placeholder={translate('checkout.city_ph', locale)}
                                         type="text"
                                         maxLength={80}
                                     />
@@ -181,30 +188,63 @@ const MainCheckout: React.FC = () => {
                                 </div>
                                 <FormControl className="form-row">
                                     <label className="form-label">{translate('checkout.shipping.title', locale)}</label>
-                                    <RadioGroup
-                                        value={Shipping}
-                                        onChange={onChangeShippingHandler}
-                                    >
-                                        <FormControlLabel sx={{ mt: -1, mb: -1 }} value={posts[0]} control={<Radio color="primary" />} label={translate('checkout.shipping.new_post.title', locale)} />
-                                        <FormControlLabel sx={{ mt: -1, mb: -1 }} value={posts[1]} control={<Radio color="primary" />} label={translate('checkout.shipping.ukr_post.title', locale)} />
-                                    </RadioGroup>
+                                    <Controller
+                                        control={control}
+                                        name='shipping'
+                                        render={({field}) => (
+                                            <RadioGroup
+                                                {...field}
+                                            >
+                                                <FormControlLabel sx={{ mt: -1, mb: -1 }} value={posts[0]} control={<Radio color="primary" />} label={translate('checkout.shipping.new_post.title', locale)} />
+                                                <FormControlLabel sx={{ mt: -1, mb: -1 }} value={posts[1]} control={<Radio color="primary" />} label={translate('checkout.shipping.ukr_post.title', locale)} />
+                                            </RadioGroup>
+                                        )}
+                                    />
                                     {Shipping.length > 0 &&<input
                                         className="checkout-input checkout-input-dep-index"
                                         placeholder={Shipping.includes(posts[0])?translate('checkout.shipping.new_post.dep', locale):Shipping.includes(posts[1])?translate('checkout.shipping.ukr_post.index', locale):''}
                                         maxLength={Shipping.includes(posts[0])?40:Shipping.includes(posts[1])?5:0}
                                         type="text"
                                         value={DepIndex}
-                                        onChange={onChangeDepIndex}
+                                        onChange={onChangeDepIndexHandler}
                                     />}
+                                    <div className="error-row"/>
+                                </FormControl>
+                                <FormControl className="form-row">
+                                    <label className="form-label">{translate('checkout.payment.title', locale)}</label>
+                                    <Controller
+                                        control={control}
+                                        name='payment'
+                                        render={({field}) => (
+                                            <RadioGroup
+                                                {...field}
+                                            >
+                                                <FormControlLabel sx={{ mt: -1, mb: -1 }} value={translate('checkout.payment.card', locale)} control={<Radio color="primary" />} label={translate('checkout.payment.card', locale)} />
+                                                <FormControlLabel sx={{ mt: -1, mb: -1 }} value={translate('checkout.payment.cash', locale)} control={<Radio color="primary" />} label={translate('checkout.payment.cash', locale)} />
+                                                <FormControlLabel sx={{ mt: -1, mb: -1 }} value={translate('checkout.payment.cashless', locale)} control={<Radio color="primary" />} label={translate('checkout.payment.cashless', locale)} />
+                                            </RadioGroup>
+                                        )}
+                                    />
+                                    <div className="error-row"/>
                                 </FormControl>
                                 <div>
                                     {Cart.map((item:ODetails)=>(
                                         <div key={item.id}>код: {item.code} товар: {item.name} кількість: {item.amount} скидка: {item.discount} сумма: <MoneyFormat {...{ value: item.sum, className: 'price-value', currency: false }} /></div>
                                     ))}
                                 </div>
+                                <div className="form-row">
+                                    <div className="error-row">
+                                        <p className="error-message">{`${errors.city}`}</p>
+                                        <p className="error-message">{`${errors.fio}`}</p>
+                                        <p className="error-message">{`${errors.payment}`}</p>
+                                        <p className="error-message">{`${errors.phone}`}</p>
+                                        <p className="error-message">{`${errors.shipping}`}</p>
+                                        <p className="error-message">{`${errors.root}`}</p>
+                                    </div>
+                                </div>
                                 <div style={{ float: "right", paddingRight: "20px" }}>
                                     <div style={{ maxWidth: "400px" }}>
-                                        <button className="custom-button">{translate('checkout.confirm_order', locale)}</button>
+                                        <button className="custom-button" disabled={!isValid}>{translate('checkout.confirm_order', locale)}</button>
                                     </div>
                                 </div>
                             </div>
