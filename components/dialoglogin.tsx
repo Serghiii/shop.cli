@@ -1,5 +1,5 @@
 import React, { MouseEvent, useRef, useState, ChangeEvent, useEffect } from "react";
-import InputMask from "react-input-mask";
+import { InputMask } from '@react-input/mask';
 import { useMainContext } from "../contexts";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -264,9 +264,9 @@ const DialogLogin: React.FC = () => {
                         {...register("phone")}
                         id="phone"
                         className={`custom-input${errors.phone ? ' error-color' : ''}`}
-                        mask="+38 999 999 99 99"
-                        maskPlaceholder=''
-                        alwaysShowMask={true}
+                        mask="+38 ___ ___ __ __"
+                        replacement={{ _: /\d/ }}
+                        showMask={true}
                      />
                      <div className="error-row">
                         <p className="error-message">{`${errors.phone ? errors.phone.message : ''}`}</p>

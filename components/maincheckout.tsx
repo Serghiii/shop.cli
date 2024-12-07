@@ -5,13 +5,12 @@ import axios from "axios"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import InputMask from "react-input-mask"
+import { InputMask } from '@react-input/mask'
 import { ChangeEvent, useEffect, useState } from "react"
 import MoneyFormat from "./money-format"
 import RadioGroup from "@mui/material/RadioGroup"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Radio from "@mui/material/Radio"
-import FormLabel from "@mui/material/FormLabel"
 import FormControl from "@mui/material/FormControl"
     
 
@@ -157,9 +156,9 @@ const MainCheckout: React.FC = () => {
                                         {...register("phone")}
                                         id="phone"
                                         className={`checkout-input${errors.phone ? ' error-color' : ''} phone`}
-                                        mask="+38 999 999 99 99"
-                                        maskPlaceholder=''
-                                        alwaysShowMask={true}
+                                        mask="+38 ___ ___ __ __"
+                                        replacement={{ _: /\d/ }}
+                                        showMask={true}
                                     />
                                     <div className="error-row">
                                         <p className="error-message">{`${errors.phone ? errors.phone.message : ''}`}</p>

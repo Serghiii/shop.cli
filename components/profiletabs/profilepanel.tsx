@@ -1,8 +1,8 @@
 import axios from "axios";
-import InputMask from "react-input-mask";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { InputMask } from '@react-input/mask';
 import React, { ChangeEvent, useEffect, useState } from "react";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -77,17 +77,18 @@ const ProfilePanel: React.FC<any> = (props) => {
             </div>
             <div className="form-row-simple">
                <label htmlFor="phone" className="form-label-simple">{translate('profile.tabs.panels.phone', locale)}</label>
-               <InputMask {...register("phone")}
+               <InputMask
+                  {...register("phone")}
                   id="phone"
                   disabled={props.phone?.length > 0}
                   className="custom-input-simple phone-bounds"
                   defaultValue={props.phone}
                   name="phone"
-                  mask="+38 999 999 99 99"
-                  maskPlaceholder=''
-                  alwaysShowMask={true}
-                  readOnly={props.phone?.length > 0}>
-               </InputMask>
+                  mask="+38 ___ ___ __ __"
+                  replacement={{ _: /\d/ }}
+                  showMask={true}
+                  readOnly={props.phone?.length > 0}
+                  />
             </div>
             <div className="form-row-simple" style={{ height: "11px", margin: "-14px 0 0 0" }}>
                <div className="form-label-simple hidden-div"></div>
