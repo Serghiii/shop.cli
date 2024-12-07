@@ -3,19 +3,21 @@ import React, { Dispatch, RefObject, SetStateAction, useContext, useRef, useStat
 import useSWR from "swr";
 
 interface IStore {
-   stateProfile: [boolean, Dispatch<SetStateAction<boolean>>];
-   stateCart: [boolean, Dispatch<SetStateAction<boolean>>];
-   Categories: RefObject<HTMLDivElement>;
-   mainSwiper: RefObject<HTMLDivElement>;
-   scrollUp: RefObject<HTMLDivElement>;
-   categoryItems: any;
-   groupItems: any;
+   stateProfile: [boolean, Dispatch<SetStateAction<boolean>>]
+   stateCart: [boolean, Dispatch<SetStateAction<boolean>>]
+   Categories: RefObject<HTMLDivElement|null>
+   mainSwiper: RefObject<HTMLDivElement|null>
+   scrollUp: RefObject<HTMLDivElement|null>
+   categoryItems: any
+   groupItems: any
+   subgroupItems: any
 };
 
 const fetcherCategories = async (url: string) => await axios.get(url).then(response => response.data)
 const fetcherGroups = async (url: string) => await axios.get(url).then(response => response.data)
+const fetcherSubGroups = async (url: string) => await axios.get(url).then(response => response.data)
 
-const MainContext = React.createContext<IStore | undefined>(undefined);
+const MainContext = React.createContext<IStore | undefined>(undefined)
 type Props = {
    children?: React.ReactNode
 };
@@ -27,6 +29,7 @@ const MainProvider: React.FC<Props> = ({ children }) => {
    const scrollUp = useRef<HTMLDivElement>(null);
    const categoryItems = useSWR('categories', fetcherCategories).data;
    const groupItems = useSWR('groups', fetcherGroups).data;
+   const subgroupItems = useSWR('subgroups', fetcherSubGroups).data;
    const store: IStore = {
       stateProfile: [stateProfile, setStateProfile],
       stateCart: [stateCart, setStateCart],
@@ -35,6 +38,7 @@ const MainProvider: React.FC<Props> = ({ children }) => {
       scrollUp: scrollUp,
       categoryItems: categoryItems,
       groupItems: groupItems,
+      subgroupItems: subgroupItems,
    };
    return (
       <MainContext.Provider value={store} >

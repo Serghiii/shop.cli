@@ -7,6 +7,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 import ListItemButton from "@mui/material/ListItemButton"
 import { useRouter } from "next/router"
 import { CheckBoxItem } from "."
+import { tt } from "../src/utils"
 
 const MainFilterGroup: React.FC<any> = ({ loading, cond, items, fitems, brandZone, brandZoneClick, handleChange }) => {
    const { locale } = useRouter()
@@ -19,7 +20,7 @@ const MainFilterGroup: React.FC<any> = ({ loading, cond, items, fitems, brandZon
    return (
       <>
          <ListItemButton onClick={handleClick} >
-            <ListItemText primary={locale == 'ru' ? items.name_ru : items.name} />
+            <ListItemText primary={tt(items.name, locale)} />
             {open ? <ExpandLess /> : <ExpandMore />}
          </ListItemButton>
          <Collapse in={open} timeout="auto" unmountOnExit>

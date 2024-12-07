@@ -41,7 +41,7 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
       fdata?.forEach((el: any) => {
          if (tmpId !== el.id) {
             let newData = fdata.filter((item: any) => item.id === el.id)
-            fData.push({ id: el.id, name: el.name, name_ru: el.name_ru, data: [...newData] })
+            fData.push({ id: el.id, name: el.name, data: [...newData] })
             tmpId = el.id
          }
       });

@@ -1,7 +1,6 @@
-import React, { MouseEvent, useRef, useState, ChangeEvent, useEffect } from "react";
-import InputMask from "react-input-mask";
+import { MouseEvent, useRef, useState, ChangeEvent, useEffect } from "react";
 import { useMainContext } from "../contexts";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import Alert from '@mui/material/Alert';
@@ -13,13 +12,15 @@ import { useRouter } from "next/router";
 import Image from 'next/image';
 import GoogleIcon from '../public/icon/google.svg';
 import { useAppDispatch, useAppSelector, LoginAuthAction, RegisterAuthAction, GoogleAuthAction, ErrorUpdate } from "../redux";
+import { IMaskInput } from "react-imask";
+import { Masks } from "../src/common";
 
 const DialogLogin: React.FC = () => {
    const { locale } = useRouter()
-   const mainCtx = useMainContext();
-   const dispatch = useAppDispatch();
-   const [Register, setRegister] = useState(false);
-   const backdrop = useRef<HTMLDivElement>(null);
+   const mainCtx = useMainContext()
+   const dispatch = useAppDispatch()
+   const [Register, setRegister] = useState(false)
+   const backdrop = useRef<HTMLDivElement>(null)
    const mouseState = {
       Down: false,
       Up: false
@@ -27,36 +28,36 @@ const DialogLogin: React.FC = () => {
 
    const backdropMouseDownHandler = (e: MouseEvent) => {
       if ((e.target as HTMLElement).contains(backdrop.current)) {
-         mouseState.Down = true;
+         mouseState.Down = true
       } else {
-         mouseState.Down = false;
+         mouseState.Down = false
       }
    }
 
    const backdropMouseUpHandler = (e: MouseEvent) => {
       if ((e.target as HTMLElement).contains(backdrop.current)) {
-         mouseState.Up = true;
+         mouseState.Up = true
       } else {
-         mouseState.Up = false;
+         mouseState.Up = false
       }
    }
 
    const backdropClickHandler = (e: MouseEvent) => {
       if (mouseState.Down && mouseState.Up && (e.target as HTMLElement).contains(backdrop.current)) {
-         closeClickHandler();
+         closeClickHandler()
       }
    };
 
    const closeClickHandler = () => {
-      mainCtx.stateProfile[1](false);
-      document.body.removeAttribute('class');
-      mainCtx.mainSwiper.current?.removeAttribute('style');
+      mainCtx.stateProfile[1](false)
+      document.body.removeAttribute('class')
+      mainCtx.mainSwiper.current?.removeAttribute('style')
    }
 
    const registerClickHandler = (e: MouseEvent) => {
-      e.preventDefault();
+      e.preventDefault()
       dispatch(ErrorUpdate({ code: '', message: '' }))
-      setRegister(!Register);
+      setRegister(!Register)
    }
 
    const getAccessToken = (data: any) => {
@@ -121,7 +122,7 @@ const DialogLogin: React.FC = () => {
       }
 
       const rememberMeOnChangeHandle = (e: ChangeEvent<HTMLInputElement>) => {
-         setRememberMe(e.target.checked);
+         setRememberMe(e.target.checked)
       }
 
       return (
@@ -215,7 +216,7 @@ const DialogLogin: React.FC = () => {
             .min(6, translate('auth.messages.password', locale))
       });
 
-      const { register, formState: { errors, isValid }, handleSubmit, getValues } = useForm({
+      const { control, register, formState: { errors, isValid }, handleSubmit, getValues } = useForm({
          mode: "onChange",
          resolver: yupResolver(registerSchema)
       });
@@ -260,13 +261,17 @@ const DialogLogin: React.FC = () => {
                   </div>
                   <div className="form-row">
                      <label htmlFor="phone" className="form-label">{translate('auth.register.phone', locale)}</label>
-                     <InputMask
-                        {...register("phone")}
-                        id="phone"
-                        className={`custom-input${errors.phone ? ' error-color' : ''}`}
-                        mask="+38 999 999 99 99"
-                        maskPlaceholder=''
-                        alwaysShowMask={true}
+                     <Controller
+                        control={control}
+                        name='phone'
+                        render={({field: { ref, ...field }}) => (
+                           <IMaskInput
+                              {...field}
+                              id='phone'
+                              className={`checkout-input${errors.phone ? ' error-color' : ''}`}
+                              mask={Masks.phone[0]}
+                           />
+                        )}
                      />
                      <div className="error-row">
                         <p className="error-message">{`${errors.phone ? errors.phone.message : ''}`}</p>

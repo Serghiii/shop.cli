@@ -7,6 +7,7 @@ import useSWR from "swr"
 import axios from "axios"
 import { useAppDispatch, useAppSelector, AddItem } from "../../redux"
 import ProductImages from "./productimages"
+import { tt } from "../../src/utils"
 
 const ProductOne: React.FC<any> = ({ data, error }) => {
    const [extHtml, setExtHtml] = React.useState({ __html: '' })
@@ -49,7 +50,7 @@ const ProductOne: React.FC<any> = ({ data, error }) => {
                      <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <ProductImages id={data.id} data={data.productpics} />
                         <div style={{ paddingTop: '20px', minHeight: 'calc(100vh - 150px)', width: '100%' }}>
-                           <div style={{ fontSize: '30px' }}>{data?.name}</div>
+                           <div style={{ fontSize: '30px' }}>{tt(data?.name, locale)}</div>
                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                               <div style={{ padding: '20px 0', fontWeight: 'bold' }}>Код: {data?.code}</div>
                               <div className="product-card__price" style={{ paddingBottom: '20px', marginRight: '-5px' }}>

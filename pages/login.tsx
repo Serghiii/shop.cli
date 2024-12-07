@@ -6,18 +6,15 @@ import { MainLogin, SimpleLayout } from "../components";
 import { translate } from "../locales/translate";
 
 const Login: React.FC = () => {
-   const [showing, setShowing] = useState(false);
-
+   const [showing, setShowing] = useState(false)
    const auth = useAppSelector((state: any) => state.auth)
    const router = useRouter()
 
    useEffect(() => {
-      setShowing(true);
-   }, []);
+      setShowing(true)
+   }, [])
 
-   if (!showing) {
-      return null;
-   }
+   if (!showing) return null
 
    if (showing && auth.user.isLoggedIn) {
       router.push('/profile')

@@ -1,7 +1,7 @@
 import React from "react"
 import Link from "next/link"
 import MoneyFormat from "./money-format"
-import { makeHeadline } from "../src/utils";
+import { makeHeadline, tt } from "../src/utils";
 import { useRouter } from "next/router";
 import { AddItem, RemoveItem, useAppDispatch, useAppSelector } from "../redux";
 
@@ -29,7 +29,7 @@ const MainProductCard: React.FC<any> = ({ id, code, name, amount, price, priceol
             </Link>
          </div>
          <Link href={ref} locale={locale} className="product-card__name">
-            {name}
+            {tt(name,locale)}
          </Link>
          <div className="product-card__prices">
             {<div className="product-card__price-old">

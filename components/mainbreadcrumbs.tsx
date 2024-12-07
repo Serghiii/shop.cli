@@ -2,31 +2,44 @@ import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Typography from '@mui/material/Typography'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import HomeIcon from '@mui/icons-material/Home'
-import React from "react"
 import { useRouter } from "next/router"
 import { useMainContext } from "../contexts"
 import Link from "next/link"
+import { tt } from '../src/utils'
 
 const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
    const mainCtx = useMainContext()
-   const router = useRouter()
+   const { locale, pathname } = useRouter()
 
-   let items: any = []
-   let parts = router.pathname.split("/")
-   const place = parts[parts.length - 1]
-   parts = parts.slice(1, parts.length - 1)
-   parts.forEach(item => { getItem(item) })
-   getItem(place)
+   const getItems = (): any[] => {
+      let res: any[] = []
+      let parts = pathname.split("/")
+      const place = parts[parts.length - 1]
+      parts = parts.slice(1, parts.length - 1)
+      parts.forEach(item => { getItem(res, item) })
+      getItem(res, place)
+      return res
+   }
 
-   function getItem(str: string) {
-      const group = getGroup(str)
-      if (group) {
+   function getItem(items: any[], str: string) {
+      const subgroup = getSubGroup(str)
+      if (subgroup) {
+         const group = mainCtx.groupItems?.find((el: any) => el.id == subgroup.groupId)
          const category = mainCtx.categoryItems?.find((el: any) => el.id == group.categoryId)
-         items.push({ to: category?.ref, label: router.locale == 'ru' ? category?.name_ru : category?.name })
-         items.push({ to: group.ref, label: router.locale == 'ru' ? group.name_ru : group.name })
+         items.push({ to: category?.ref, label: tt(category?.name, locale) })
+         items.push({ to: group.ref, label: tt(group.name, locale) })
+         items.push({ to: subgroup.ref, label: tt(subgroup.name, locale) })
       } else {
-         const category = getCategory(str)
-         if (category) items.push({ to: category?.ref, label: router.locale == 'ru' ? category?.name_ru : category?.name })
+         const group = getGroup(str)
+         if (group) {
+            const category = mainCtx.categoryItems?.find((el: any) => el.id == group.categoryId)
+            items.push({ to: category?.ref, label: tt(category?.name, locale) })
+            items.push({ to: group.ref, label: tt(group.name, locale) })
+         } 
+         else {
+            const category = getCategory(str)
+            if (category) items.push({ to: category?.ref, label: tt(category?.name, locale) })
+         }
       }
    }
 
@@ -38,13 +51,17 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
       return mainCtx.groupItems?.find((el: any) => el.ref == str)
    }
 
+   function getSubGroup(str: string) {
+      return mainCtx.subgroupItems?.find((el: any) => el.ref == str)
+   }
+
    return (
       <>
          <Breadcrumbs className="breadcrumb-ol" aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
             <Link href="/">
                <HomeIcon />
             </Link>
-            {items?.map((item: any, index: number, arr: any) => (
+            {getItems().map((item: any, index: number, arr: any) => (
                ((index >= arr.length - 1) && (isProduct === false)) ? (
                   <Typography color="textPrimary" key={item.to}>{item.label}</Typography>
                ) : (

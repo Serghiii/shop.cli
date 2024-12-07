@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { makeHeadline } from "../src/utils";
+import { makeHeadline, tt } from "../src/utils";
 import MoneyFormat from "./money-format";
 
-const HomeProductCard: React.FC<any> = ({ id, name, price, priceold, pic, group, productinfo }) => {
+const HomeProductCard: React.FC<any> = ({ id, name, price, priceold, pic, subgroup, productinfo }) => {
    const { locale } = useRouter()
-   const ref = `/${group.ref}/${makeHeadline(id, productinfo)}`
+   const ref = `/${subgroup.ref}/${makeHeadline(id, productinfo)}`
 
    return (
       <div className="main-product-card">
@@ -16,7 +16,7 @@ const HomeProductCard: React.FC<any> = ({ id, name, price, priceold, pic, group,
             </Link>
          </div>
          <Link href={ref} locale={locale} className="product-card__name">
-            {name}
+            {tt(name,locale)}
          </Link>
          <div className="product-card__prices">
             {<div className="product-card__price-old">

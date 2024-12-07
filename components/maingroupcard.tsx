@@ -6,27 +6,29 @@ import Typography from '@mui/material/Typography'
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import { tt } from '../src/utils'
 
 const MainGroupCard: React.FC<any> = ({ item }) => {
    const { locale } = useRouter()
    const [raised, setRaised] = useState(false);
-   const toggleRaised = () => setRaised(!raised);
+   const setCardUp = ()=>setRaised(true)
+   const resetCardUp = ()=>setRaised(false)
 
    return (
       <Link href={`/${item.ref}`} passHref>
          <Box width={200} height='100%'>
             <Card
                raised={raised}
-               onMouseOver={toggleRaised}
-               onMouseOut={toggleRaised}
+               onMouseOver={setCardUp}
+               onMouseOut={resetCardUp}
             >
                <CardActionArea>
                   <Box display='flex' justifyContent='center' pt={3}>
-                     <img style={{ maxHeight: "160px", maxWidth: "100%" }} src={`${process.env.STATIC_URL}/groups/${item.pic}`} alt={item.name} />
+                     <img style={{ maxHeight: "160px", maxWidth: "100%" }} src={`${process.env.STATIC_URL}/subgroups/${item.pic}`} alt={item.name} />
                   </Box>
                   <CardContent>
                      <Typography variant="h6" align="center" color='textPrimary'>
-                        {locale == 'ru' ? item.name_ru : item.name}
+                        {tt(item.name, locale)}
                      </Typography>
                   </CardContent>
                </CardActionArea>

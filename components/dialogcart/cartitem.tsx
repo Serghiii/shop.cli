@@ -3,8 +3,9 @@ import MoneyFormat from "../money-format"
 import IconButton from '@mui/material/IconButton'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { AdjustAmount, RemoveItem } from "../../redux"
+import { tt } from "../../src/utils"
 
-const CartItem: React.FC<any> = ({ data, doAction }) => {
+const CartItem: React.FC<any> = ({ data, locale, doAction }) => {
 
    const onChangeCountHandler = (e: any) => {
       if (e.target.value <= 0) e.target.value = 1
@@ -24,7 +25,7 @@ const CartItem: React.FC<any> = ({ data, doAction }) => {
                <img className="cart-row__img" src={data.id ? `${process.env.STATIC_URL}/cards/${data.id}/${data.pic}` : ''} alt="" />
             </div>
             <div style={{ flex: "1" }}>
-               <p>{data.name}</p>
+               <p>{tt(data.name, locale)}</p>
                <p>Код: {data.code}</p>
                <MoneyFormat {...{ value: data.price, className: 'price-value' }} />
             </div>

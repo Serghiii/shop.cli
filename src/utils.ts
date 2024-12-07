@@ -46,3 +46,12 @@ export const paramsToArr = (params: string[]) => {
    });
    return temp
 }
+
+export const tt = (value: string, lang: string = 'uk', defstr: string = 'undefined') => {
+   let res: string = JSON.parse(value)[lang]
+   if (res === undefined) {
+      res = JSON.parse(value)['uk']
+      if (res === undefined) res = defstr
+   }
+   return res
+}

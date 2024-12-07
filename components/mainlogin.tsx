@@ -36,7 +36,7 @@ const MainLogin: React.FC = () => {
       setRememberMe(e.target.checked);
    }
 
-   const onSubmit = (e: FormEvent) => {
+   const onSubmitHandler = (e: FormEvent) => {
       e.preventDefault();
       dispatch(LoginAuthAction({
          username: getValues('login'),
@@ -51,7 +51,7 @@ const MainLogin: React.FC = () => {
             <Image src={User} alt="" width={80} />
          </div>
          <h2>{translate('auth.login.title', locale)}</h2>
-         <form className="dialog-form" onSubmit={onSubmit}>
+         <form className="dialog-form" onSubmit={onSubmitHandler}>
             <div className="form-row">
                <label htmlFor="auth-login" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>{translate('auth.login.name', locale)}</label>
                <input

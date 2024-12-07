@@ -42,7 +42,7 @@ const PhotoPanel: React.FC<any> = (props) => {
    //    })
    // }
 
-   const SaveProfileSubmit = (e: any) => {
+   const onSubmitHandler = (e: any) => {
       e.preventDefault();
       const editor: any = state.editor;
       if (editor?.props.image !== undefined) {
@@ -69,7 +69,7 @@ const PhotoPanel: React.FC<any> = (props) => {
 
    return (
       <>
-         <form className="dialog-form-simple" onSubmit={SaveProfileSubmit}>
+         <form className="dialog-form-simple" onSubmit={onSubmitHandler}>
             <div style={{ display: "flex", flexDirection: "column", width: "220px" }}>
                <div>
                   <div style={{ display: "flex", justifyContent: "center" }}>

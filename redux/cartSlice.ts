@@ -16,7 +16,7 @@ interface Cart extends LsCart {
    dcount: number,
    dpercent:number,
    pic: string,
-   firm: {}
+   firm: {id: number}
 }
 
 interface CartState {

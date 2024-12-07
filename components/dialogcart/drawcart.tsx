@@ -18,7 +18,7 @@ const DrawCart = ({closeDialog}:any) => {
    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       closeDialog()
-      router.push('/checkout')
+      router.push('/checkout', '/checkout', {shallow: false})
    }
 
    const doAction = (action: any) => {
@@ -63,7 +63,7 @@ const DrawCart = ({closeDialog}:any) => {
                      animate="show"
                   >
                      {cart?.cart.map((item: any) => (
-                        <CartItem data={item} doAction={doAction} key={item.id} />
+                        <CartItem data={item} locale={router.locale} doAction={doAction} key={item.id} />
                      ))}
                      <div style={{ padding: "5px 20px 20px 0", textAlign: "right" }}>
                         <span style={{ fontSize: "20px" }}>{translate('cart.total', router.locale)}&nbsp;</span>
