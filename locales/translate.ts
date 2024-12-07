@@ -1,7 +1,7 @@
 import uk from './uk';
 import ru from './ru';
 
-export const translate = (str: string, lang: string = 'uk', defstr: string = '') => {
+export const translate = (str: string, lang: string = 'uk', defstr: string = 'undefined') => {
    const langs: any[] = [{ uk }, { ru }]
    let res: any = undefined;
 

@@ -9,14 +9,14 @@ import { translate } from '../locales/translate';
 import { useAppDispatch, LogoutAuthAction } from "../redux";
 
 const MainProfile: React.FC = () => {
-   const dispatch = useAppDispatch();
-   const router = useRouter();
+   const dispatch = useAppDispatch()
+   const router = useRouter()
 
    const fetcher = async (url: string) => await axios.post(url).then(response => response.data)
-   const { data } = useSWR('user/profile', fetcher);
+   const { data } = useSWR('user/profile', fetcher)
 
    const exitClickHandler = () => {
-      dispatch(LogoutAuthAction());
+      dispatch(LogoutAuthAction())
    }
 
    return (

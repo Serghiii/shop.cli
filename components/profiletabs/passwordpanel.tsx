@@ -20,14 +20,14 @@ const PasswordPanel: React.FC = () => {
       resolver: yupResolver(validationSchema)
    });
 
-   const onSubmit = () => {
+   const onSubmitHandle = () => {
       axios.post('user/changepassword', { password: getValues('password') }).then(() => {
          window.location.reload();
       })
    }
 
    return (
-      <form className="dialog-form-simple" onSubmit={handleSubmit(onSubmit)}>
+      <form className="dialog-form-simple" onSubmit={handleSubmit(onSubmitHandle)}>
          <div className="form-row-simple">
             <label htmlFor="Password" className="form-label-simple">{translate('profile.tabs.panels.newpassword', locale)}</label>
             <input {...register("password")} id="Password" className="custom-input-simple" name="password" type="password" maxLength={500} />

@@ -2,22 +2,19 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../redux";
-import { MainProfile, SimpleLayout } from "../components"
+import { MainProfile, SimpleLayout } from "../components";
 import { translate } from '../locales/translate';
 
 const Profile: React.FC = () => {
-   const [showing, setShowing] = useState(false);
-
-   const auth = useAppSelector((state: any) => state.auth);
-   const router = useRouter();
+   const [showing, setShowing] = useState(false)
+   const auth = useAppSelector((state: any) => state.auth)
+   const router = useRouter()
 
    useEffect(() => {
-      setShowing(true);
-   }, []);
+      setShowing(true)
+   }, [])
 
-   if (!showing) {
-      return null;
-   }
+   if (!showing) return null
 
    if (showing && !auth.user.isLoggedIn) {
       router.push('/login')

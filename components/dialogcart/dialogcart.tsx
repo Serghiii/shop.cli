@@ -1,4 +1,4 @@
-import React, { MouseEvent, useRef } from 'react'
+import { MouseEvent, useRef } from 'react'
 import { useMainContext } from '../../contexts'
 import { translate } from '../../locales/translate'
 import { useRouter } from 'next/router'

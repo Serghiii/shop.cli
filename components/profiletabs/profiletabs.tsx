@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -9,13 +9,13 @@ import PasswordPanel from "./passwordpanel";
 import PhotoPanel from "./photopanel";
 
 const ProfileTabs: React.FC<any> = props => {
-   const [value, setValue] = useState(0);
+   const [value, setValue] = useState(0)
    const { locale } = useRouter()
 
    interface TabPanelProps {
-      children?: React.ReactNode;
-      index: any;
-      value: any;
+      children?: React.ReactNode
+      index: any
+      value: any
    }
 
    function TabPanel(props: TabPanelProps) {

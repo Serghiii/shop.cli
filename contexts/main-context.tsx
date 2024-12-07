@@ -5,9 +5,9 @@ import useSWR from "swr";
 interface IStore {
    stateProfile: [boolean, Dispatch<SetStateAction<boolean>>];
    stateCart: [boolean, Dispatch<SetStateAction<boolean>>];
-   Categories: RefObject<HTMLDivElement>;
-   mainSwiper: RefObject<HTMLDivElement>;
-   scrollUp: RefObject<HTMLDivElement>;
+   Categories: RefObject<HTMLDivElement|null>;
+   mainSwiper: RefObject<HTMLDivElement|null>;
+   scrollUp: RefObject<HTMLDivElement|null>;
    categoryItems: any;
    groupItems: any;
 };
