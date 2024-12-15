@@ -11,16 +11,16 @@
   },
   "dependencies": {
     "-": "0.0.1",
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@hookform/resolvers": "^3.0.0",
     "@mui/icons-material": "^6.0.1",
     "@mui/material": "^6.0.1",
+    "@mui/material-nextjs": "^6.2.0",
     "@redux-devtools/extension": "^3.2.5",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/gapi.auth2": "^0.0.61",
-    "@types/node": "^22.5.0",
-    "@types/react": "^19.0.1",
     "@types/react-avatar-editor": "^13.0.0",
     "@types/react-inner-image-zoom": "^3.0.0",
     "axios": "^1.2.2",
@@ -44,9 +44,12 @@
     "yup": "^1.0.0"
   },
   "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^22.5.0",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19",
     "eslint": "^9.16.0",
-    "eslint-config-next": "^15.0.4",
-    "typescript": "^5.5.4"
+    "eslint-config-next": "^15.0.4"
   },
   "overrides": {}
 }
