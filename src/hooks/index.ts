@@ -1,0 +1,1 @@
+export { useSWRGet } from './swr.hooks'
