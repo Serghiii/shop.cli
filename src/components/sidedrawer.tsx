@@ -1,9 +1,8 @@
+import { useDictionary } from "../contexts";
 import { Language, Logo } from "./index";
-// import { useTranslation } from "./translatation";
 
 const SideDrawer: React.FC<any> = props => {
-   // const { t } = useTranslation()
-
+   const {d} = useDictionary()
    return (
       <div className={`side-drawer${props.show ? ' show' : ''}`}>
          <div className="side-drawer-header">
@@ -11,8 +10,8 @@ const SideDrawer: React.FC<any> = props => {
             <Language mobile={props.show} />
             <div className="side-drawer-registration">
                <i className="side-drawer-registration__icon"></i>
-               <span className="side-drawer-registration__login">{/*t('auth.login.title')*/'undefined'}</span>
-               <span className="side-drawer-registration__register">{/*t('auth.register.title')*/'undefined'}</span>
+               <span className="side-drawer-registration__login">{d.auth.login.title}</span>
+               <span className="side-drawer-registration__register">{d.auth.register.title}</span>
             </div>
          </div>
          <div className="side-drawer-main">

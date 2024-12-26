@@ -1,13 +1,16 @@
 'use client'
 import { MainBreadcrumbs, MainFilters, MainProducts } from ".";
-import { translate } from "../locales/translate";
 import { useEffect, useState } from "react";
 import { axiosService, pageService } from "../services";
+import { useDictionary } from "../contexts";
+import { useParams } from "next/navigation";
+import { i18n } from "../i18n-config";
 
 const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
    const [filters, setFilters] = useState<string[]>(params);
    const [page, setPage] = useState<number>(pg)
-   const locale = 'uk'
+   const { lang } = useParams<{ lang: string }>()
+   const {d} = useDictionary()
    const getParams = (Ids: string[]) => {
       let res: string[] = []
       if (Ids.length) {
@@ -25,7 +28,7 @@ const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
    }, [])
 
    useEffect(() => {
-      window.history.replaceState('', '', '/' + group + (filters.length ? '/' : '') + pageService.arrToParams(filters, '/') + (page > 1 ? '/page_' + page : ''))
+      window.history.replaceState('', '', `${lang !== i18n.defaultLocale?`/${lang}`:''}/${group}${filters.length?'/':''}${pageService.arrToParams(filters, '/')}${page>1?`/page_${page}`:''}`)
    }, [filters, page])
 
    return (
@@ -36,7 +39,7 @@ const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
                   <div className="breadcrumbs">
                      <MainBreadcrumbs />
                   </div>
-                  <h2 className="main-title">{translate('filter.group.title', locale)}</h2>
+                  <h2 className="main-title">{d.filter.group.title}</h2>
                   <div className="main-products">
                      <div>
                         <section className="filters">

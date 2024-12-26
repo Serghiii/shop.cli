@@ -1,14 +1,12 @@
 'use client'
-// import { useRouter } from "next/router"
 import { HomeProductCard } from "."
-// import { translate } from "../locales/translate"
+import { useDictionary } from "../contexts"
 
 const NewGoods: React.FC<any> = ({ data }) => {
-   // const { locale } = useRouter()
-
+   const {d} = useDictionary()
    return (
       <>
-         <h2 className="main-new-goods-title">{/*translate('goods.title', locale)*/'undefined'}</h2>
+         <h2 className="main-new-goods-title">{d.goods.title}</h2>
          <div className="main-product-cards">
             {data?.map((obj: any) => (
                <HomeProductCard key={obj.id} {...obj} />
@@ -17,4 +15,5 @@ const NewGoods: React.FC<any> = ({ data }) => {
       </>
    )
 }
+
 export default NewGoods

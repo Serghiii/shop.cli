@@ -9,24 +9,22 @@ import Alert from '@mui/material/Alert';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import { translate } from '../locales/translate';
-// import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector, LoginAuthAction, ErrorUpdate } from "../redux";
+import { useDictionary } from "../contexts";
 
 const MainLogin: React.FC = () => {
-   // const { locale } = useRouter()
-   const locale = 'uk'
+   const { d,t } = useDictionary()
    const dispatch = useAppDispatch();
    const auth = useAppSelector((state: any) => state.auth);
    const [rememberme, setRememberMe] = useState(false);
 
    const loginSchema = yup.object().shape({
       login: yup.string().trim()
-         .required(translate('auth.messages.required', locale))
-         .min(2, translate('auth.messages.login', locale)),
+         .required(d.auth.messages.required)
+         .min(2, d.auth.messages.login),
       loginPassword: yup.string()
-         .required(translate('auth.messages.required', locale))
-         .min(6, translate('auth.messages.password', locale))
+         .required(d.auth.messages.required)
+         .min(6, d.auth.messages.password)
    });
 
    const { register, formState: { errors, isValid }, getValues } = useForm({
@@ -52,10 +50,10 @@ const MainLogin: React.FC = () => {
          <div className="avatar-login">
             <Image src={User} alt="" width={80} />
          </div>
-         <h2>{translate('auth.login.title', locale)}</h2>
+         <h2>{d.auth.login.title}</h2>
          <form className="dialog-form" onSubmit={onSubmitHandler}>
             <div className="form-row">
-               <label htmlFor="auth-login" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>{translate('auth.login.name', locale)}</label>
+               <label htmlFor="auth-login" className="form-label" style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitLineClamp: 1, overflow: 'hidden', whiteSpace: 'normal' }}>{d.auth.login.name}</label>
                <input
                   {...register("login")}
                   id="auth-login"
@@ -68,7 +66,7 @@ const MainLogin: React.FC = () => {
                </div>
             </div>
             <div className="form-row">
-               <label htmlFor="auth-pass" className="form-label">{translate('auth.login.password', locale)}</label>
+               <label htmlFor="auth-pass" className="form-label">{d.auth.login.password}</label>
                <input
                   {...register("loginPassword")}
                   id="auth-pass"
@@ -91,19 +89,20 @@ const MainLogin: React.FC = () => {
                      checked={rememberme}
                      onChange={rememberMeOnChangeHandle}
                   />}
-                  label={translate('auth.login.rememberme', locale)}
+                  label={d.auth.login.rememberme}
                />
             </FormGroup>
             <div className="form-row">
                {auth.error?.message && <Alert
                   severity="error"
                   onClose={() => { dispatch(ErrorUpdate({ code: '', message: '' })) }}>
-                  {translate('server.' + auth.error.code, locale, auth.error.message)}
+                  { t('server.'+auth.error.code) ? t('server.'+auth.error.code) : auth.error.message }
                </Alert>}
             </div>
-            <button className="custom-button" disabled={!isValid}>{translate('auth.login.enter', locale)}</button>
+            <button className="custom-button" disabled={!isValid}>{d.auth.login.enter}</button>
          </form>
       </div >
    )
 }
+
 export default MainLogin

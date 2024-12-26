@@ -6,11 +6,11 @@ import Tabs from '@mui/material/Tabs';
 import ProfilePanel from "./profilepanel";
 import PasswordPanel from "./passwordpanel";
 import PhotoPanel from "./photopanel";
-import { useTranslation } from "../../hooks/translatation.hooks";
+import { useDictionary } from "../../contexts";
 
 const ProfileTabs: React.FC<any> = props => {
    const [value, setValue] = useState(0)
-   const { t } = useTranslation()
+   const {d} = useDictionary()
 
    interface TabPanelProps {
       children?: React.ReactNode
@@ -60,9 +60,9 @@ const ProfileTabs: React.FC<any> = props => {
                variant="scrollable"
                scrollButtons="auto"
             >
-               <Tab label={t('profile.tabs.title.name')} {...a11yProps(0)} />
-               <Tab label={t('profile.tabs.title.password')} {...a11yProps(1)} />
-               <Tab label={t('profile.tabs.title.photo')} {...a11yProps(2)} />
+               <Tab label={d.profile.tabs.title.name} {...a11yProps(0)} />
+               <Tab label={d.profile.tabs.title.password} {...a11yProps(1)} />
+               <Tab label={d.profile.tabs.title.photo} {...a11yProps(2)} />
             </Tabs>
          </AppBar>
          <TabPanel value={value} index={0}>

@@ -1,15 +1,15 @@
 'use client'
-// import { useRouter } from "next/router"
+import { useDictionary } from "../contexts"
 
 const Search: React.FC = () => {
-   // const { locale } = useRouter()
-   const locale:string = 'uk'
+   const {d} = useDictionary()
+   
    return (
       <div className="search">
          <input
             className="search__txt"
             type="text"
-            placeholder={locale == 'ru' ? 'Поиск...' : 'Я шукаю...'}
+            placeholder={d.search}
             autoComplete="off" />
          <button className="search__btn">''</button>
       </div>

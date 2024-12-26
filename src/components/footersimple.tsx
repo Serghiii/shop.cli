@@ -1,20 +1,19 @@
 'use client'
-// import { translate } from '../locales/translate';
-// import { useRouter } from "next/router"
+import { useDictionary } from '../contexts'
 
 const FooterSimple: React.FC = () => {
-   // const { locale } = useRouter()
-   return (
-      <footer>
-         <div className="wraper-footer-simple">
-            <div className="container-simple">
-               <div className="footer-simple">
-                  <p>{/*translate('footer.title', locale)*/'undefined'}</p>
-               </div>
-            </div>
-         </div>
-      </footer>
-   )
+	const { d } = useDictionary()
+	return (
+		<footer>
+			<div className='wraper-footer-simple'>
+				<div className='container-simple'>
+					<div className='footer-simple'>
+						<p>{d.footer.title}</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+	)
 }
 
 export default FooterSimple

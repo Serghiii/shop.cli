@@ -19,9 +19,9 @@ const Slider: React.FC = () => {
             disableOnInteraction: true
          }}
       >
-         <SwiperSlide><div className="image_bk"><Image src={slide1} alt="" /></div></SwiperSlide>
-         <SwiperSlide><div className="image_bk"><Image src={slide2} alt="" /></div></SwiperSlide>
-         <SwiperSlide><div className="image_bk"><Image src={slide3} alt="" /></div></SwiperSlide>
+         <SwiperSlide><div className="image_bk"><Image src={slide1} alt="" priority={true}/></div></SwiperSlide>
+         <SwiperSlide><div className="image_bk"><Image src={slide2} alt="" priority={true}/></div></SwiperSlide>
+         <SwiperSlide><div className="image_bk"><Image src={slide3} alt="" priority={true}/></div></SwiperSlide>
       </Swiper>
    )
 }

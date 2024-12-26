@@ -1,43 +1,55 @@
 'use client'
-import Image from 'next/image';
-import { HeaderSimple } from '../components'
+import Image from 'next/image'
 import Image404 from '../../public/icon/404.svg'
+// import { useParams } from 'next/navigation'
 // import Head from 'next/head';
-// import { useRouter } from 'next/router';
-// import { translate } from '../locales/translate';
 
 const Custom404: React.FC = () => {
-   // const { locale } = useRouter()
+	// const { lang } = useParams<{ lang: string }>()
 
-   return (
-      <>
-         {/* <Head>
+	return (
+		<>
+			{/* <Head>
             <title>404 Сторінка не знайдена</title>
          </Head> */}
-         <div className="wrapper">
-            <HeaderSimple />
-            <div className="container-simple">
-               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", margin: "0" }}>
-                  <Image width={500} height={500} src={Image404} alt="" priority={true} />
-                  <h2 className="paragraf">{/*translate('404.not_found', locale)*/'undefined'}</h2>
-               </div>
-               <style jsx>{`
-                  .paragraf {
-                     margin-top: -25%; 
-                     color: gray;
-                     text-align: center;
-                  }
-                  @media (max-width: 479.98px) {
-                     .paragraf {
-                        font-size:14px;
-                     }
-                  }
-               `}
-               </style>
-            </div>
-         </div >
-      </>
-   )
+			<html /*lang={lang}*/>
+				<body>
+					<div className='wrapper'>
+						<div className='container-simple'>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									justifyContent: 'center',
+									width: '100%',
+									height: '100%',
+									margin: '0'
+								}}
+							>
+								<Image width={500} height={500} src={Image404} alt='' priority={true} />
+								<h2 className='paragraf'>{/*d['404'].not_found*/}</h2>
+							</div>
+							<style jsx>
+								{`
+									.paragraf {
+										margin-top: -25%;
+										color: gray;
+										text-align: center;
+									}
+									@media (max-width: 479.98px) {
+										.paragraf {
+											font-size: 14px;
+										}
+									}
+								`}
+							</style>
+						</div>
+					</div>
+				</body>
+			</html>
+		</>
+	)
 }
 
 export default Custom404

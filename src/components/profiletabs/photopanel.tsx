@@ -3,7 +3,7 @@ import axios from "axios"
 import React, { ChangeEvent, useCallback, useState } from "react"
 import AvatarEditor from "react-avatar-editor"
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
-import { useTranslation } from "../../hooks/translatation.hooks"
+import { useDictionary } from "../../contexts"
 // import Jimp from "jimp"
 // import sharp from "sharp"
 
@@ -12,15 +12,15 @@ const PhotoPanel: React.FC<any> = (props) => {
       editor: null,
       scale: 1,
    });
-   const [editor, setEditor] = useState(true);
-   const { t, locale } = useTranslation()
-   const [file, setFile] = useState(t('profile.tabs.panels.selectfile'));
+   const [editor, setEditor] = useState(true)
+   const {d} = useDictionary()
+   const [file, setFile] = useState(d.profile.tabs.panels.selectfile)
 
    const profilePicChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files || !e.target.files[0]) return;
-      const { type } = e.target.files[0];
+      if (!e.target.files || !e.target.files[0]) return
+      const { type } = e.target.files[0]
       if ((type.endsWith('jpeg') || type.endsWith('png') || type.endsWith('jpg'))) {
-         setState({ ...state, scale: 1, openCropper: true, Image: e.target.files[0], fileUploadErrors: [] });
+         setState({ ...state, scale: 1, openCropper: true, Image: e.target.files[0], fileUploadErrors: [] })
          setEditor(!editor)
          setFile(e.target.files[0].name)
       }
@@ -100,7 +100,7 @@ const PhotoPanel: React.FC<any> = (props) => {
                   <input style={{ display: 'none' }} id="file" type="file" name="profilePicBtn" accept="image/png, image/jpeg" onChange={profilePicChange} />
                </div>
                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <button className="custom-button-simple" disabled={false}>{t('profile.tabs.panels.save')}</button>
+                  <button className="custom-button-simple" disabled={false}>{d.profile.tabs.panels.save}</button>
                </div>
             </div>
             <style jsx>{`
