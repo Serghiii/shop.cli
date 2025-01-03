@@ -1,26 +1,26 @@
 'use client'
-import React, { Dispatch, RefObject, SetStateAction, useContext, useRef, useState } from 'react'
+import { createContext, Dispatch, ReactNode, RefObject, SetStateAction, useContext, useRef, useState } from 'react'
 
 interface IStore {
 	stateCart: [boolean, Dispatch<SetStateAction<boolean>>]
-	Categories: RefObject<HTMLDivElement | null>
+	stateCategory: [boolean, Dispatch<SetStateAction<boolean>>]
 	mainSwiper: RefObject<HTMLDivElement | null>
 	scrollUp: RefObject<HTMLDivElement | null>
 }
 
-const MainContext = React.createContext<IStore | undefined>(undefined)
+const MainContext = createContext<IStore | undefined>(undefined)
 type Props = {
-	children?: React.ReactNode
+	children?: ReactNode
 }
 const MainProvider: React.FC<Props> = ({ children }) => {
-	const [stateCart, setStateCart] = useState<boolean>(false) // стан для категорій
-	const Categories = useRef<HTMLDivElement>(null)
+	const [stateCart, setStateCart] = useState<boolean>(false) // стан для корзини
+	const [stateCategory, setStateCategory] = useState<boolean>(false) // стан для категорії
 	const mainSwiper = useRef<HTMLDivElement>(null)
 	const scrollUp = useRef<HTMLDivElement>(null)
 
 	const store: IStore = {
 		stateCart: [stateCart, setStateCart],
-		Categories: Categories,
+		stateCategory: [stateCategory, setStateCategory],
 		mainSwiper: mainSwiper,
 		scrollUp: scrollUp
 	}

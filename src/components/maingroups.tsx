@@ -4,10 +4,11 @@ import Grid from '@mui/material/Grid2'
 import { MainBreadcrumbs, MainGroupCard } from '.'
 import { tt } from '../lib/utils'
 import { useParams, usePathname } from 'next/navigation'
-import { reduxService } from '../services'
+import { useCategories } from '../hooks'
 
 const MainGroups: React.FC = () => {
-	const menu = reduxService.getMenu()
+	const menu = useCategories()
+
 	const pathname = usePathname()
 	const { lang } = useParams<{ lang: string }>()
 
@@ -41,32 +42,29 @@ const MainGroups: React.FC = () => {
 
 	return (
 		<>
-			<main>
-				<div className='container'>
-					<div className='main'>
-						<div className='breadcrumbs'>
-							<MainBreadcrumbs />
-						</div>
-						{menu.started &&
-							getItems()?.map((item: any) => (
-								<div className='mb-10' key={item?.id}>
-									<h2 className='main-title'>{tt(item?.name, lang)}</h2>
-									<Container maxWidth='xl'>
-										<div style={{ marginTop: '3px', marginBottom: '10px' }}>
-											<Grid container spacing={3}>
-												{getSubGroupsByGroup(item?.id)?.map((item: any) => (
-													<Grid key={item.id}>
-														<MainGroupCard item={item} />
-													</Grid>
-												))}
-											</Grid>
-										</div>
-									</Container>
-								</div>
-							))}
+			<div className='container'>
+				<div className='main'>
+					<div className='breadcrumbs'>
+						<MainBreadcrumbs />
 					</div>
+					{getItems()?.map((item: any) => (
+						<div className='mb-10' key={item?.id}>
+							<h2 className='main-title'>{tt(item?.name, lang)}</h2>
+							<Container maxWidth='xl'>
+								<div style={{ marginTop: '3px', marginBottom: '10px' }}>
+									<Grid container spacing={3}>
+										{getSubGroupsByGroup(item?.id)?.map((item: any) => (
+											<Grid key={item.id}>
+												<MainGroupCard item={item} />
+											</Grid>
+										))}
+									</Grid>
+								</div>
+							</Container>
+						</div>
+					))}
 				</div>
-			</main>
+			</div>
 			<style jsx>
 				{`
 					.mb-10 {

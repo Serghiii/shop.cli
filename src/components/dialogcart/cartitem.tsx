@@ -1,9 +1,9 @@
-import React from 'react'
-import IconButton from '@mui/material/IconButton'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { AdjustAmount, RemoveItem } from '../../redux'
-import { tt } from '../../lib/utils'
+import IconButton from '@mui/material/IconButton'
+import React from 'react'
 import { MoneyFormat } from '..'
+import { tt } from '../../lib/utils'
+import { AdjustAmount, RemoveItem } from '../../redux'
 
 const CartItem: React.FC<any> = ({ data, locale, doAction }) => {
 	const onChangeCountHandler = (e: any) => {

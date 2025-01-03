@@ -1,13 +1,13 @@
 'use client'
-import List from '@mui/material/List'
-import ListItemText from '@mui/material/ListItemText'
-import Collapse from '@mui/material/Collapse'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import Collapse from '@mui/material/Collapse'
+import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
+import { memo, useState } from 'react'
 import { CheckBoxItem } from '.'
 import { tt } from '../lib/utils'
-import { useState } from 'react'
 
 const MainFilterGroup: React.FC<any> = ({ loading, cond, items, fitems, brandZone, brandZoneClick, handleChange }) => {
 	const locale = 'uk'
@@ -46,4 +46,4 @@ const MainFilterGroup: React.FC<any> = ({ loading, cond, items, fitems, brandZon
 	)
 }
 
-export default MainFilterGroup
+export default memo(MainFilterGroup)

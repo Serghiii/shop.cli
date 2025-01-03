@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
 	useEffect(() => {
 		document.title = `${d.auth.login.profile.title}: ${auth.user.name}`
 		setShowing(true)
-	}, [])
+	}, [, d.auth.login.profile.title, auth.user.name])
 
 	if (!showing) return null
 

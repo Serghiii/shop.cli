@@ -1,18 +1,12 @@
 'use client'
-import React from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import { getDictionary } from '../app/[lang]/dictionaries'
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
-const DictionaryContext = React.createContext<Dictionary | undefined>(undefined)
+const DictionaryContext = createContext<Dictionary | undefined>(undefined)
 
-export default function DictionaryProvider({
-	dictionary,
-	children
-}: {
-	dictionary: Dictionary
-	children: React.ReactNode
-}) {
+export default function DictionaryProvider({ dictionary, children }: { dictionary: Dictionary; children: ReactNode }) {
 	return <DictionaryContext value={dictionary}>{children}</DictionaryContext>
 }
 
@@ -24,7 +18,7 @@ const getKeys = (str: string, obj: {}): any => {
 }
 
 export function useDictionary() {
-	const d = React.useContext(DictionaryContext)
+	const d = useContext(DictionaryContext)
 
 	const t = (str: string) => {
 		const keys: string[] = str.split('.')

@@ -1,16 +1,17 @@
 'use client'
+import HomeIcon from '@mui/icons-material/Home'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Typography from '@mui/material/Typography'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import HomeIcon from '@mui/icons-material/Home'
 import Link from 'next/link'
-import { tt } from '../lib/utils'
 import { useParams } from 'next/navigation'
-import { reduxService } from '../services'
+import { memo } from 'react'
+import { useCategories } from '../hooks'
 import { i18n } from '../i18n-config'
+import { tt } from '../lib/utils'
 
 const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
-	const menu = reduxService.getMenu()
+	const menu = useCategories()
 	const { lang } = useParams<{ lang: string }>()
 	const { slug } = useParams()
 
@@ -20,7 +21,6 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
 			slug.forEach(item => {
 				getItem(res, item)
 			})
-			// getItem(res, place)
 		}
 		return res
 	}
@@ -58,8 +58,6 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
 		return menu.subgroups?.find((el: any) => el.ref == str)
 	}
 
-	typeof window !== 'undefined'
-
 	return (
 		<>
 			<Breadcrumbs
@@ -67,22 +65,20 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
 				aria-label='breadcrumb'
 				separator={<NavigateNextIcon fontSize='small' />}
 			>
-				<Link href={`${lang !== i18n.defaultLocale ? `/${lang}` : '/'}`}>
+				<Link href={lang !== i18n.defaultLocale ? `/${lang}` : '/'}>
 					<HomeIcon />
 				</Link>
-				{window &&
-					menu.started &&
-					getItems().map((item: any, index: number, arr: any) =>
-						index >= arr.length - 1 && isProduct === false ? (
-							<Typography color='textPrimary' key={item.to}>
-								{item.label}
-							</Typography>
-						) : (
-							<Link key={item.to} href={`${lang !== i18n.defaultLocale ? `/${lang}` : ''}/${item.to}`}>
-								{item.label}
-							</Link>
-						)
-					)}
+				{getItems().map((item: any, index: number, arr: any) =>
+					index >= arr.length - 1 && isProduct === false ? (
+						<Typography color='textPrimary' key={item.to}>
+							{item.label}
+						</Typography>
+					) : (
+						<Link key={item.to} href={`${lang !== i18n.defaultLocale ? `/${lang}` : ''}/${item.to}`}>
+							{item.label}
+						</Link>
+					)
+				)}
 			</Breadcrumbs>
 			<style global jsx>
 				{`
@@ -102,4 +98,4 @@ const MainBreadcrumbs: React.FC<any> = ({ isProduct = false }) => {
 	)
 }
 
-export default MainBreadcrumbs
+export default memo(MainBreadcrumbs)

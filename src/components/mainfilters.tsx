@@ -1,11 +1,11 @@
 'use client'
-import ListSubheader from '@mui/material/ListSubheader'
 import List from '@mui/material/List'
-import { MainFilterGroup } from '.'
+import ListSubheader from '@mui/material/ListSubheader'
+import { memo, useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { useCallback, useMemo, useState } from 'react'
-import { axiosService } from '../services'
+import { MainFilterGroup } from '.'
 import { useDictionary } from '../contexts'
+import { axiosService } from '../services'
 
 const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
 	const [loading, setLoading] = useState(false)
@@ -93,4 +93,4 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
 	)
 }
 
-export default MainFilters
+export default memo(MainFilters)

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -8,6 +7,7 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import { Masks } from '../../lib/masks'
 import { useDictionary } from '../../contexts'
+import { axiosAuthService } from '../../services'
 
 const ProfilePanel: React.FC<any> = props => {
 	const { d } = useDictionary()
@@ -44,9 +44,11 @@ const ProfilePanel: React.FC<any> = props => {
 	const onSubmitHandler = () => {
 		let values = { name: getValues('name'), gender: getValues('gender') }
 		const phone: any = getValues('phone')?.replace(/\s/g, '')
-		axios.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values).then(() => {
-			window.location.reload()
-		})
+		axiosAuthService
+			.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values)
+			.then(() => {
+				window.location.reload()
+			})
 	}
 
 	return (

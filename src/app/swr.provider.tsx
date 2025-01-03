@@ -2,7 +2,7 @@
 import { SWRConfig } from 'swr'
 
 const swrConfig = {
-	revalidateOnFocus: false,
+	revalidateOnFocus: true,
 	shouldRetryOnError: true
 }
 

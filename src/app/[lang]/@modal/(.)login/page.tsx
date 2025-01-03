@@ -94,7 +94,7 @@ const ModalLogin: React.FC = () => {
 				})
 			})
 		} catch (e) {}
-	}, [])
+	}, [, mainCtx.mainSwiper, dispatch])
 
 	const LoginForm = () => {
 		const [rememberme, setRememberMe] = useState(false)

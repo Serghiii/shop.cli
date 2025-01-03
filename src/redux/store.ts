@@ -2,14 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import authReducer from './authSlice'
 import cartReducer from './cartSlice'
-import menuReducer from './menuSlice'
 
 const store = configureStore({
-   reducer: {
-      auth: authReducer,
-      cart: cartReducer,
-      menu: menuReducer
-   },
+	reducer: {
+		auth: authReducer,
+		cart: cartReducer
+	}
 })
 
 export type RootState = ReturnType<typeof store.getState>

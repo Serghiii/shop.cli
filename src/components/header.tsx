@@ -1,20 +1,20 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
-import { useAppSelector } from '../redux'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMainContext } from '../contexts'
+import { useAppSelector } from '../redux'
 import {
 	CartButton,
 	CompareButton,
-	ProfileButton,
-	MenuCategoriesButton,
-	MenuSideDrawerButton,
 	Language,
 	Logo,
+	MenuCategoriesButton,
+	MenuSideDrawerButton,
 	Phones,
+	ProfileButton,
 	Search,
 	SideDrawer
 } from './index'
-import { useRouter } from 'next/navigation'
 
 const Header: React.FC = () => {
 	const auth = useAppSelector((state: any) => state.auth)
@@ -26,11 +26,9 @@ const Header: React.FC = () => {
 	const paddingTop: string = 'top_padding_top'
 	const Fixed: string = 'btm_fixed'
 	const _lock: string = '_lock'
-	const Show: string = 'show'
-	let hdFixed: boolean = false
-	let categoryes: boolean = false
-	let scrollup: boolean = false
-	let lockbody: boolean = false
+	const hdFixed = useRef<boolean>(false)
+	const scrollup = useRef<boolean>(false)
+	const lockbody = useRef<boolean>(false)
 	const router = useRouter()
 
 	const drawerClickHandler = () => {
@@ -41,7 +39,7 @@ const Header: React.FC = () => {
 		}
 		setStateDarawer(!stateDarawer)
 		document.body.classList.add(_lock)
-		lockbody = true
+		lockbody.current = true
 		if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
 	}
 
@@ -67,36 +65,37 @@ const Header: React.FC = () => {
 		// приховування бокової панелі
 		setStateDarawer(false)
 		document.body.removeAttribute('class')
-		lockbody = false
+		lockbody.current = false
 		mainCtx.mainSwiper.current?.removeAttribute('style')
 	}
 
-	function showCategoryes(show: boolean) {
-		if (show && !categoryes) {
-			mainCtx.Categories.current?.classList.add(Show) // показати категорії
-			categoryes = show
-		} else if (!show && categoryes) {
-			mainCtx.Categories.current?.classList.remove(Show) // показати категорії
-			categoryes = show
-		}
-	}
+	const showCategoryes = useCallback(
+		(show: boolean) => {
+			if (show && !mainCtx.stateCategory[0]) {
+				mainCtx.stateCategory[1](show)
+			} else if (!show && mainCtx.stateCategory[0]) {
+				mainCtx.stateCategory[1](show)
+			}
+		},
+		[mainCtx.stateCategory]
+	)
 
-	const changeWindowSize = () => {
+	const changeWindowSize = useCallback(() => {
 		// блокування екрану
 		if (window.innerWidth > lg) {
-			showCategoryes(true) // показати категорії
-			if (lockbody) {
+			mainCtx.stateCategory[1](true)
+			if (lockbody.current) {
 				document.body.classList.remove(_lock)
-				lockbody = false
+				lockbody.current = false
 			}
 		} else {
-			showCategoryes(false) // сховати категорії
-			if (stateDarawer && !lockbody) {
+			mainCtx.stateCategory[1](false)
+			if (stateDarawer && !lockbody.current) {
 				document.body.classList.add(_lock)
-				lockbody = true
+				lockbody.current = true
 			}
 		}
-	}
+	}, [mainCtx.stateCategory, stateDarawer])
 
 	function isLargeScreen() {
 		let res = true
@@ -106,43 +105,42 @@ const Header: React.FC = () => {
 		return res
 	}
 
-	const scrollWindow = () => {
+	const scrollWindow = useCallback(() => {
 		// фіксація шапки
-		if (!hdFixed && window.scrollY > (hdBtm.current?.offsetTop || 0)) {
+		if (!hdFixed.current && window.scrollY > (hdBtm.current?.offsetTop || 0)) {
 			// зафіксувати шапку
 			hdBtm.current?.classList.add(Fixed)
-			hdFixed = true
+			hdFixed.current = true
 			if (isLargeScreen()) hdTop.current?.classList.add(paddingTop)
-		} else if (hdFixed && window.scrollY - (isLargeScreen() ? hdTop.current?.clientHeight || 0 : 0) <= 0) {
+		} else if (hdFixed.current && window.scrollY - (isLargeScreen() ? hdTop.current?.clientHeight || 0 : 0) <= 0) {
 			// зняти фіксацію шапки
 			hdBtm.current?.classList.remove(Fixed)
-			hdFixed = false
+			hdFixed.current = false
 			hdTop.current?.classList.remove(paddingTop)
 		}
 		// показати/сховати кнопку наверх
-		if (!scrollup && hdFixed) {
+		if (!scrollup.current && hdFixed.current) {
 			mainCtx.scrollUp.current?.classList.add('show')
-			scrollup = true
-		} else if (scrollup && !hdFixed) {
+			scrollup.current = true
+		} else if (scrollup.current && !hdFixed.current) {
 			mainCtx.scrollUp.current?.classList.remove('show')
-			scrollup = false
+			scrollup.current = false
 		}
-	}
+	}, [mainCtx.scrollUp])
 
 	useEffect(() => {
 		window.addEventListener('resize', changeWindowSize)
 		window.addEventListener('scroll', scrollWindow)
 		if (window.innerWidth > lg) {
-			showCategoryes(true) // показати категорії
+			mainCtx.stateCategory[1](true)
 		} else {
-			showCategoryes(false) // сховати категорії
+			mainCtx.stateCategory[1](false)
 		}
 		return () => {
 			window.removeEventListener('resize', changeWindowSize)
 			window.removeEventListener('scroll', scrollWindow)
 		}
-		// eslint-disable-next-line
-	}, [])
+	}, [, mainCtx.stateCategory, showCategoryes, changeWindowSize, scrollWindow])
 
 	return (
 		<header>

@@ -32,7 +32,7 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 				data.productinfo
 			)}`
 		)
-	}, [])
+	}, [, lang, group, data.id, data.productinfo])
 
 	const onClickHandle = () => {
 		if (!cartItem) {
@@ -55,55 +55,50 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 	}
 
 	return (
-		<main>
-			<div className='container'>
-				<div className='main'>
-					<div className='breadcrumbs'>
-						<MainBreadcrumbs isProduct={true} />
-					</div>
-					{data && (
-						<div className='product-card'>
-							<div style={{ display: 'flex', flexDirection: 'row' }}>
-								<ProductImages id={data.id} data={data.productpics} />
-								<div style={{ paddingTop: '20px', minHeight: 'calc(100vh - 150px)', width: '100%' }}>
-									<div style={{ fontSize: '30px' }}>{tt(data.name, lang)}</div>
-									<div
-										style={{
-											width: '100%',
-											display: 'flex',
-											flexDirection: 'column',
-											alignItems: 'flex-end'
-										}}
-									>
-										<div style={{ padding: '20px 0', fontWeight: 'bold' }}>Код: {data?.code}</div>
-										<div
-											className='product-card__price'
-											style={{ paddingBottom: '20px', marginRight: '-5px' }}
-										>
-											<MoneyFormat {...{ value: data?.price, className: 'price-value' }} />
-										</div>
-									</div>
-									<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-										<button className='custom-button-simple' onClick={onClickHandle}>
-											{d.bay}
-										</button>
+		<div className='container'>
+			<div className='main'>
+				<div className='breadcrumbs'>
+					<MainBreadcrumbs isProduct={true} />
+				</div>
+				{data && (
+					<div className='product-card'>
+						<div style={{ display: 'flex', flexDirection: 'row' }}>
+							<ProductImages id={data.id} data={data.productpics} />
+							<div style={{ paddingTop: '20px', minHeight: 'calc(100vh - 150px)', width: '100%' }}>
+								<div style={{ fontSize: '30px' }}>{tt(data.name, lang)}</div>
+								<div
+									style={{
+										width: '100%',
+										display: 'flex',
+										flexDirection: 'column',
+										alignItems: 'flex-end'
+									}}
+								>
+									<div style={{ padding: '20px 0', fontWeight: 'bold' }}>Код: {data?.code}</div>
+									<div className='product-card__price' style={{ paddingBottom: '20px', marginRight: '-5px' }}>
+										<MoneyFormat {...{ value: data?.price, className: 'price-value' }} />
 									</div>
 								</div>
+								<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+									<button className='custom-button-simple' onClick={onClickHandle}>
+										{d.bay}
+									</button>
+								</div>
 							</div>
-							<div dangerouslySetInnerHTML={extHtml} />
 						</div>
-					)}
-				</div>
-				<style global jsx>
-					{`
-						.center-img {
-							display: block;
-							margin: 0 auto;
-						}
-					`}
-				</style>
+						<div dangerouslySetInnerHTML={extHtml} />
+					</div>
+				)}
 			</div>
-		</main>
+			<style global jsx>
+				{`
+					.center-img {
+						display: block;
+						margin: 0 auto;
+					}
+				`}
+			</style>
+		</div>
 	)
 }
 

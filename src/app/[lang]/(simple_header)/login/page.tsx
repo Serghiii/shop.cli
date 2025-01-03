@@ -14,7 +14,7 @@ const Login: React.FC = () => {
 	useEffect(() => {
 		document.title = d.auth.login.title
 		setShowing(true)
-	}, [])
+	}, [, d.auth.login.title])
 
 	if (!showing) return null
 

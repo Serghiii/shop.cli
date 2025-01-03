@@ -1,4 +1,3 @@
-export { useMainContext } from './main-context'
-export { default as MainProvider } from './main-context'
-export { default as DictionaryProvider } from './dictionary-context'
-export { useDictionary } from './dictionary-context'
+export { default as CartProvider, useCartContext } from './cart.context'
+export { default as DictionaryProvider, useDictionary } from './dictionary.context'
+export { default as MainProvider, useMainContext } from './main.context'

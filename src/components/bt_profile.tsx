@@ -4,11 +4,11 @@ import User from '../../public/icon/profile/user.svg'
 import Logout from '../../public/icon/profile/logout.svg'
 import Image from 'next/image'
 import Link from 'next/link'
-import axios from 'axios'
 import useSWR from 'swr'
 import Avatar from '@mui/material/Avatar'
 import { LogoutAuthAction, useAppDispatch, useAppSelector } from '../redux'
 import { useDictionary } from '../contexts'
+import { axiosAuthService } from '../services'
 
 const ProfileButton: React.FC<any> = props => {
 	const { d } = useDictionary()
@@ -18,7 +18,7 @@ const ProfileButton: React.FC<any> = props => {
 	const actionsProfileDropdown = useRef<HTMLDivElement>(null)
 	const Show: string = 'show'
 
-	const fetcher = async (url: string) => await axios.post(url).then(response => response.data)
+	const fetcher = async (url: string) => await axiosAuthService.post(url).then(response => response.data)
 	const { data }: any = useSWR(auth.user.isLoggedIn ? 'user/profile' : null, fetcher)
 
 	useEffect(() => {

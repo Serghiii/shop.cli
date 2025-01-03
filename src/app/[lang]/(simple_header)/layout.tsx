@@ -4,7 +4,7 @@ export default function SimpleLayout_H({ children }: Readonly<{ children: React.
 	return (
 		<div className='wrapper'>
 			<HeaderSimple />
-			{children}
+			<main>{children}</main>
 		</div>
 	)
 }

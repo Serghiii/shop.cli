@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { jwtDecode } from 'jwt-decode'
-import { axiosService } from '../services/axios.service'
 import { deleteCookie, getCookie } from 'cookies-next/client'
+import { axiosAuthService } from '../services'
 
 interface User {
 	name: string
@@ -91,7 +91,7 @@ export const RegisterAuthAction = createAsyncThunk(
 	async (action: PUser, { rejectWithValue }) => {
 		try {
 			return await (
-				await axiosService.post('auth/register', action)
+				await axiosAuthService.post('auth/register', action)
 			).data
 		} catch (e: any) {
 			return rejectWithValue(<Error>{
@@ -105,7 +105,7 @@ export const RegisterAuthAction = createAsyncThunk(
 export const LoginAuthAction = createAsyncThunk('auth/LoginAuthAction', async (action: Login, { rejectWithValue }) => {
 	try {
 		return await (
-			await axiosService.post('auth/login', action)
+			await axiosAuthService.post('auth/login', action)
 		).data
 	} catch (e: any) {
 		return rejectWithValue(<Error>{
@@ -131,7 +131,7 @@ export const GoogleAuthAction = createAsyncThunk(
 	async (state: Google, { rejectWithValue }) => {
 		try {
 			return await (
-				await axiosService.post('auth/google', state)
+				await axiosAuthService.post('auth/google', state)
 			).data
 		} catch (e: any) {
 			return rejectWithValue(<Error>{

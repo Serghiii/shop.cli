@@ -8,12 +8,12 @@ export default function MainLayout({ children }: Readonly<{ children: React.Reac
 
 	useEffect(() => {
 		document.title = d.title
-	}, [])
+	}, [, d.title])
 
 	return (
 		<div className='wrapper'>
 			<Header />
-			{children}
+			<main>{children}</main>
 			<Footer />
 		</div>
 	)
