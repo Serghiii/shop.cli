@@ -1,16 +1,17 @@
 'use client'
-import { MainBreadcrumbs, MainFilters, MainProducts } from '.'
-import { useEffect, useState } from 'react'
-import { axiosService, pageService } from '../services'
-import { useDictionary } from '../contexts'
 import { useParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { MainBreadcrumbs, MainFilters, MainProducts } from '.'
+import { useDictionary } from '../contexts'
 import { i18n } from '../i18n-config'
+import { axiosService, pageService } from '../services'
 
 const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
 	const [filters, setFilters] = useState<string[]>(params)
 	const [page, setPage] = useState<number>(pg)
 	const { lang } = useParams<{ lang: string }>()
 	const { d } = useDictionary()
+
 	const getParams = (Ids: string[]) => {
 		let res: string[] = []
 		if (Ids.length) {
@@ -28,13 +29,10 @@ const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
 	}, [, params])
 
 	useEffect(() => {
-		window.history.replaceState(
-			'',
-			'',
-			`${lang !== i18n.defaultLocale ? `/${lang}` : ''}/${group}${
-				filters.length ? '/' : ''
-			}${pageService.arrToParams(filters, '/')}${page > 1 ? `/page_${page}` : ''}`
-		)
+		const newUrl = `${lang !== i18n.defaultLocale ? `/${lang}` : ''}/${group}${
+			filters.length ? '/' : ''
+		}${pageService.arrToParams(filters, '/')}${page > 1 ? `/page_${page}` : ''}`
+		window.history.replaceState(null, '', newUrl)
 	}, [filters, page, lang, group])
 
 	return (

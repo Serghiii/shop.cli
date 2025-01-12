@@ -1,16 +1,14 @@
 'use client'
 import { createContext, FC, ReactNode, useContext, useEffect, useReducer } from 'react'
+import { decryptString, encryptString } from '../lib/crypto'
 import { axiosService } from '../services'
 
-interface LocalStorageCart {
+interface Cart {
 	id: number
-	amount: number
-}
-
-interface Cart extends LocalStorageCart {
 	code: number
 	name: string
-	iamount: number
+	amount: number
+	amount_max: number
 	price: number
 	priceold: number
 	dcount: number
@@ -19,102 +17,16 @@ interface Cart extends LocalStorageCart {
 	firm: { id: number }
 }
 
-interface CartState {
-	cartItems: Cart[] | LocalStorageCart[]
-	loaded: boolean
-	// loading: boolean
-	// error: Error | null
-}
-
-interface Error {
-	code?: string
-	message: string
-}
-
 enum CartActionKind {
 	ADD_ITEM = 'ADD_ITEM',
 	ADJUST_AMOUNT = 'ADJUST_AMOUNT',
 	REMOVE_ITEM = 'REMOVE_ITEM',
-	LOAD_ITEMS = 'LOAD_ITEMS'
+	UPDATE_ITEMS = 'UPDATE_ITEMS'
 }
 
 interface CartAction {
 	type: CartActionKind
-	payload: any //Cart | Cart[]
-}
-
-const cartFromStorage = (): LocalStorageCart[] => {
-	const cart: string | null = typeof window !== 'undefined' ? localStorage.getItem('cart') : null
-	return cart ? JSON.parse(cart) : []
-}
-
-const MAX_AMOUNT_PER_ITEM = 99
-const initialState: CartState = {
-	cartItems: cartFromStorage(),
-	loaded: false
-	// loading: false,
-	// error: null
-}
-
-const cartReducer = (state: CartState, action: CartAction) => {
-	switch (action.type) {
-		case 'ADD_ITEM':
-			const entry = state.cartItems.find((item: any) => item.id === action.payload.id)
-			if (entry) {
-				return {
-					...state,
-					cartItems: state.cartItems.map((item: any) => {
-						if (item.id === action.payload.id) {
-							return {
-								...item,
-								iamount: Math.min(item.iamount + 1, MAX_AMOUNT_PER_ITEM)
-							}
-						}
-						return item
-					})
-				}
-			}
-		case 'ADJUST_AMOUNT':
-			state.cartItems = state.cartItems.map((item: any) => {
-				if (item.id === action.payload.id) {
-					return {
-						...item,
-						iamount: Math.min(action.payload.amount, MAX_AMOUNT_PER_ITEM)
-					}
-				}
-				return item
-			})
-			localStorage.setItem(
-				'cart',
-				JSON.stringify(
-					state.cartItems.map((item: any) => {
-						return { id: item.id, amount: item.iamount }
-					})
-				)
-			)
-			return state
-		case 'REMOVE_ITEM':
-			let cartState: CartState = state
-			cartState.cartItems = state.cartItems.filter((item: any) => item.id !== action.payload)
-			localStorage.setItem(
-				'cart',
-				JSON.stringify(
-					cartState.cartItems.map((item: any) => {
-						return { id: item.id, amount: item.iamount }
-					})
-				)
-			)
-			return cartState
-		case 'LOAD_ITEMS':
-			state.cartItems = action.payload.map((item1: Cart) => ({
-				...item1,
-				iamount: state.cartItems.find((item2: LocalStorageCart) => item2.id === item1.id)?.amount
-			}))
-			state.loaded = true
-			return { ...state }
-		default:
-			return state
-	}
+	payload: Cart | Cart[] | number
 }
 
 const getIDs: any = (val: any) => {
@@ -125,19 +37,88 @@ const getIDs: any = (val: any) => {
 	return { data }
 }
 
-// const LoadCart = (state: CartState, loadItems: (products: Cart[]) => void) => {
-// 	const { data } = useSWRPost('products/cart', getIDs(state.cartItems), {
-// 		revalidateOnFocus: false,
-// 		shouldRetryOnError: true
-// 	})
-// 	if (data) loadItems(data)
-// }
+const loadCartFromLocalStorage = () => {
+	try {
+		const encryptedCart = localStorage.getItem('cart')
+		if (encryptedCart) {
+			const cartString = decryptString(encryptedCart)
+			return JSON.parse(cartString)
+		}
+	} catch (e) {}
+	return []
+}
+
+const saveCartToLocalStorage = (cartItems: Cart[]) => {
+	const cartString = JSON.stringify(cartItems.map((item: Cart) => ({ ...item })))
+	const encryptedCart = encryptString(cartString)
+	localStorage.setItem('cart', encryptedCart)
+}
+
+const MAX_AMOUNT_PER_ITEM = 99
+const initialState: Cart[] = loadCartFromLocalStorage()
+
+const cartReducer = (state: Cart[], action: CartAction) => {
+	switch (action.type) {
+		case 'ADD_ITEM':
+			const entry = state.find((item: any) => item.id === (action.payload as Cart).id)
+			if (entry) {
+				state = state.map((item: any) => {
+					if (item.id === (action.payload as Cart).id) {
+						return {
+							...item,
+							amount: Math.min(item.amount + 1, Math.min(item.amount_max, MAX_AMOUNT_PER_ITEM))
+						}
+					}
+					return item
+				})
+				saveCartToLocalStorage(state)
+				return state
+			}
+			state = [
+				...state,
+				{
+					...(action.payload as Cart),
+					amount: 1
+				}
+			]
+			saveCartToLocalStorage(state)
+			return state
+		case 'ADJUST_AMOUNT':
+			state = state.map((item: any) => {
+				if (item.id === (action.payload as Cart).id) {
+					return {
+						...item,
+						amount: Math.min((action.payload as Cart).amount, MAX_AMOUNT_PER_ITEM)
+					}
+				}
+				return item
+			})
+			saveCartToLocalStorage(state)
+			return state
+		case 'REMOVE_ITEM':
+			state = state.filter((item: any) => item.id !== action.payload)
+			saveCartToLocalStorage(state)
+			return state
+		case 'UPDATE_ITEMS':
+			const modifiedPayload = (action.payload as Cart[]).map((item: Cart) => ({
+				...item,
+				amount_max: item.amount
+			}))
+			state = modifiedPayload.map((payloadItem: Cart) => ({
+				...payloadItem,
+				amount: state.find((cartItem: Cart) => cartItem.id === payloadItem.id)?.amount || 0
+			}))
+			return state
+		default:
+			return state
+	}
+}
 
 interface IStore {
-	cart: CartState
+	cart: Cart[]
 	addItem: (product: Cart) => void
 	adjustAmount: (product: Cart) => void
-	removeItem: (product: Cart) => void
+	removeItem: (id: number) => void
 }
 
 const CartContext = createContext<IStore | undefined>(undefined)
@@ -148,19 +129,20 @@ const CartProvider: FC<Props> = ({ children }) => {
 	const [state, dispatch] = useReducer(cartReducer, initialState)
 	const addItem = (data: Cart) => dispatch({ type: CartActionKind.ADD_ITEM, payload: data })
 	const adjustAmount = (data: Cart) => dispatch({ type: CartActionKind.ADJUST_AMOUNT, payload: data })
-	const removeItem = (data: Cart) => dispatch({ type: CartActionKind.REMOVE_ITEM, payload: data })
-	const loadCart = () => {
+	const removeItem = (id: number) => dispatch({ type: CartActionKind.REMOVE_ITEM, payload: id })
+	const updateCart = () => {
 		axiosService
-			.post('products/cart', getIDs(state.cartItems))
-			.then(({ data }) => dispatch({ type: CartActionKind.LOAD_ITEMS, payload: data }))
+			.post('products/cart', getIDs(state))
+			.then(({ data }) => dispatch({ type: CartActionKind.UPDATE_ITEMS, payload: data }))
+			.catch(e => {})
 	}
 
 	useEffect(() => {
-		if (!state.loaded) loadCart()
+		updateCart()
 	}, [])
 
 	const store: IStore = {
-		cart: { ...state },
+		cart: state,
 		addItem,
 		adjustAmount,
 		removeItem

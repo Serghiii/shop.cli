@@ -1,13 +1,11 @@
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { MoneyFormat } from '..'
-import { useDictionary } from '../../contexts'
-import { useAppDispatch, useAppSelector } from '../../redux'
+import { useCartContext, useDictionary } from '../../contexts'
 import CartItem from './cartitem'
 
 const DrawCart = ({ closeDialog }: any) => {
-	const cart = useAppSelector((state: any) => state.cart)
-	const dispatch = useAppDispatch()
+	const cart = useCartContext().cart
 	const { d } = useDictionary()
 	const router = useRouter()
 
@@ -20,10 +18,6 @@ const DrawCart = ({ closeDialog }: any) => {
 		e.preventDefault()
 		closeDialog()
 		router.push('/checkout')
-	}
-
-	const doAction = (action: any) => {
-		dispatch(action)
 	}
 
 	const EmptyCart = () => {
@@ -56,22 +50,22 @@ const DrawCart = ({ closeDialog }: any) => {
 
 	return (
 		<>
-			{cart.started && cart.cart.length > 0 ? (
+			{cart.length > 0 ? (
 				<div className='dialog-body cart'>
 					<form className='dialog-form' onSubmit={handleSubmit}>
 						<motion.div variants={status} initial='hidden' animate='show'>
-							{cart.cart.map((item: any) => (
-								<CartItem data={item} doAction={doAction} key={item.id} />
+							{cart.map((item: any) => (
+								<CartItem data={item} key={item.id} />
 							))}
 							<div style={{ padding: '5px 20px 20px 0', textAlign: 'right' }}>
 								<span style={{ fontSize: '20px' }}>{d.cart.total}&nbsp;</span>
 								<MoneyFormat
 									{...{
-										value: cart.cart
-											.map(({ price, iamount, dcount, dpercent }: any) =>
-												iamount >= dcount
-													? iamount * price - (iamount * price * dpercent) / 100
-													: iamount * price
+										value: cart
+											.map(({ price, amount, dcount, dpercent }: any) =>
+												amount >= dcount
+													? amount * price - (amount * price * dpercent) / 100
+													: amount * price
 											)
 											.reduce((acc: number, cur: number) => acc + cur, 0),
 										className: 'price-value'

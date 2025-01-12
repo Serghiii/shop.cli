@@ -1,11 +1,11 @@
 'use client'
 import Link from 'next/link'
-import { tt } from '../lib/utils'
-import { AddItem, RemoveItem, useAppDispatch, useAppSelector } from '../redux'
-import { MoneyFormat } from '.'
-import { pageService } from '../services'
 import { useParams } from 'next/navigation'
+import { MoneyFormat } from '.'
+import { useCartContext } from '../contexts'
 import { i18n } from '../i18n-config'
+import { tt } from '../lib/utils'
+import { pageService } from '../services'
 
 const MainProductCard: React.FC<any> = ({
 	id,
@@ -21,16 +21,17 @@ const MainProductCard: React.FC<any> = ({
 	group,
 	productinfo
 }) => {
-	const cartItem = useAppSelector((state: any) => state.cart.cart).find((item: any) => item.id === id)
-	const dispatch = useAppDispatch()
+	const cartItem = useCartContext().cart.find((item: any) => item.id === id)
+	const addItem = useCartContext().addItem
+	const removeItem = useCartContext().removeItem
 	const { lang } = useParams<{ lang: string }>()
 	const ref = `${lang !== i18n.defaultLocale ? `/${lang}` : ''}/${group}/${pageService.makeHeadline(id, productinfo)}`
 
 	const onClickHandle = () => {
 		if (!cartItem) {
-			dispatch(AddItem({ id, code, name, price, priceold, amount, pic, iamount: 1, dcount, dpercent, firm }))
+			addItem({ id, code, name, price, priceold, amount_max: amount, pic, amount: 1, dcount, dpercent, firm })
 		} else {
-			dispatch(RemoveItem(id))
+			removeItem(id)
 		}
 	}
 
@@ -48,7 +49,7 @@ const MainProductCard: React.FC<any> = ({
 			<div className='product-card__prices'>
 				{
 					<div className='product-card__price-old'>
-						<MoneyFormat {...{ value: priceold, className: 'old-price-value', currency: false }} />
+						<MoneyFormat value={priceold} className='old-price-value' currency={false} />
 					</div>
 				}
 				<img
@@ -59,7 +60,7 @@ const MainProductCard: React.FC<any> = ({
 				/>
 			</div>
 			<div className='product-card__price'>
-				<MoneyFormat {...{ value: price, className: 'price-value' }} />
+				<MoneyFormat value={price} className='price-value' />
 			</div>
 		</div>
 	)

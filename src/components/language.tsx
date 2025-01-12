@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
-import { memo } from 'react'
 
 const Language: React.FC<any> = props => {
 	const { lang } = useParams<{ lang: string }>()
@@ -23,4 +22,4 @@ const Language: React.FC<any> = props => {
 	)
 }
 
-export default memo(Language)
+export default Language

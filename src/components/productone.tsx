@@ -1,31 +1,31 @@
 'use client'
-import { MainBreadcrumbs, MoneyFormat } from '.'
-import useSWR from 'swr'
-import { useAppDispatch, useAppSelector, AddItem } from '../redux'
-import ProductImages from './productimages'
-import { tt } from '../lib/utils'
-import { useEffect, useState } from 'react'
-import { axiosService, pageService } from '../services'
+import DOMPurify from 'dompurify'
 import { useParams } from 'next/navigation'
-import { useDictionary } from '../contexts'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
+import { MainBreadcrumbs, MoneyFormat } from '.'
+import { useCartContext, useDictionary } from '../contexts'
 import { i18n } from '../i18n-config'
+import { tt } from '../lib/utils'
+import { axiosService, pageService } from '../services'
+import ProductImages from './productimages'
 
 const ProductOne: React.FC<any> = ({ group, data }) => {
 	const [extHtml, setExtHtml] = useState({ __html: '' })
-	const cartItem = useAppSelector((state: any) => state.cart.cart).find((item: any) => item.id === data?.id)
-	const dispatch = useAppDispatch()
+	const cartItem = useCartContext().cart.find((item: any) => item.id === data?.id)
+	const addItem = useCartContext().addItem
 	const { lang } = useParams<{ lang: string }>()
 	const { d } = useDictionary()
 
 	const fetcher = async (url: string) =>
 		await axiosService.get(url).then(response => {
-			setExtHtml({ __html: response.data })
+			setExtHtml({ __html: DOMPurify.sanitize(response.data, { USE_PROFILES: { html: true } }) })
 		})
 	useSWR(data ? `${process.env.STATIC_URL}/cards/${data?.id}/description/${data?.id}_${lang}.html` : null, fetcher)
 
 	useEffect(() => {
 		window.history.replaceState(
-			'',
+			null,
 			'',
 			`${lang !== i18n.defaultLocale ? `/${lang}` : ''}/${group}/${pageService.makeHeadline(
 				data.id,
@@ -36,21 +36,19 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 
 	const onClickHandle = () => {
 		if (!cartItem) {
-			dispatch(
-				AddItem({
-					id: data.id,
-					code: data.code,
-					name: data.name,
-					price: data.price,
-					priceold: data.priceold,
-					amount: data.amount,
-					pic: data.pic,
-					iamount: 1,
-					dcount: data.dcount,
-					dpercent: data.dpercent,
-					firm: data.firmid
-				})
-			)
+			addItem({
+				id: data.id,
+				code: data.code,
+				name: data.name,
+				price: data.price,
+				priceold: data.priceold,
+				amount_max: data.amount,
+				pic: data.pic,
+				amount: 1,
+				dcount: data.dcount,
+				dpercent: data.dpercent,
+				firm: data.firmid
+			})
 		}
 	}
 
@@ -74,9 +72,9 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 										alignItems: 'flex-end'
 									}}
 								>
-									<div style={{ padding: '20px 0', fontWeight: 'bold' }}>Код: {data?.code}</div>
+									<div style={{ padding: '20px 0', fontWeight: 'bold' }}>Код: {data.code}</div>
 									<div className='product-card__price' style={{ paddingBottom: '20px', marginRight: '-5px' }}>
-										<MoneyFormat {...{ value: data?.price, className: 'price-value' }} />
+										<MoneyFormat value={data.price} className='price-value' />
 									</div>
 								</div>
 								<div style={{ display: 'flex', justifyContent: 'flex-end' }}>

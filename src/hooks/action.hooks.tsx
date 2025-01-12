@@ -1,21 +1,24 @@
 'use client'
-import { useMemo } from "react";
-import { useAppDispatch, AddItem, AdjustAmount, ErrorUpdate, GetCartAction, GoogleAuthAction, LoginAuthAction, LogoutAuthAction, RegisterAuthAction, RemoveItem } from "../redux";
-import { bindActionCreators } from "redux";
+import { useMemo } from 'react'
+import { bindActionCreators } from 'redux'
+import {
+	ErrorUpdate,
+	GoogleAuthAction,
+	LoginAuthAction,
+	LogoutAuthAction,
+	RegisterAuthAction,
+	useAppDispatch
+} from '../redux'
 
 const rootActions = {
-    AddItem,
-    AdjustAmount,
-    ErrorUpdate,
-    GetCartAction,
-    GoogleAuthAction,
-    LoginAuthAction,
-    LogoutAuthAction,
-    RegisterAuthAction,
-    RemoveItem
+	ErrorUpdate,
+	GoogleAuthAction,
+	LoginAuthAction,
+	LogoutAuthAction,
+	RegisterAuthAction
 }
 
-export const useActions = () =>{
-    const dispatch = useAppDispatch()
-    return useMemo(()=> bindActionCreators(rootActions, dispatch), [dispatch])
+export const useActions = () => {
+	const dispatch = useAppDispatch()
+	return useMemo(() => bindActionCreators(rootActions, dispatch), [dispatch])
 }

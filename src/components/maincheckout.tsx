@@ -1,20 +1,19 @@
 'use client'
-import { GetCartAction, RemoveItem, useAppDispatch, useAppSelector } from '../redux'
-import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { IMaskInput } from 'react-imask'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import RadioGroup from '@mui/material/RadioGroup'
+import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
-import FormControl from '@mui/material/FormControl'
-import { Masks } from '../lib/masks'
-import { MoneyFormat } from '.'
-import { axiosService } from '../services'
-import { useDictionary } from '../contexts'
-import { tt } from '../lib/utils'
+import RadioGroup from '@mui/material/RadioGroup'
 import { useParams } from 'next/navigation'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { IMaskInput } from 'react-imask'
+import * as yup from 'yup'
+import { MoneyFormat } from '.'
+import { useCartContext, useDictionary } from '../contexts'
+import { Masks } from '../lib/masks'
+import { tt } from '../lib/utils'
+import { axiosService } from '../services'
 
 interface Details {
 	fio: string
@@ -28,7 +27,7 @@ interface Details {
 	payment?: string
 }
 
-interface ODetails {
+interface OrderDetails {
 	id: number
 	code: number
 	name: string
@@ -40,15 +39,15 @@ interface ODetails {
 
 interface Order {
 	details: string
-	odetails: ODetails[]
+	odetails: OrderDetails[]
 }
 
 export default function MainCheckout() {
 	const { lang } = useParams<{ lang: string }>()
 	const { d } = useDictionary()
-	const cart = useAppSelector((state: any) => state.cart)
-	const dispatch = useAppDispatch()
-	const [Cart, setCart] = useState<ODetails[]>([])
+	const cart = useCartContext().cart
+	const removeItem = useCartContext().removeItem
+	const [Cart, setCart] = useState<OrderDetails[]>([])
 	const [Shipping, setShipping] = useState<string>('')
 	const [DepIndex, setDepIndex] = useState<string>('')
 	const [Error, setError] = useState<string>('')
@@ -84,13 +83,8 @@ export default function MainCheckout() {
 	const shipping = watch('shipping')
 
 	useEffect(() => {
-		dispatch(GetCartAction(cart))
-		// eslint-disable-next-line
-	}, [])
-
-	useEffect(() => {
-		if (cart.started) setCart(getDataFromCart(cart.cart))
-	}, [cart.started, cart.cart])
+		setCart(getDataFromCart(cart))
+	}, [cart])
 
 	useEffect(() => {
 		setShipping(shipping)
@@ -123,26 +117,26 @@ export default function MainCheckout() {
 		return res
 	}
 
-	const getDataFromCart = (cart: any[]): ODetails[] => {
-		let items: ODetails[] = []
+	const getDataFromCart = (cart: any[]): OrderDetails[] => {
+		let items: OrderDetails[] = []
 		cart.forEach((item: any) => {
 			items.push({
 				id: item.id,
 				code: item.code,
 				name: item.name,
-				amount: item.iamount,
+				amount: item.amount,
 				sum:
-					item.iamount >= item.dcount
-						? item.iamount * item.price - (item.iamount * item.price * item.dpercent) / 100
-						: item.iamount * item.price,
-				discount: item.iamount >= item.dcount ? item.dpercent : 0,
+					item.amount >= item.dcount
+						? item.amount * item.price - (item.amount * item.price * item.dpercent) / 100
+						: item.amount * item.price,
+				discount: item.amount >= item.dcount ? item.dpercent : 0,
 				firmid: item.firm.id
 			})
 		})
 		return items
 	}
 
-	const clearCart = (items: ODetails[]) => items.forEach((item: ODetails) => dispatch(RemoveItem(item.id)))
+	const clearCart = (items: OrderDetails[]) => items.forEach((item: OrderDetails) => removeItem(item.id))
 
 	const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
@@ -310,7 +304,7 @@ export default function MainCheckout() {
 							</div>
 							{Cart.length > 0 && (
 								<div className='checkout-grid-container'>
-									{Cart.map((item: ODetails) => (
+									{Cart.map((item: OrderDetails) => (
 										<div className='checkout-grid-container-row' key={item.id}>
 											<div className='checkout-grid-item checkout-grid-item-code'>{item.code}</div>
 											<div className='checkout-grid-item checkout-grid-item-name'>{tt(item.name, lang)}</div>
