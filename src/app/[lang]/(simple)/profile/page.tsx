@@ -1,27 +1,23 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { useAppSelector } from '../../../../redux'
-import { MainProfile } from '../../../../components'
 import { useRouter } from 'next/navigation'
-import { useDictionary } from '../../../../contexts'
+import { useEffect } from 'react'
+import { MainProfile } from '../../../../components'
+import { useAuthContext, useDictionary } from '../../../../contexts'
 
 const Profile: React.FC = () => {
-	const [showing, setShowing] = useState(false)
-	const auth = useAppSelector((state: any) => state.auth)
-	const router = useRouter()
+	const session = useAuthContext().session
 	const { d } = useDictionary()
+	const router = useRouter()
+
+	// if (!session.isLoggedIn) {
+	// window.location.reload()
+	// router.push('/profile')
+	// return <></>
+	// }
 
 	useEffect(() => {
-		document.title = `${d.auth.login.profile.title}: ${auth.user.name}`
-		setShowing(true)
-	}, [, d.auth.login.profile.title, auth.user.name])
-
-	if (!showing) return null
-
-	if (showing && !auth.user.isLoggedIn) {
-		router.push('/login')
-		return <></>
-	}
+		document.title = `${d.auth.login.profile.title}: ${session.name}`
+	}, [, d.auth.login.profile.title])
 
 	return <MainProfile />
 }

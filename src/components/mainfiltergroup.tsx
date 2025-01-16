@@ -5,12 +5,13 @@ import Collapse from '@mui/material/Collapse'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import { useParams } from 'next/navigation'
 import { memo, useState } from 'react'
 import { CheckBoxItem } from '.'
 import { tt } from '../lib/utils'
 
 const MainFilterGroup: React.FC<any> = ({ loading, cond, items, fitems, brandZone, brandZoneClick, handleChange }) => {
-	const locale = 'uk'
+	const { lang } = useParams<{ lang: string }>()
 	const [open, setOpen] = useState(true)
 
 	const handleClick = () => {
@@ -20,7 +21,7 @@ const MainFilterGroup: React.FC<any> = ({ loading, cond, items, fitems, brandZon
 		<>
 			{items && (
 				<ListItemButton onClick={handleClick}>
-					<ListItemText primary={tt(items.name, locale)} />
+					<ListItemText primary={tt(items.name, lang)} />
 					{open ? <ExpandLess /> : <ExpandMore />}
 				</ListItemButton>
 			)}

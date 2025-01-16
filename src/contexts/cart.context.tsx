@@ -3,11 +3,14 @@ import { createContext, FC, ReactNode, useContext, useEffect, useReducer } from 
 import { decryptString, encryptString } from '../lib/crypto'
 import { axiosService } from '../services'
 
-interface Cart {
+interface BaseCart {
 	id: number
+	amount: number
+}
+
+interface Cart extends BaseCart {
 	code: number
 	name: string
-	amount: number
 	amount_max: number
 	price: number
 	priceold: number
@@ -26,7 +29,7 @@ enum CartActionKind {
 
 interface CartAction {
 	type: CartActionKind
-	payload: Cart | Cart[] | number
+	payload: Cart | Cart[] | BaseCart | number
 }
 
 const getIDs: any = (val: any) => {
@@ -85,10 +88,10 @@ const cartReducer = (state: Cart[], action: CartAction) => {
 			return state
 		case 'ADJUST_AMOUNT':
 			state = state.map((item: any) => {
-				if (item.id === (action.payload as Cart).id) {
+				if (item.id === (action.payload as BaseCart).id) {
 					return {
 						...item,
-						amount: Math.min((action.payload as Cart).amount, MAX_AMOUNT_PER_ITEM)
+						amount: Math.min((action.payload as BaseCart).amount, MAX_AMOUNT_PER_ITEM)
 					}
 				}
 				return item
@@ -117,7 +120,7 @@ const cartReducer = (state: Cart[], action: CartAction) => {
 interface IStore {
 	cart: Cart[]
 	addItem: (product: Cart) => void
-	adjustAmount: (product: Cart) => void
+	adjustAmount: (product: BaseCart) => void
 	removeItem: (id: number) => void
 }
 
@@ -128,7 +131,7 @@ type Props = {
 const CartProvider: FC<Props> = ({ children }) => {
 	const [state, dispatch] = useReducer(cartReducer, initialState)
 	const addItem = (data: Cart) => dispatch({ type: CartActionKind.ADD_ITEM, payload: data })
-	const adjustAmount = (data: Cart) => dispatch({ type: CartActionKind.ADJUST_AMOUNT, payload: data })
+	const adjustAmount = (data: BaseCart) => dispatch({ type: CartActionKind.ADJUST_AMOUNT, payload: data })
 	const removeItem = (id: number) => dispatch({ type: CartActionKind.REMOVE_ITEM, payload: id })
 	const updateCart = () => {
 		axiosService

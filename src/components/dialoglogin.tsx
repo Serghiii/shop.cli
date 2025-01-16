@@ -1,32 +1,21 @@
 'use client'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Alert from '@mui/material/Alert'
-import Checkbox from '@mui/material/Checkbox'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormGroup from '@mui/material/FormGroup'
 import Image from 'next/image'
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { MouseEvent, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
 import * as yup from 'yup'
-import GoogleIcon from '../../../../../public/icon/google.svg'
-import { useDictionary, useMainContext } from '../../../../contexts'
-import { Masks } from '../../../../lib/masks'
-import {
-	ErrorUpdate,
-	GoogleAuthAction,
-	LoginAuthAction,
-	RegisterAuthAction,
-	useAppDispatch,
-	useAppSelector
-} from '../../../../redux'
-import { useRouter } from 'next/navigation'
+import GoogleIcon from '../../public/icon/google.svg'
+import { useAuthContext, useDictionary, useMainContext } from '../contexts'
+import { Masks } from '../lib/masks'
+import { ErrorStatus } from '../lib/types'
 
-const ModalLogin: React.FC = () => {
+const DialogLogin: React.FC = () => {
 	const { d, t } = useDictionary()
 	const mainCtx = useMainContext()
 	const router = useRouter()
-	const dispatch = useAppDispatch()
 	const [Register, setRegister] = useState(false)
 	const backdrop = useRef<HTMLDivElement>(null)
 	const mouseState = {
@@ -57,24 +46,14 @@ const ModalLogin: React.FC = () => {
 	}
 
 	const closeClickHandler = () => {
-		router.back()
+		mainCtx.stateLogin[1](false)
 		document.body.removeAttribute('class')
 		mainCtx.mainSwiper.current?.removeAttribute('style')
 	}
 
 	const registerClickHandler = (e: MouseEvent) => {
 		e.preventDefault()
-		dispatch(ErrorUpdate({ code: '', message: '' }))
 		setRegister(!Register)
-	}
-
-	const getAccessToken = (data: any) => {
-		let res = ''
-		for (let el of Object.keys(data)) {
-			res = data[el]['access_token']
-			if (res !== undefined) break
-		}
-		return res
 	}
 
 	useEffect(() => {
@@ -85,20 +64,18 @@ const ModalLogin: React.FC = () => {
 		document.body.classList.add('_lock')
 		if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
 
-		dispatch(ErrorUpdate({ code: '', message: '' }))
-
-		try {
-			gapi.load('auth2', () => {
-				gapi.auth2.init({
-					client_id: process.env.GOOGLE_ID
-				})
-			})
-		} catch (e) {}
-	}, [, mainCtx.mainSwiper, dispatch])
+		// try {
+		// 	gapi.load('auth2', () => {
+		// 		gapi.auth2.init({
+		// 			client_id: process.env.GOOGLE_ID
+		// 		})
+		// 	})
+		// } catch (e) {}
+	}, [, mainCtx.mainSwiper])
 
 	const LoginForm = () => {
-		const [rememberme, setRememberMe] = useState(false)
-		const auth = useAppSelector((state: any) => state.auth)
+		const [error, setError] = useState<ErrorStatus | null>(null)
+		const login = useAuthContext().login
 
 		const loginSchema = yup.object().shape({
 			login: yup.string().trim().required(d.auth.messages.required).min(2, d.auth.messages.login),
@@ -116,20 +93,16 @@ const ModalLogin: React.FC = () => {
 		})
 
 		const loginSubmitHandle = async () => {
-			const resultAction = await dispatch(
-				LoginAuthAction({
-					username: getValues('login'),
-					password: getValues('loginPassword'),
-					rememberme
-				})
-			)
-			if (LoginAuthAction.fulfilled.match(resultAction)) {
+			const res = await login({ username: getValues('login'), password: getValues('loginPassword') })
+			if (res.message === 'Success') {
 				closeClickHandler()
+			} else {
+				setError(res)
 			}
 		}
 
 		const googleClickHandler = async () => {
-			const GoogleAuth = await gapi.auth2.getAuthInstance()
+			/*const GoogleAuth = await gapi.auth2.getAuthInstance()
 			await GoogleAuth.signIn().then(
 				(data: any) => {
 					dispatch(GoogleAuthAction({ token: getAccessToken(data) })).then(resultAction => {
@@ -141,11 +114,7 @@ const ModalLogin: React.FC = () => {
 				message => {
 					dispatch(ErrorUpdate({ code: '', message: message.error }))
 				}
-			)
-		}
-
-		const rememberMeOnChangeHandle = (e: ChangeEvent<HTMLInputElement>) => {
-			setRememberMe(e.target.checked)
+			)*/
 		}
 
 		return (
@@ -194,31 +163,15 @@ const ModalLogin: React.FC = () => {
 								<p className='error-message'>{`${errors.loginPassword ? errors.loginPassword.message : ''}`}</p>
 							</div>
 						</div>
-						<FormGroup row>
-							<FormControlLabel
-								control={
-									<Checkbox
-										name='rememberme'
-										size='small'
-										style={{
-											color: '#3e5288'
-										}}
-										checked={rememberme}
-										onChange={rememberMeOnChangeHandle}
-									/>
-								}
-								label={d.auth.login.rememberme}
-							/>
-						</FormGroup>
 						<div className='form-row'>
-							{auth.error?.message && (
+							{error?.message && (
 								<Alert
 									severity='error'
 									onClose={() => {
-										dispatch(ErrorUpdate({ code: '', message: '' }))
+										setError(null)
 									}}
 								>
-									{t('server.' + auth.error.code) ? t('server.' + auth.error.code) : auth.error.message}
+									{t('server.' + error.error) ? t('server.' + error.error) : error.message}
 								</Alert>
 							)}
 						</div>
@@ -241,7 +194,8 @@ const ModalLogin: React.FC = () => {
 	}
 
 	const RegisterForm = () => {
-		const auth = useAppSelector((state: any) => state.auth)
+		const [error, setError] = useState<ErrorStatus | null>(null)
+		const create = useAuthContext().register
 
 		const registerSchema = yup.object().shape({
 			name: yup
@@ -269,19 +223,18 @@ const ModalLogin: React.FC = () => {
 		})
 
 		const registerSubmitHandle = async () => {
-			const resultAction = await dispatch(
-				RegisterAuthAction({
-					name: getValues('name'),
-					// phone: getValues('phone').replace(/\s/g, ''),
-					phone: "getValues('phone').replace(/s/g, '')",
-					email: getValues('email'),
-					password: getValues('password'),
-					activation_on: d.server.mail.activation_on,
-					activation_ref: d.server.mail.activation_ref
-				})
-			)
-			if (RegisterAuthAction.fulfilled.match(resultAction)) {
+			const res = await create({
+				name: getValues('name'),
+				phone: getValues('phone')?.replace(/\s/g, '') || '',
+				email: getValues('email'),
+				password: getValues('password'),
+				activation_on: '',
+				activation_ref: ''
+			})
+			if (res.message === 'Success') {
 				closeClickHandler()
+			} else {
+				setError(res)
 			}
 		}
 
@@ -367,14 +320,14 @@ const ModalLogin: React.FC = () => {
 							</div>
 						</div>
 						<div className='form-row'>
-							{auth.error?.message && (
+							{error?.message && (
 								<Alert
 									severity='error'
 									onClose={() => {
-										dispatch(ErrorUpdate({ code: '', message: '' }))
+										setError(null)
 									}}
 								>
-									{t('server.' + auth.error.code) ? t('server.' + auth.error.code) : auth.error.message}
+									{t('server.' + error.error) ? t('server.' + error.error) : error.message}
 								</Alert>
 							)}
 						</div>
@@ -405,4 +358,4 @@ const ModalLogin: React.FC = () => {
 	)
 }
 
-export default ModalLogin
+export default DialogLogin

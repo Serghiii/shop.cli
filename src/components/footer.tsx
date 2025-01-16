@@ -1,6 +1,6 @@
 'use client'
+import { DialogCart, DialogLogin } from '.'
 import { useDictionary, useMainContext } from '../contexts'
-import { DialogCart } from '.'
 
 const Footer: React.FC = () => {
 	const mainCtx = useMainContext()
@@ -37,6 +37,7 @@ const Footer: React.FC = () => {
 					</div>
 				</div>
 			</footer>
+			{mainCtx.stateLogin[0] && <DialogLogin />}
 			{mainCtx.stateCart[0] && <DialogCart />}
 		</>
 	)

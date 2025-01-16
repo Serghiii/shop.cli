@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { MoneyFormat } from '..'
 import { useCartContext, useDictionary } from '../../contexts'
 import CartItem from './cartitem'
@@ -8,6 +8,7 @@ const DrawCart = ({ closeDialog }: any) => {
 	const cart = useCartContext().cart
 	const { d } = useDictionary()
 	const router = useRouter()
+	const { lang } = useParams<{ lang: string }>()
 
 	let status = {
 		hidden: { opacity: 0 },
@@ -17,7 +18,7 @@ const DrawCart = ({ closeDialog }: any) => {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		closeDialog()
-		router.push('/checkout')
+		router.push(`/${lang}/checkout`)
 	}
 
 	const EmptyCart = () => {

@@ -1,8 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useMainContext } from '../contexts'
-import { useAppSelector } from '../redux'
+import { useAuthContext, useMainContext } from '../contexts'
 import {
 	CartButton,
 	CompareButton,
@@ -15,9 +14,17 @@ import {
 	Search,
 	SideDrawer
 } from './index'
+// const ProfileButton = dynamic(
+// 	() =>
+// 		import('../components/bt_profile').catch(err => {
+// 			// eslint-disable-next-line react/display-name
+// 			return () => <p>{err.message}</p>
+// 		}),
+// 	{ ssr: false }
+// )
 
 const Header: React.FC = () => {
-	const auth = useAppSelector((state: any) => state.auth)
+	const session = useAuthContext().session
 	const mainCtx = useMainContext()
 	const [stateDarawer, setStateDarawer] = useState<boolean>(false)
 	const hdTop = useRef<HTMLDivElement>(null)
@@ -43,10 +50,16 @@ const Header: React.FC = () => {
 		if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
 	}
 
-	const profileClickHandler = () => {
-		// авторизація
-		if (!auth.user.isLoggedIn) {
-			router.push('/login')
+	const loginClickHandler = () => {
+		// логін діалог
+		if (!session.isLoggedIn) {
+			let padding = '0'
+			if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+				padding = String(window.innerWidth - document.documentElement.clientWidth) + 'px'
+			}
+			mainCtx.stateLogin[1](true)
+			document.body.classList.add(_lock)
+			if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
 		}
 	}
 
@@ -165,7 +178,7 @@ const Header: React.FC = () => {
 						<Logo />
 						<Search />
 						<div className='actions'>
-							<ProfileButton click={profileClickHandler} />
+							<ProfileButton click={loginClickHandler} />
 							<CompareButton />
 							<CartButton click={cartClickHandler} />
 						</div>

@@ -1,34 +1,60 @@
-import axios from 'axios'
+import axios, { CreateAxiosDefaults } from 'axios'
 
 const baseURL = process.env.API_URL
-const isServer = typeof window === 'undefined'
 
-export const api = axios.create({
+const options: CreateAxiosDefaults = {
 	baseURL,
 	headers: {
 		'Content-Type': 'application/json'
-	}
-})
+	},
+	withCredentials: true
+}
 
-export const apiAuth = axios.create({
-	baseURL,
-	headers: {
-		'Content-Type': 'application/json'
-	}
-})
+export const api = axios.create(options)
+export const apiAuth = axios.create(options)
+
+let token: string | null = null
 
 apiAuth.interceptors.request.use(async config => {
-	if (isServer) {
-		const { cookies } = await import('next/headers')
-		const token = (await cookies()).get('auth')?.value
-		if (token) {
-			config.headers['Authorization'] = `Bearer ${token}`
-		}
-	} else {
-		const token = document.cookie.replace(/(?:(?:^|.*;\s*)auth\s*=\s*([^;]*).*$)|^.*$/, '$1')
-		if (token) {
-			config.headers['Authorization'] = `Bearer ${token}`
-		}
+	if (config?.headers && token) {
+		config.headers.Authorization = `Bearer ${token}`
 	}
 	return config
 })
+
+apiAuth.interceptors.response.use(
+	async config => config,
+	async error => {
+		const originalRequest = error.config
+		if (error.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true
+			token = await refreshToken()
+			if (token) {
+				originalRequest.headers.Authorization = `Bearer ${token}`
+				return apiAuth(originalRequest)
+			}
+		}
+	}
+)
+
+// async function getToken() {
+// 		const sessionName = 'session'
+// 		const sessionCookies = await cookies()
+// 		if (!sessionCookies.has(sessionName)) return ''
+// 		const token = sessionCookies.get(sessionName)?.value
+// 		if (!token) return ''
+// 		const payload = decodePayload((jwtDecode(token) as any).data)
+// 		return payload.sign
+// }
+
+async function refreshToken() {
+	return await apiAuth.post('/auth/refresh').then(res => res.data)
+}
+
+export async function setToken(token: string) {
+	token = token
+}
+
+export async function clearToken() {
+	token = null
+}

@@ -1,22 +1,22 @@
 'use client'
+import Avatar from '@mui/material/Avatar'
+import Image from 'next/image'
 import useSWR from 'swr'
 import { ProfileTabs } from '.'
-import Image from 'next/image'
 import Logout from '../../public/icon/profile/logout.svg'
-import Avatar from '@mui/material/Avatar'
-import { useAppDispatch, LogoutAuthAction } from '../redux'
-import { useDictionary } from '../contexts'
-import { axiosAuthService } from '../services'
+import { useAuthContext, useDictionary } from '../contexts'
 
 const MainProfile: React.FC = () => {
 	const { d } = useDictionary()
-	const dispatch = useAppDispatch()
+	const logout = useAuthContext().logout
+	const post = useAuthContext().post
 
-	const fetcher = async (url: string) => await axiosAuthService.post(url).then(response => response.data)
+	const fetcher = async (url: string) => await post(url).then(response => response.json())
+	// const fetcher = async (url: string) => await axiosAuthService.post(url).then(response => response.data)
 	const { data } = useSWR('user/profile', fetcher)
 
 	const exitClickHandler = () => {
-		dispatch(LogoutAuthAction())
+		logout()
 	}
 
 	return (

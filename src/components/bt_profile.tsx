@@ -1,41 +1,32 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
-import User from '../../public/icon/profile/user.svg'
-import Logout from '../../public/icon/profile/logout.svg'
+import Avatar from '@mui/material/Avatar'
 import Image from 'next/image'
 import Link from 'next/link'
-import useSWR from 'swr'
-import Avatar from '@mui/material/Avatar'
-import { LogoutAuthAction, useAppDispatch, useAppSelector } from '../redux'
-import { useDictionary } from '../contexts'
-import { axiosAuthService } from '../services'
+import { useRef } from 'react'
+import Logout from '../../public/icon/profile/logout.svg'
+import User from '../../public/icon/profile/user.svg'
+import { useAuthContext, useDictionary } from '../contexts'
 
 const ProfileButton: React.FC<any> = props => {
 	const { d } = useDictionary()
-	const auth = useAppSelector((state: any) => state.auth)
-	const dispatch = useAppDispatch()
-	const [mounted, setMounted] = useState(false)
+	const session = useAuthContext().session
+	const logout = useAuthContext().logout
 	const actionsProfileDropdown = useRef<HTMLDivElement>(null)
 	const Show: string = 'show'
 
-	const fetcher = async (url: string) => await axiosAuthService.post(url).then(response => response.data)
-	const { data }: any = useSWR(auth.user.isLoggedIn ? 'user/profile' : null, fetcher)
-
-	useEffect(() => {
-		setMounted(true)
-	}, [])
-
 	const profileMouseEnterHandler = () => {
-		if (auth.user.isLoggedIn) actionsProfileDropdown.current?.classList.add(Show)
+		if (session.isLoggedIn) actionsProfileDropdown.current?.classList.add(Show)
 	}
 
 	const profileMouseLeaveHandler = () => {
-		if (auth.user.isLoggedIn) actionsProfileDropdown.current?.classList.remove(Show)
+		if (session.isLoggedIn) actionsProfileDropdown.current?.classList.remove(Show)
 	}
 
-	const exitClickHandler = () => {
-		dispatch(LogoutAuthAction())
-		actionsProfileDropdown.current?.classList.remove(Show)
+	const exitClickHandler = async () => {
+		const res = await logout()
+		if (res.message === 'Success') {
+			actionsProfileDropdown.current?.classList.remove(Show)
+		}
 	}
 
 	const textOverflow = (str: string = '') => {
@@ -53,15 +44,15 @@ const ProfileButton: React.FC<any> = props => {
 			onMouseLeave={profileMouseLeaveHandler}
 		>
 			<div className='actions__profile-wrapper'>
-				{mounted && auth.user.isLoggedIn ? (
+				{session.isLoggedIn ? (
 					<div className='avatar'>
 						<Avatar
 							alt='Аватар'
 							src={
-								data?.avatar?.trim().length
-									? data?.avatar.includes('lh3.googleusercontent.com')
-										? data?.avatar
-										: `${process.env.STATIC_URL}/avatars/${data?.avatar}`
+								session.avatar?.trim().length
+									? session.avatar.includes('lh3.googleusercontent.com')
+										? session.avatar
+										: `${process.env.STATIC_URL}/avatars/${session.avatar}`
 									: '/icon/profile/avatar-none.svg'
 							}
 							style={{ height: 30, width: 30 }}
@@ -71,11 +62,11 @@ const ProfileButton: React.FC<any> = props => {
 					<i className='actions__profile-icon'></i>
 				)}
 			</div>
-			{mounted && auth.user.isLoggedIn ? (
+			{session.isLoggedIn ? (
 				<p>
 					{d.greeting}
 					<br />
-					{textOverflow(data?.name)}
+					{textOverflow(session.name)}
 				</p>
 			) : (
 				<p>
