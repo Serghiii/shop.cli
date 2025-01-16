@@ -1,15 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from '../../../../redux'
 import { MainLogin } from '../../../../components'
-import { useDictionary } from '../../../../contexts'
+import { useAuthContext, useDictionary } from '../../../../contexts'
 import { useRouter } from 'next/navigation'
 
 const Login: React.FC = () => {
 	const { d } = useDictionary()
 	const router = useRouter()
 	const [showing, setShowing] = useState(false)
-	const auth = useAppSelector((state: any) => state.auth)
+	const session = useAuthContext().session
 
 	useEffect(() => {
 		document.title = d.auth.login.title
@@ -18,9 +17,9 @@ const Login: React.FC = () => {
 
 	if (!showing) return null
 
-	if (showing && auth.user.isLoggedIn) {
+	if (showing && session.isLoggedIn) {
 		router.push('/profile')
-		return <></>
+		return null
 	}
 
 	return <MainLogin />

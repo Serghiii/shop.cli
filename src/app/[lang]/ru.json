@@ -8,7 +8,6 @@
 			"title": "Вход",
 			"name": "Електронная почта или телефон",
 			"password": "Пароль",
-			"rememberme": "Запомнить",
 			"enter": "Войти",
 			"enter_google": "Войти через Google",
 			"profile": {
@@ -130,7 +129,7 @@
 			"Role_not_found": "Роль не найдена",
 			"user_exists": "Пользователь уже есть в базе",
 			"user_banned": "Ваш акаунт заблокировано, обратитесь в службу поддержки",
-			"login_password_not_corrected": "Не корректный логин или пароль",
+			"password_not_corrected": "Не корректный логин или пароль",
 			"create_user_error": "Не удается создать пользователя",
 			"create_order_error": "Не удается создать заказ",
 			"activate_user_error": "Не удается активировать пользователя",

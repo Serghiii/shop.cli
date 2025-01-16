@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 
-const SECRET_KEY = process.env.CRIPTO || 're69amkbceM.rs0769ouimeHd0q2ljav'
+const SECRET_KEY = String(process.env.CRIPTO)
 
 export function encryptString(text: string): string {
 	return CryptoJS.AES.encrypt(text, SECRET_KEY).toString()

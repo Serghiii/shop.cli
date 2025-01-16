@@ -1,8 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useMainContext } from '../contexts'
-import { useAppSelector } from '../redux'
+import { useAuthContext, useMainContext } from '../contexts'
 import {
 	CartButton,
 	CompareButton,
@@ -15,9 +14,17 @@ import {
 	Search,
 	SideDrawer
 } from './index'
+// const ProfileButton = dynamic(
+// 	() =>
+// 		import('../components/bt_profile').catch(err => {
+// 			// eslint-disable-next-line react/display-name
+// 			return () => <p>{err.message}</p>
+// 		}),
+// 	{ ssr: false }
+// )
 
 const Header: React.FC = () => {
-	const auth = useAppSelector((state: any) => state.auth)
+	const session = useAuthContext().session
 	const mainCtx = useMainContext()
 	const [stateDarawer, setStateDarawer] = useState<boolean>(false)
 	const hdTop = useRef<HTMLDivElement>(null)
@@ -45,7 +52,7 @@ const Header: React.FC = () => {
 
 	const profileClickHandler = () => {
 		// авторизація
-		if (!auth.user.isLoggedIn) {
+		if (!session.isLoggedIn) {
 			router.push('/login')
 		}
 	}

@@ -8,7 +8,6 @@
 			"title": "Вхід",
 			"name": "Електронна пошта або телефон",
 			"password": "Пароль",
-			"rememberme": "Запам'ятати",
 			"enter": "Увійти",
 			"enter_google": "Увійти через Google",
 			"profile": {
@@ -130,7 +129,7 @@
 			"Role_not_found": "Роль не знайдено",
 			"user_exists": "Користувач вже існує",
 			"user_banned": "Ваш акаунт заблоковано, зверніться в службу підтримки",
-			"login_password_not_corrected": "Не коректний логін або пароль",
+			"password_not_corrected": "Не коректний логін або пароль",
 			"create_user_error": "Не вдалося створити користувача",
 			"create_order_error": "Не вдалося створити замовлення",
 			"activate_user_error": "Не вдалося активувати користувача",
