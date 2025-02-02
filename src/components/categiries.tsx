@@ -1,4 +1,5 @@
 'use client'
+import cn from 'clsx'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useCategories } from '../hooks'
@@ -21,7 +22,7 @@ const Categories: React.FC<any> = ({ show, refCategory = null }) => {
 								className='submenu-item__link'
 								onClick={closeClickHandler}
 							>
-								{tt(item.name)}
+								{tt(item.name, lang)}
 							</Link>
 						</li>
 					))}
@@ -39,7 +40,7 @@ const Categories: React.FC<any> = ({ show, refCategory = null }) => {
 							<ul className='submenu-list'>
 								{group.map((item: any) => (
 									<li className='submenu-item' key={item.id}>
-										<p className='submenu-item__title'>{tt(item.name)}</p>
+										<p className='submenu-item__title'>{tt(item.name, lang)}</p>
 										<ul className='submenu-list-item'>{getSubItems(item.id)}</ul>
 									</li>
 								))}
@@ -56,7 +57,7 @@ const Categories: React.FC<any> = ({ show, refCategory = null }) => {
 	}
 
 	return (
-		<nav ref={refCategory} className={'categories' + (show ? ' show' : '')}>
+		<nav ref={refCategory} className={cn('categories', { show: show })}>
 			<ul className='categories-list'>
 				{menu.categories?.map((item: any) => (
 					<li key={item.ref} className='category-item'>

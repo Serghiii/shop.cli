@@ -2,14 +2,14 @@
 import { setCookie } from 'cookies-next/client'
 import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
-import { cookieName } from '../i18n-config'
+import { cookieI18nName } from '../i18n-config'
 
 const Language: React.FC<any> = props => {
 	const { lang } = useParams<{ lang: string }>()
 	const pathname = usePathname()
 
 	const onClickHandle = (e: React.MouseEvent<HTMLAnchorElement>) => {
-		setCookie(cookieName, e.currentTarget.lang)
+		setCookie(cookieI18nName, e.currentTarget.lang)
 	}
 
 	return (

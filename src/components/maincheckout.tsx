@@ -13,7 +13,7 @@ import { MoneyFormat } from '.'
 import { useCartContext, useDictionary } from '../contexts'
 import { Masks } from '../lib/masks'
 import { tt } from '../lib/utils'
-import { axiosService } from '../services'
+import { fetchService } from '../services'
 
 interface Details {
 	fio: string
@@ -47,11 +47,16 @@ export default function MainCheckout() {
 	const { d } = useDictionary()
 	const cart = useCartContext().cart
 	const removeItem = useCartContext().removeItem
-	const [Cart, setCart] = useState<OrderDetails[]>([])
+	const OrderDetails = getDataFromCart()
 	const [Shipping, setShipping] = useState<string>('')
 	const [DepIndex, setDepIndex] = useState<string>('')
 	const [Error, setError] = useState<string>('')
 	const posts: string[] = ['Нова пошта', 'Укрпошта']
+	const payments: string[] = [
+		'Оплата карткою на сайті',
+		'Готівкою при отриманні',
+		'Безготівкова оплата (для юр. осіб)'
+	]
 
 	const checkoutSchema = yup.object().shape({
 		fio: yup.string().trim().required(d.checkout.messages.required),
@@ -76,15 +81,12 @@ export default function MainCheckout() {
 		mode: 'onChange',
 		resolver: yupResolver(checkoutSchema),
 		defaultValues: {
-			shipping: ''
+			shipping: '',
+			payment: ''
 		}
 	})
 
 	const shipping = watch('shipping')
-
-	useEffect(() => {
-		setCart(getDataFromCart(cart))
-	}, [cart])
 
 	useEffect(() => {
 		setShipping(shipping)
@@ -117,7 +119,7 @@ export default function MainCheckout() {
 		return res
 	}
 
-	const getDataFromCart = (cart: any[]): OrderDetails[] => {
+	function getDataFromCart(): OrderDetails[] {
 		let items: OrderDetails[] = []
 		cart.forEach((item: any) => {
 			items.push({
@@ -140,13 +142,14 @@ export default function MainCheckout() {
 
 	const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		if (Cart.length > 0) {
-			await axiosService
-				.post('order', { details: JSON.stringify(getDetails()), odetails: Cart } as Order)
-				.then(({ data: Order }) => {
-					// clearCart(Cart)
+		if (OrderDetails.length > 0) {
+			await fetchService
+				.post('order', { details: JSON.stringify(getDetails()), odetails: OrderDetails } as Order)
+				.then(responce => responce.json())
+				.then((data: Order) => {
+					clearCart(OrderDetails)
 				})
-				.catch(error => {
+				.catch(() => {
 					setError(d.checkout.messages.error)
 				})
 		}
@@ -281,19 +284,19 @@ export default function MainCheckout() {
 											<RadioGroup {...field}>
 												<FormControlLabel
 													sx={{ mt: -1, mb: -1 }}
-													value={d.checkout.payment.card}
+													value={payments[0]}
 													control={<Radio color='primary' />}
 													label={d.checkout.payment.card}
 												/>
 												<FormControlLabel
 													sx={{ mt: -1, mb: -1 }}
-													value={d.checkout.payment.cash}
+													value={payments[1]}
 													control={<Radio color='primary' />}
 													label={d.checkout.payment.cash}
 												/>
 												<FormControlLabel
 													sx={{ mt: -1, mb: -1 }}
-													value={d.checkout.payment.cashless}
+													value={payments[2]}
 													control={<Radio color='primary' />}
 													label={d.checkout.payment.cashless}
 												/>
@@ -302,9 +305,9 @@ export default function MainCheckout() {
 									/>
 								</FormControl>
 							</div>
-							{Cart.length > 0 && (
+							{OrderDetails.length > 0 && (
 								<div className='checkout-grid-container'>
-									{Cart.map((item: OrderDetails) => (
+									{OrderDetails.map((item: OrderDetails) => (
 										<div className='checkout-grid-container-row' key={item.id}>
 											<div className='checkout-grid-item checkout-grid-item-code'>{item.code}</div>
 											<div className='checkout-grid-item checkout-grid-item-name'>{tt(item.name, lang)}</div>

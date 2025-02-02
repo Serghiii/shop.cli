@@ -5,7 +5,7 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { MainFilterGroup } from '.'
 import { useDictionary } from '../contexts'
-import { axiosService } from '../services'
+import { fetchService } from '../services'
 
 const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
 	const [loading, setLoading] = useState(false)
@@ -30,14 +30,15 @@ const MainFilters: React.FC<any> = ({ group, cond, page, fdata }) => {
 		)
 	const fetcher = async (url: string) => {
 		setLoading(true)
-		await axiosService
+		await fetchService
 			.get(url)
-			.then(response => {
+			.then(responce => responce.json())
+			.then(data => {
 				setLoading(false)
 				setBrandZoneClick(false)
-				setData(response.data)
+				setData(data)
 			})
-			.catch(e => setLoading(false))
+			.catch(() => setLoading(false))
 	}
 	useSWR(url, fetcher)
 

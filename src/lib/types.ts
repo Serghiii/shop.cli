@@ -1,15 +1,15 @@
 export interface ErrorStatus {
 	code?: number
 	message: string
-	error?: string
+	messageId?: string
 }
 
 export class ErrorMessage extends Error {
 	code: number | undefined
-	error: string | undefined
-	constructor(message: string, code?: number, error?: string) {
+	messageId: string | undefined
+	constructor(message: string, code?: number, messageId?: string) {
 		super(message)
 		this.code = code
-		this.error = error
+		this.messageId = messageId
 	}
 }

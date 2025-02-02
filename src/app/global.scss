@@ -1,7 +1,7 @@
-// Шрифти за замовчуванням
+// default font
 $fontFamily: 'Roboto';
 
-// Змінні
+// dimensions
 $minWidth: 320px;
 $maxWidth: 1400;
 $maxWidthContainer: 1370;
@@ -10,20 +10,22 @@ $lg: 991.98;
 $md: 767.98;
 $sm: 479.98;
 
-// Кольори
-$colorBackground: #f2f3f7; //fafafa
-$colorLogo: #3e5288;
-$colorText: #252525;
-$colorBorder: #cccccc;
-$colorTop: #212c4a;
-$colorTopSelected: #313c5a;
-$colorTitle: #404040;
-$colorMenuSelected: #1686cc;
+:root {
+	// colours
+	--colorBackground: #f2f3f7; //fafafa
+	--colorLogo: #3e5288;
+	--colorText: #252525;
+	--colorBorder: #cccccc;
+	--colorTop: #212c4a;
+	--colorTopSelected: #313c5a;
+	--colorTitle: #404040;
+	--colorMenuSelected: #1686cc;
+}
 
 html,
 body {
-	color: $colorText;
-	background-color: $colorBackground;
+	color: var(--colorText);
+	background-color: var(--colorBackground);
 	padding: 0;
 	margin: 0;
 	font-size: 14px;
@@ -46,7 +48,6 @@ a {
 	box-sizing: border-box;
 }
 
-// Середовище
 .wrapper {
 	width: 100%;
 	min-height: 100vh;
@@ -56,7 +57,7 @@ a {
 	flex-direction: column;
 }
 
-// Головна сітка
+// main grid
 .container {
 	// width: 100%; // для уникнення коллапсу
 	max-width: $maxWidthContainer + px;
@@ -80,7 +81,7 @@ a {
 }
 
 .logo {
-	fill: $colorLogo;
+	fill: var(--colorLogo);
 	margin: 3px 0 0 0;
 }
 
@@ -109,7 +110,7 @@ a {
 }
 
 .locality {
-	color: $colorTitle;
+	color: var(--colorTitle);
 	font-size: 13px;
 	font-weight: 500;
 	padding: 0 20px 0 0;
@@ -137,9 +138,9 @@ a {
 		position: relative;
 		text-transform: uppercase;
 		padding: 0 0 0 8px;
-		color: $colorTitle;
+		color: var(--colorTitle);
 		a {
-			color: $colorTitle;
+			color: var(--colorTitle);
 			text-decoration: none;
 			&:hover {
 				text-decoration: underline;
@@ -155,7 +156,7 @@ a {
 			top: 0;
 			left: 4px;
 			height: 100%;
-			border-left: 1px solid $colorTitle;
+			border-left: 1px solid var(--colorTitle);
 		}
 	}
 	&__item-mobile {
@@ -182,7 +183,7 @@ a {
 	&__txt {
 		height: 32px;
 		width: 100%;
-		border: 1px solid $colorBorder;
+		border: 1px solid var(--colorBorder);
 		border-radius: 4px 0 0 4px;
 		padding: 0 10px 0 10px;
 		outline: none;
@@ -191,8 +192,8 @@ a {
 		height: 34px;
 		min-width: 43px;
 		background: url(../../public/icon/search.svg) no-repeat center center;
-		border: 1px solid $colorLogo;
-		background-color: $colorLogo;
+		border: 1px solid var(--colorLogo);
+		background-color: var(--colorLogo);
 		border-radius: 0 4px 4px 0;
 		cursor: pointer;
 		outline: none;
@@ -211,11 +212,11 @@ header {
 .wraper-btm,
 .wraper-footer {
 	width: 100%;
-	background-color: $colorTop;
+	background-color: var(--colorTop);
 }
 .wraper-top-simple {
 	width: 100%;
-	background-color: $colorLogo;
+	background-color: var(--colorLogo);
 }
 .wraper-footer-simple {
 	width: 100%;
@@ -239,7 +240,7 @@ header {
 		align-items: center;
 		justify-content: space-between;
 		color: white;
-		background-color: $colorTop;
+		background-color: var(--colorTop);
 		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
 		z-index: 20;
 		& .logo {
@@ -253,7 +254,7 @@ header {
 		flex-wrap: wrap;
 		padding: 15px 40px 15px 40px;
 		color: white;
-		background-color: $colorLogo;
+		background-color: var(--colorLogo);
 		// overflow: hidden;
 		& .top-left .logo {
 			fill: white;
@@ -270,7 +271,7 @@ header {
 	&-phones {
 		margin: 0 0 0 20px;
 		&__phone {
-			color: $colorTitle;
+			color: var(--colorTitle);
 			text-decoration: none;
 			font-size: 15px;
 			font-weight: 600;
@@ -280,7 +281,7 @@ header {
 			}
 		}
 		&__ico {
-			fill: $colorTitle;
+			fill: var(--colorTitle);
 			margin: 0 2px 0 0;
 		}
 	}
@@ -314,7 +315,7 @@ header {
 	min-width: 285px;
 	height: 100%;
 	&:hover {
-		background-color: $colorTopSelected;
+		background-color: var(--colorTop) Selected;
 		.categories {
 			display: block;
 			top: 100%;
@@ -342,7 +343,7 @@ header {
 	display: none;
 	padding: 7px 7px 3px 7px;
 	margin: 0 6px 0 0;
-	border: 1px solid $colorLogo;
+	border: 1px solid var(--colorLogo);
 	border-radius: 4px;
 }
 
@@ -377,10 +378,10 @@ header {
 			padding: 3px;
 			font-size: 12px;
 			border-radius: 10px;
-			background-color: $colorLogo;
+			background-color: var(--colorLogo);
 		}
 		&:hover {
-			background-color: $colorTopSelected;
+			background-color: var(--colorTop) Selected;
 			.actions__profile-wrapper + p {
 				text-decoration: underline;
 			}
@@ -404,7 +405,7 @@ header {
 		overflow: hidden;
 		font-size: 14px;
 		cursor: auto;
-		color: $colorText;
+		color: var(--colorText);
 		background-color: white;
 		border-radius: 4px;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -423,7 +424,7 @@ header {
 		right: 0;
 		padding: 0 12px;
 		cursor: auto;
-		color: $colorText;
+		color: var(--colorText);
 		background-color: white;
 		border-radius: 4px;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -465,7 +466,7 @@ header {
 		list-style: none;
 	}
 	&-item {
-		color: $colorTitle;
+		color: var(--colorTitle);
 		&__link {
 			display: flex;
 			position: relative;
@@ -477,7 +478,7 @@ header {
 			z-index: 102;
 		}
 		&:hover {
-			color: $colorMenuSelected;
+			color: var(--colorMenuSelected);
 			background-color: #fbfbfb;
 			text-decoration: underline;
 			.profile-item__link {
@@ -493,6 +494,7 @@ header {
 	border-radius: 50%;
 	&-simple {
 		position: absolute;
+		background-color: lightgray;
 		width: 100px;
 		height: 100px;
 		top: 15px;
@@ -560,7 +562,7 @@ header {
 		justify-content: space-between;
 		flex-wrap: wrap;
 		color: white;
-		background: $colorTop;
+		background: var(--colorTop);
 		padding: 10px 15px;
 	}
 	&-registration {
@@ -715,7 +717,7 @@ header {
 }
 
 .category-item {
-	color: $colorTitle;
+	color: var(--colorTitle);
 	&__link {
 		display: flex;
 		position: relative;
@@ -742,11 +744,11 @@ header {
 		}
 	}
 	&:hover {
-		color: $colorMenuSelected;
+		color: var(--colorMenuSelected);
 		background-color: #fbfbfb;
 		text-decoration: underline;
 		.link__arrow {
-			fill: $colorMenuSelected;
+			fill: var(--colorMenuSelected);
 			right: 13px;
 		}
 		.category-item__link-submenu {
@@ -781,19 +783,19 @@ header {
 		margin-top: 8px;
 		line-height: 1;
 		&__title {
-			color: $colorTop;
+			color: var(--colorTop);
 			font-size: 18px;
 			font-weight: 500;
 			margin: 32px 0 10px 0;
 			white-space: nowrap;
 		}
 		&__link {
-			color: $colorTop;
+			color: var(--colorTop);
 			text-decoration: none;
 			font-size: 14px;
 			white-space: nowrap;
 			&:hover {
-				color: $colorMenuSelected;
+				color: var(--colorMenuSelected);
 				text-decoration: underline;
 			}
 		}
@@ -943,10 +945,10 @@ header {
 	padding: 10px 5px;
 	margin: 12px 0;
 	outline: none;
-	color: $colorText;
+	color: var(--colorText);
 	font-size: 16px;
 	border-radius: 5px;
-	background-color: $colorBackground;
+	background-color: var(--colorBackground);
 	border: 1px solid lightgray;
 }
 
@@ -970,10 +972,10 @@ header {
 }
 
 .tab-list-active {
-	background-color: $colorBackground;
+	background-color: var(--colorBackground);
 	border: solid lightgray;
 	border-width: 1px 1px 0px 1px;
-	box-shadow: inset 0 0 0 1px $colorBackground;
+	box-shadow: inset 0 0 0 1px var(--colorBackground);
 }
 
 .dialog-form-simple {
@@ -995,7 +997,7 @@ header {
 .form-label-simple {
 	width: 30%;
 	max-width: 200px;
-	color: $colorTitle;
+	color: var(--colorTitle);
 	font-size: 15px;
 	font-weight: 500;
 }
@@ -1012,7 +1014,7 @@ header {
 	outline: none;
 	padding: 0 15px 0 15px;
 	margin: 0;
-	background-color: $colorBackground;
+	background-color: var(--colorBackground);
 	border: 1px solid rgba(0, 0, 0, 0.12);
 	&:focus {
 		border: 1px solid gray;
@@ -1033,10 +1035,10 @@ header {
 	border-radius: 6px;
 	font-size: 18px;
 	color: #e5ffff;
-	background: $colorLogo;
+	background: var(--colorLogo);
 	transition: all 0.2s ease-in-out;
 	&:hover {
-		background: $colorMenuSelected;
+		background: var(--colorMenuSelected);
 	}
 	&:disabled {
 		opacity: 0.3;
@@ -1132,11 +1134,11 @@ header {
 		line-clamp: 2;
 		overflow: hidden;
 		height: 33px;
-		color: $colorTitle;
+		color: var(--colorTitle);
 		margin: 10px 0 10px 0;
 		text-decoration: none;
 		&:hover {
-			color: $colorMenuSelected;
+			color: var(--colorMenuSelected);
 			text-decoration: underline;
 		}
 	}
@@ -1222,7 +1224,7 @@ header {
 	align-items: center;
 	width: 95%;
 	max-width: 350px;
-	color: $colorTitle;
+	color: var(--colorTitle);
 	margin: 20px auto;
 	padding: 20px 20px 15px 20px;
 	box-shadow: 0 0 4px rgba(153, 152, 152, 0.5);
@@ -1267,8 +1269,12 @@ header {
 		font-size: 14px;
 	}
 	.avatar-simple {
-		width: 80px;
-		height: 80px;
+		width: 52px;
+		height: 52px;
+	}
+	.MuiAvatar-root.profile-avatar {
+		width: 48px;
+		height: 48px;
 	}
 }
 
@@ -1352,13 +1358,13 @@ header {
 .footer {
 	color: white;
 	box-sizing: border-box;
-	background-color: $colorTop;
+	background-color: var(--colorTop);
 	padding: 10px;
 	text-align: center;
 }
 
 .footer-simple {
-	color: $colorTitle;
+	color: var(--colorTitle);
 	box-sizing: border-box;
 	padding: 10px;
 	text-align: center;
@@ -1459,7 +1465,7 @@ header {
 	border: 1px solid rgba(0, 0, 0, 0.12);
 	transition: border 0.2s ease-in-out;
 	&:hover {
-		border-color: $colorMenuSelected;
+		border-color: var(--colorMenuSelected);
 	}
 	&:focus {
 		border: 1px solid gray;
@@ -1475,7 +1481,7 @@ header {
 	border: 1px solid rgba(0, 0, 0, 0.12);
 	transition: border 0.2s ease-in-out;
 	&:hover {
-		border-color: $colorMenuSelected;
+		border-color: var(--colorMenuSelected);
 	}
 	&:focus {
 		border: 1px solid gray;
@@ -1506,10 +1512,10 @@ header {
 	border-radius: 6px;
 	font-size: 18px;
 	color: #e5ffff;
-	background: $colorLogo;
+	background: var(--colorLogo);
 	transition: all 0.2s ease-in-out;
 	&:hover {
-		background: $colorMenuSelected;
+		background: var(--colorMenuSelected);
 	}
 	&:disabled {
 		opacity: 0.3;
@@ -1519,7 +1525,7 @@ header {
 
 .form-register {
 	display: block;
-	color: $colorLogo;
+	color: var(--colorLogo);
 	background-color: transparent;
 	text-align: center;
 	border: none;
@@ -1528,7 +1534,7 @@ header {
 	margin: 0 auto;
 	&:hover {
 		cursor: pointer;
-		color: $colorMenuSelected;
+		color: var(--colorMenuSelected);
 		transition: all 0.2s ease-in-out;
 	}
 }
@@ -1565,7 +1571,7 @@ header {
 	width: 120px;
 	height: 50px;
 	background-color: transparent;
-	border: 3px solid $colorLogo;
+	border: 3px solid var(--colorLogo);
 	border-radius: 10px 10px 10px 10px;
 }
 
@@ -1600,7 +1606,7 @@ header {
 		padding: 0 15px 0 15px;
 		margin: 0;
 		border: 1px solid rgba(0, 0, 0, 0.12);
-		background-color: $colorBackground;
+		background-color: var(--colorBackground);
 		&-dep-index {
 			margin-left: 50px;
 			width: 240px;
@@ -1625,19 +1631,19 @@ header {
 		&-item {
 			padding: 3px;
 			&-code {
-				background-color: $colorBackground;
+				background-color: var(--colorBackground);
 				text-align: center;
 			}
 			&-name {
-				background-color: $colorBackground;
+				background-color: var(--colorBackground);
 				text-align: left;
 			}
 			&-amount {
-				background-color: $colorBackground;
+				background-color: var(--colorBackground);
 				text-align: center;
 			}
 			&-sum {
-				background-color: $colorBackground;
+				background-color: var(--colorBackground);
 				text-align: right;
 			}
 		}

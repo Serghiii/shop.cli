@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { MainLogin } from '../../../../components'
 import { Locale } from '../../../../i18n-config'
 import { getDictionary } from '../../dictionaries'
 
@@ -11,12 +10,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const lang = (await params).lang
 	const d = await getDictionary(lang)
 	return {
-		title: d.auth.login.title
+		title: d.title
 	}
 }
 
-const Login: React.FC = () => {
-	return <MainLogin />
+export default function CheckoutLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+	return <>{children}</>
 }
-
-export default Login

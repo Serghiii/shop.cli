@@ -1,11 +1,12 @@
-import { useForm } from 'react-hook-form'
+'use client'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import { useDictionary } from '../../contexts'
-import { axiosAuthService } from '../../services'
+import { useAuthContext, useDictionary } from '../../contexts'
 
 const PasswordPanel: React.FC = () => {
 	const { d } = useDictionary()
+	const ctxAuth = useAuthContext()
 
 	const validationSchema = yup.object().shape({
 		password: yup.string().required(d.auth.messages.required).min(6, d.auth.messages.password),
@@ -26,7 +27,7 @@ const PasswordPanel: React.FC = () => {
 	})
 
 	const onSubmitHandle = () => {
-		axiosAuthService.post('user/changepassword', { password: getValues('password') }).then(() => {
+		ctxAuth.patch('user/changepassword', { password: getValues('password') }).then(() => {
 			window.location.reload()
 		})
 	}

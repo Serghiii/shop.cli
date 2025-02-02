@@ -20,15 +20,15 @@ const NewGoods = dynamic(
 )
 
 export default function Home() {
-	const mainCtx = useMainContext()
+	const ctxMain = useMainContext()
 
 	return (
 		<main>
 			<div className='container'>
 				<div className='main'>
-					<Categories show={mainCtx.stateCategory[0]} />
+					<Categories show={ctxMain.stateCategory[0]} />
 					<div className='menu-backdrop'></div>
-					<div ref={mainCtx.mainSwiper} className='main-swiper'>
+					<div ref={ctxMain.mainSwiper} className='main-swiper'>
 						<Slider />
 					</div>
 					<div className='main-sections'>

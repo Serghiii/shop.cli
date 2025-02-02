@@ -1,7 +1,6 @@
 'use client'
-
 import useSWR from 'swr'
-import { axiosService } from '../services'
+import { fetchService } from '../services'
 
 export const useCategories = () => {
 	const { data, error, isLoading } = useSWRGet('service/menu')
@@ -9,11 +8,19 @@ export const useCategories = () => {
 }
 
 export function useSWRGet(url: string, options?: any) {
-	const fetcher = async (url: string) => await axiosService.get(url).then(response => response.data)
+	const fetcher = async (url: string) =>
+		await fetchService
+			.get(url)
+			.then(responce => responce.json())
+			.then(data => data)
 	return useSWR(url, fetcher, options)
 }
 
 export function useSWRPost(url: string, data?: any, options?: any) {
-	const fetcher = async (url: string) => await axiosService.post(url, data).then(response => response.data)
+	const fetcher = async (url: string) =>
+		await fetchService
+			.post(url, data)
+			.then(responce => responce.json())
+			.then(data => data)
 	return useSWR(url, fetcher, options)
 }

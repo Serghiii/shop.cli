@@ -1,11 +1,9 @@
 'use client'
-import axios from 'axios'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import React, { ChangeEvent, useCallback, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
-import FileDownloadIcon from '@mui/icons-material/FileDownload'
-import { useDictionary } from '../../contexts'
-// import Jimp from "jimp"
-// import sharp from "sharp"
+import { useAuthContext, useDictionary } from '../../contexts'
+import { Resize, resize } from '../../lib/utils'
 
 const PhotoPanel: React.FC<any> = props => {
 	const [state, setState] = useState<any>({
@@ -14,6 +12,7 @@ const PhotoPanel: React.FC<any> = props => {
 	})
 	const [editor, setEditor] = useState(true)
 	const { d } = useDictionary()
+	const ctxAuth = useAuthContext()
 	const [file, setFile] = useState(d.profile.tabs.panels.selectfile)
 
 	const profilePicChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,41 +34,28 @@ const PhotoPanel: React.FC<any> = props => {
 		(editor: any) => {
 			setState({ ...state, editor })
 		},
-		[state]
+		[editor]
 	)
 
-	// const changeQuality: any = (buffer: any) => {
-	//    return Jimp.read(Buffer.from(buffer, 'base64')).then((image: any) => {
-	//       return image.quality(10) //.toString('base64')
-	//    })
-	// }
-
-	const onSubmitHandler = (e: any) => {
+	const onSubmitHandler = async (e: any) => {
 		e.preventDefault()
 		const editor: any = state.editor
 		if (editor?.props.image !== undefined) {
 			const Avatar = {
-				avatar: editor
+				avatar: await editor
 					?.getImageScaledToCanvas()
 					.toDataURL()
 					.replace(/^data:image\/\w+;base64,/, '')
 			}
 			if (Avatar.avatar) {
-				axios
-					.post(
-						'user/changeavatar',
-						Avatar
-						// Buffer.from(Avatar.avatar, 'base64')
-						// await changeQuality(Avatar.avatar)
-						// sharp(Avatar.avatar).jpeg({
-						//    quality: 10,
-						//    chromaSubsampling: '4:4:4',
-						//    force: true,
-						// }).toBuffer()
-					)
-					.then(res => {
-						window.location.reload()
-					})
+				let compressedImage = Avatar.avatar
+				try {
+					compressedImage = await resize(Avatar.avatar, Resize.Auto, Resize.Auto, 20)
+				} catch {}
+				ctxAuth.patch('user/changeavatar', { avatar: compressedImage }).then(() => {
+					ctxAuth.refreshToken()
+					window.location.reload()
+				})
 			}
 		}
 	}

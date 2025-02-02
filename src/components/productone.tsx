@@ -7,7 +7,7 @@ import { MainBreadcrumbs, MoneyFormat } from '.'
 import { useCartContext, useDictionary } from '../contexts'
 import { i18n } from '../i18n-config'
 import { tt } from '../lib/utils'
-import { axiosService, pageService } from '../services'
+import { fetchService, pageService } from '../services'
 import ProductImages from './productimages'
 
 const ProductOne: React.FC<any> = ({ group, data }) => {
@@ -18,9 +18,12 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 	const { d } = useDictionary()
 
 	const fetcher = async (url: string) =>
-		await axiosService.get(url).then(response => {
-			setExtHtml({ __html: DOMPurify.sanitize(response.data, { USE_PROFILES: { html: true } }) })
-		})
+		await fetchService
+			.get(url)
+			.then(responce => responce.text())
+			.then(data => {
+				setExtHtml({ __html: DOMPurify.sanitize(data, { USE_PROFILES: { html: true } }) })
+			})
 	useSWR(data ? `${process.env.STATIC_URL}/cards/${data?.id}/description/${data?.id}_${lang}.html` : null, fetcher)
 
 	useEffect(() => {
@@ -47,7 +50,7 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 				amount: 1,
 				dcount: data.dcount,
 				dpercent: data.dpercent,
-				firm: data.firmid
+				firm: { id: data.firmid ? data.firmid : data.firm.id }
 			})
 		}
 	}
@@ -61,7 +64,7 @@ const ProductOne: React.FC<any> = ({ group, data }) => {
 				{data && (
 					<div className='product-card'>
 						<div style={{ display: 'flex', flexDirection: 'row' }}>
-							<ProductImages id={data.id} data={data.productpics} />
+							<ProductImages id={data.id} data={data.imgs} />
 							<div style={{ paddingTop: '20px', minHeight: 'calc(100vh - 150px)', width: '100%' }}>
 								<div style={{ fontSize: '30px' }}>{tt(data.name, lang)}</div>
 								<div

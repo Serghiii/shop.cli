@@ -1,16 +1,16 @@
 'use client'
-import Avatar from '@mui/material/Avatar'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef } from 'react'
+import { UserAvatar } from '.'
 import Logout from '../../public/icon/profile/logout.svg'
 import User from '../../public/icon/profile/user.svg'
 import { useAuthContext, useDictionary } from '../contexts'
 
 const ProfileButton: React.FC<any> = props => {
 	const { d } = useDictionary()
-	const session = useAuthContext().session
-	const logout = useAuthContext().logout
+	const ctxAuth = useAuthContext()
+	const session = ctxAuth.session
 	const actionsProfileDropdown = useRef<HTMLDivElement>(null)
 	const Show: string = 'show'
 
@@ -23,7 +23,7 @@ const ProfileButton: React.FC<any> = props => {
 	}
 
 	const exitClickHandler = async () => {
-		const res = await logout()
+		const res = await ctxAuth.logout()
 		if (res.message === 'Success') {
 			actionsProfileDropdown.current?.classList.remove(Show)
 		}
@@ -45,19 +45,7 @@ const ProfileButton: React.FC<any> = props => {
 		>
 			<div className='actions__profile-wrapper'>
 				{session.isLoggedIn ? (
-					<div className='avatar'>
-						<Avatar
-							alt='Аватар'
-							src={
-								session.avatar?.trim().length
-									? session.avatar.includes('lh3.googleusercontent.com')
-										? session.avatar
-										: `${process.env.STATIC_URL}/avatars/${session.avatar}`
-									: '/icon/profile/avatar-none.svg'
-							}
-							style={{ height: 30, width: 30 }}
-						/>
-					</div>
+					<UserAvatar height={40} width={40} path={session.avatar} />
 				) : (
 					<i className='actions__profile-icon'></i>
 				)}

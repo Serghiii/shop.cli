@@ -1,24 +1,21 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { Metadata } from 'next'
 import { MainProfile } from '../../../../components'
-import { useAuthContext, useDictionary } from '../../../../contexts'
+import { Locale } from '../../../../i18n-config'
+import { getDictionary } from '../../dictionaries'
+
+type Props = {
+	params: Promise<{ lang: Locale }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const lang = (await params).lang
+	const d = await getDictionary(lang)
+	return {
+		title: `${d.auth.login.profile.title}:`
+	}
+}
 
 const Profile: React.FC = () => {
-	const session = useAuthContext().session
-	const { d } = useDictionary()
-	const router = useRouter()
-
-	// if (!session.isLoggedIn) {
-	// window.location.reload()
-	// router.push('/profile')
-	// return <></>
-	// }
-
-	useEffect(() => {
-		document.title = `${d.auth.login.profile.title}: ${session.name}`
-	}, [, d.auth.login.profile.title])
-
 	return <MainProfile />
 }
 

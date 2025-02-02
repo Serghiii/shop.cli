@@ -1,16 +1,22 @@
-import { Controller, useForm } from 'react-hook-form'
+'use client'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { IMaskInput } from 'react-imask'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
+import { Controller, useForm } from 'react-hook-form'
+import { IMaskInput } from 'react-imask'
+import * as yup from 'yup'
+import { useAuthContext, useDictionary } from '../../contexts'
 import { Masks } from '../../lib/masks'
-import { useDictionary } from '../../contexts'
-import { axiosAuthService } from '../../services'
+
+enum EnumGender {
+	male = '0',
+	female = '1'
+}
 
 const ProfilePanel: React.FC<any> = props => {
 	const { d } = useDictionary()
+	const ctxAuth = useAuthContext()
 
 	const validationSchema = yup.object().shape({
 		name: yup
@@ -18,7 +24,13 @@ const ProfilePanel: React.FC<any> = props => {
 			.required(d.auth.messages.required)
 			.min(2, d.auth.messages.login)
 			.matches(/^[а-яА-ЯіІёЁ\s]+$/, d.auth.messages.login_cyr),
-		gender: yup.string().required(d.auth.messages.gender).oneOf(['1', '2'], d.auth.messages.gender),
+		gender: yup
+			.mixed<EnumGender>()
+			.oneOf(
+				Object.values(EnumGender).map(e => e as EnumGender),
+				d.auth.messages.gender
+			)
+			.required(),
 		phone: yup
 			.string()
 			.matches(/^\+38\s[0-9,\s]+$/, d.auth.messages.required)
@@ -30,9 +42,7 @@ const ProfilePanel: React.FC<any> = props => {
 		register,
 		handleSubmit,
 		formState: { errors },
-		clearErrors,
-		getValues,
-		setValue
+		getValues
 	} = useForm({
 		resolver: yupResolver(validationSchema),
 		defaultValues: {
@@ -44,11 +54,9 @@ const ProfilePanel: React.FC<any> = props => {
 	const onSubmitHandler = () => {
 		let values = { name: getValues('name'), gender: getValues('gender') }
 		const phone: any = getValues('phone')?.replace(/\s/g, '')
-		axiosAuthService
-			.post('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values)
-			.then(() => {
-				window.location.reload()
-			})
+		ctxAuth.put('user/changeprofile', props.phone !== phone ? { ...values, phone: phone } : values).then(() => {
+			window.location.reload()
+		})
 	}
 
 	return (
@@ -80,14 +88,14 @@ const ProfilePanel: React.FC<any> = props => {
 						render={({ field }) => (
 							<RadioGroup {...field} aria-label='gender'>
 								<FormControlLabel
-									value='1'
-									disabled={props.gender in ['1', '2']}
+									value={EnumGender.male}
+									disabled={props.gender in [EnumGender.male, EnumGender.female]}
 									control={<Radio color='primary' />}
 									label={d.profile.tabs.panels.gender.male}
 								/>
 								<FormControlLabel
-									value='2'
-									disabled={props.gender in ['1', '2']}
+									value={EnumGender.female}
+									disabled={props.gender in [EnumGender.male, EnumGender.female]}
 									control={<Radio color='primary' />}
 									label={d.profile.tabs.panels.gender.famale}
 								/>
@@ -107,12 +115,13 @@ const ProfilePanel: React.FC<any> = props => {
 						control={control}
 						name='phone'
 						disabled={props.phone?.length > 0}
-						render={({ field: { ref, ...field } }) => (
+						render={({ field: { ref, onChange, ...field } }) => (
 							<IMaskInput
 								{...field}
-								id={field.name}
+								id='phone'
 								className='custom-input-simple phone-bounds'
 								mask={Masks.phone.without_brackets}
+								onAccept={value => onChange({ target: { name: field.name, value: value as string } })}
 							/>
 						)}
 					/>

@@ -1,4 +1,4 @@
-export const cookieName = 'NEXT_LOCALE'
+export const cookieI18nName = 'NEXT_LOCALE'
 
 export const i18n = {
 	defaultLocale: 'uk',

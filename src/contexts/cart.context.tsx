@@ -1,7 +1,7 @@
 'use client'
 import { createContext, FC, ReactNode, useContext, useEffect, useReducer } from 'react'
 import { decryptString, encryptString } from '../lib/crypto'
-import { axiosService } from '../services'
+import { fetchService } from '../services'
 
 interface BaseCart {
 	id: number
@@ -47,7 +47,7 @@ const loadCartFromLocalStorage = () => {
 			const cartString = decryptString(encryptedCart)
 			return JSON.parse(cartString)
 		}
-	} catch (e) {}
+	} catch {}
 	return []
 }
 
@@ -134,10 +134,14 @@ const CartProvider: FC<Props> = ({ children }) => {
 	const adjustAmount = (data: BaseCart) => dispatch({ type: CartActionKind.ADJUST_AMOUNT, payload: data })
 	const removeItem = (id: number) => dispatch({ type: CartActionKind.REMOVE_ITEM, payload: id })
 	const updateCart = () => {
-		axiosService
-			.post('products/cart', getIDs(state))
-			.then(({ data }) => dispatch({ type: CartActionKind.UPDATE_ITEMS, payload: data }))
-			.catch(e => {})
+		if (state.length > 0) {
+			// sync products
+			fetchService
+				.post('products/cart', getIDs(state))
+				.then(responce => responce.json())
+				.then(data => dispatch({ type: CartActionKind.UPDATE_ITEMS, payload: data }))
+				.catch()
+		}
 	}
 
 	useEffect(() => {

@@ -64,6 +64,9 @@ interface IStore {
 	register: (data: RegisterUser) => Promise<ErrorStatus>
 	get: (url: string) => Promise<any>
 	post: (url: string, data?: any) => Promise<any>
+	put: (url: string, data?: any) => Promise<any>
+	patch: (url: string, data?: any) => Promise<any>
+	refreshToken: () => void
 }
 
 const AuthContext = createContext<IStore | undefined>(undefined)
@@ -84,8 +87,8 @@ const AuthProvider: FC<Props> = ({ auth, children }) => {
 				payload: { isLoggedIn: true, name: payload.name, avatar: payload.avatar, token }
 			})
 			return { message: 'Success' }
-		} catch (exception: any) {
-			return exception
+		} catch (e: any) {
+			return e
 		}
 	}
 
@@ -94,23 +97,23 @@ const AuthProvider: FC<Props> = ({ auth, children }) => {
 			await post('auth/logout')
 			dispatch({ type: SessionActionKind.UPDATE, payload: initialState })
 			return { message: 'Success' }
-		} catch (exception: any) {
-			return exception
+		} catch (e: any) {
+			return e
 		}
 	}
 
 	const register = async (data: RegisterUser): Promise<ErrorStatus> => {
 		try {
-			const res = await (await post('auth/register', data)).json()
-			return { message: 'Success', ...res }
-		} catch (exception: any) {
-			return exception
+			await (await post('auth/register', data)).json()
+			return { message: 'Success' }
+		} catch (e: any) {
+			return e
 		}
 	}
 
 	const get = async (url: string, retry: boolean = false) => {
 		const config: RequestInit = {
-			method: 'get',
+			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${store.session.token}`
@@ -124,16 +127,15 @@ const AuthProvider: FC<Props> = ({ auth, children }) => {
 				res = await get(url, true)
 			} else {
 				const e = JSON.parse(await res.text())
-				throw new ErrorMessage(e.message, e.statusCode, e.error)
+				throw new ErrorMessage(e.message, e.statusCode, e.messageId)
 			}
 		}
-
 		return res
 	}
 
 	const post = async (url: string, data?: any, retry: boolean = false) => {
 		const config: RequestInit = {
-			method: 'post',
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${store.session.token}`
@@ -148,7 +150,53 @@ const AuthProvider: FC<Props> = ({ auth, children }) => {
 				res = await post(url, data, true)
 			} else {
 				const e = JSON.parse(await res.text())
-				throw new ErrorMessage(e.message, e.statusCode, e.error)
+				throw new ErrorMessage(e.message, e.statusCode, e.messageId)
+			}
+		}
+		return res
+	}
+
+	const put = async (url: string, data?: any, retry: boolean = false) => {
+		const config: RequestInit = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${store.session.token}`
+			},
+			body: JSON.stringify(data),
+			credentials: 'include'
+		}
+		let res = await fetch(`${baseURL}${url.startsWith('/') ? url : '/' + url}`, config)
+		if (!res.ok) {
+			if (res.status == 401 && !retry) {
+				await refreshToken()
+				res = await put(url, data, true)
+			} else {
+				const e = JSON.parse(await res.text())
+				throw new ErrorMessage(e.message, e.statusCode, e.messageId)
+			}
+		}
+		return res
+	}
+
+	const patch = async (url: string, data?: any, retry: boolean = false) => {
+		const config: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${store.session.token}`
+			},
+			body: JSON.stringify(data),
+			credentials: 'include'
+		}
+		let res = await fetch(`${baseURL}${url.startsWith('/') ? url : '/' + url}`, config)
+		if (!res.ok) {
+			if (res.status == 401 && !retry) {
+				await refreshToken()
+				res = await patch(url, data, true)
+			} else {
+				const e = JSON.parse(await res.text())
+				throw new ErrorMessage(e.message, e.statusCode, e.messageId)
 			}
 		}
 		return res
@@ -156,7 +204,7 @@ const AuthProvider: FC<Props> = ({ auth, children }) => {
 
 	async function refreshToken() {
 		const config: RequestInit = {
-			method: 'post',
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
@@ -178,7 +226,10 @@ const AuthProvider: FC<Props> = ({ auth, children }) => {
 		logout,
 		register,
 		get,
-		post
+		post,
+		put,
+		patch,
+		refreshToken
 	}
 	return <AuthContext value={store}>{children}</AuthContext>
 }

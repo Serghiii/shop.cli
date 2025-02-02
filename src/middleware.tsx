@@ -1,11 +1,11 @@
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
 import { NextRequest, NextResponse } from 'next/server'
-import { cookieName, i18n } from './i18n-config'
+import { cookieI18nName, i18n } from './i18n-config'
 
 const getLocale = (request: NextRequest): string => {
-	if (request.cookies.has(cookieName)) {
-		let locale = request.cookies.get(cookieName)!.value
+	if (request.cookies.has(cookieI18nName)) {
+		let locale = request.cookies.get(cookieI18nName)!.value
 		if (i18n.locales.some(locale => locale === locale)) return locale
 	}
 	const acceptLang = request.headers.get('Accept-Language')
@@ -31,6 +31,14 @@ export function middleware(request: NextRequest) {
 	const locale = getLocale(request)
 	const { pathname } = request.nextUrl
 	const pathlocale = pathContains(pathname, i18n.locales as unknown as string[])
+
+	// Routing --->
+	const cookieSessionName = 'session'
+	const isSession = request.cookies.has(cookieSessionName)
+	const isProfile = pathname.includes('/profile')
+
+	if (isProfile && !isSession) return NextResponse.redirect(new URL(`/${locale}/login`, request.url))
+	// Routing <--
 
 	// Internationalization v1 --->
 	if (locale === i18n.defaultLocale) {

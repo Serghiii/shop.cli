@@ -1,22 +1,31 @@
 'use client'
-import Avatar from '@mui/material/Avatar'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import useSWR from 'swr'
-import { ProfileTabs } from '.'
+import { ProfileTabs, UserAvatar } from '.'
 import Logout from '../../public/icon/profile/logout.svg'
 import { useAuthContext, useDictionary } from '../contexts'
 
 const MainProfile: React.FC = () => {
 	const { d } = useDictionary()
-	const logout = useAuthContext().logout
-	const post = useAuthContext().post
+	const ctxAuth = useAuthContext()
+	const session = ctxAuth.session
+	const router = useRouter()
 
-	const fetcher = async (url: string) => await post(url).then(response => response.json())
-	// const fetcher = async (url: string) => await axiosAuthService.post(url).then(response => response.data)
+	const fetcher = async (url: string) => await ctxAuth.post(url).then(response => response.json())
 	const { data } = useSWR('user/profile', fetcher)
 
+	useEffect(() => {
+		document.title = `${d.auth.login.profile.title}: ${session.name}`
+	}, [, d.auth.login.profile.title])
+
+	useEffect(() => {
+		if (!session.isLoggedIn) router.refresh()
+	}, [session.isLoggedIn])
+
 	const exitClickHandler = () => {
-		logout()
+		ctxAuth.logout()
 	}
 
 	return (
@@ -29,31 +38,7 @@ const MainProfile: React.FC = () => {
 					<div className='title-simple-avatar-wraper'>
 						<div className='title-simple-avatar'>
 							<div className='avatar-simple'>
-								<Avatar
-									alt='Аватар'
-									src={
-										data?.avatar?.trim().length
-											? data?.avatar.includes('lh3.googleusercontent.com')
-												? data?.avatar
-												: `${process.env.STATIC_URL}/avatars/${data?.avatar}`
-											: '/icon/profile/avatar-none.svg'
-									}
-									className='profile-avatar'
-								/>
-								<style global jsx>
-									{`
-										.MuiAvatar-root.profile-avatar {
-											height: 96px;
-											width: 96px;
-										}
-										@media (max-width: 767.98px) {
-											.MuiAvatar-root.profile-avatar {
-												height: 76px;
-												width: 76px;
-											}
-										}
-									`}
-								</style>
+								<UserAvatar className='profile-avatar' height={96} width={96} path={session.avatar} />
 							</div>
 						</div>
 					</div>

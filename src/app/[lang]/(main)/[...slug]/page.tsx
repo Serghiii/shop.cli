@@ -1,7 +1,7 @@
-import { ProductOne, MainSubgroups, MainGroups } from '../../../../components'
+import { MainGroups, MainSubgroups, ProductOne } from '../../../../components'
 
 import { notFound } from 'next/navigation'
-import { axiosService, pageService } from '../../../../services'
+import { fetchService, pageService } from '../../../../services'
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
 	const slug = (await params).slug
@@ -20,19 +20,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
 		if (pageService.isProductFormat(slug[1])) {
 			try {
 				res = await (
-					await axiosService.get(`/service/combined/page/${slug[0]}?id=${pageService.extractId(slug[1])}`)
-				).data
+					await fetchService.get(`/service/combined/page/${slug[0]}?id=${pageService.extractId(slug[1])}`)
+				).json()
 			} catch (e: any) {
-				error = { message: e.response ? (e.response.status ? e.response.data.message : e.message) : e.message }
+				error = { message: e.message }
 			}
 			if (res.page == 'not_found') notFound()
 		} else notFound()
 	} else {
 		if (pageService.isGroupFormat(slug[0])) {
 			try {
-				res = await (await axiosService.get(`/service/combined/page/${slug[0]}`)).data
+				res = await (await fetchService.get(`/service/combined/page/${slug[0]}`)).json()
 			} catch (e: any) {
-				error = { message: e.response ? (e.response.status ? e.response.data.message : e.message) : e.message }
+				error = { message: e.message }
 			}
 			if (res.page == 'not_found') notFound()
 		} else notFound()

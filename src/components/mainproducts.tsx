@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack'
 import React from 'react'
 import useSWR from 'swr'
 import { MainProductCard } from '.'
-import { axiosService, pageService } from '../services'
+import { fetchService, pageService } from '../services'
 
 const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 	const limit: number = 6
@@ -13,10 +13,13 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 	}`
 
 	const fetcher = async (url: string) => {
-		return await axiosService.get(url).then(response => {
-			if (page[0] > 1 && response.data.results.length <= 0) page[1](1)
-			return response.data
-		})
+		return await fetchService
+			.get(url)
+			.then(responce => responce.json())
+			.then(data => {
+				if (page[0] > 1 && data.results.length <= 0) page[1](1)
+				return data
+			})
 	}
 	const { data, error } = useSWR(url, fetcher)
 

@@ -40,8 +40,35 @@ export default function NumberFieldPlusMinus({ id, value, min, max }: any) {
 		)
 	}
 
+	function onValueChange(value: number | null) {
+		if (!value) return
+		if (value < min) {
+			adjustAmount({
+				id: id,
+				amount: 1
+			})
+		} else if (value > max) {
+			adjustAmount({
+				id: id,
+				amount: max
+			})
+		} else if (value) {
+			adjustAmount({
+				id: id,
+				amount: value
+			})
+		}
+	}
+
 	return (
-		<NumberField.Root id={id} className={styles.Field} value={value} min={min} max={max}>
+		<NumberField.Root
+			id={id}
+			className={styles.Field}
+			value={value}
+			min={min}
+			max={max}
+			onValueChange={onValueChange}
+		>
 			<NumberField.ScrubArea>
 				<NumberField.ScrubAreaCursor />
 			</NumberField.ScrubArea>

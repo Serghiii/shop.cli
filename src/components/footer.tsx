@@ -3,7 +3,7 @@ import { DialogCart, DialogLogin } from '.'
 import { useDictionary, useMainContext } from '../contexts'
 
 const Footer: React.FC = () => {
-	const mainCtx = useMainContext()
+	const ctxMain = useMainContext()
 	const { d } = useDictionary()
 
 	const scrollUpClickHandler = () => {
@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
                            <Logo />
                         </div>
                      </div> */}
-							<span ref={mainCtx.scrollUp} className='scroll-up' onClick={scrollUpClickHandler}>
+							<span ref={ctxMain.scrollUp} className='scroll-up' onClick={scrollUpClickHandler}>
 								<svg className='icon-up-arrow' viewBox='0 0 6 9'>
 									<path
 										d='M0 0.7L3.5 4.4L0 8.4L0.8 9L5 4.4L0.8 0L0 0.7Z'
@@ -37,8 +37,8 @@ const Footer: React.FC = () => {
 					</div>
 				</div>
 			</footer>
-			{mainCtx.stateLogin[0] && <DialogLogin />}
-			{mainCtx.stateCart[0] && <DialogCart />}
+			{ctxMain.stateLogin[0] && <DialogLogin />}
+			{ctxMain.stateCart[0] && <DialogCart />}
 		</>
 	)
 }

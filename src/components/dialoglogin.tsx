@@ -2,7 +2,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Alert from '@mui/material/Alert'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { MouseEvent, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
@@ -14,8 +13,8 @@ import { ErrorStatus } from '../lib/types'
 
 const DialogLogin: React.FC = () => {
 	const { d, t } = useDictionary()
-	const mainCtx = useMainContext()
-	const router = useRouter()
+	const ctxMain = useMainContext()
+	const ctxAuth = useAuthContext()
 	const [Register, setRegister] = useState(false)
 	const backdrop = useRef<HTMLDivElement>(null)
 	const mouseState = {
@@ -46,9 +45,9 @@ const DialogLogin: React.FC = () => {
 	}
 
 	const closeClickHandler = () => {
-		mainCtx.stateLogin[1](false)
+		ctxMain.stateLogin[1](false)
 		document.body.removeAttribute('class')
-		mainCtx.mainSwiper.current?.removeAttribute('style')
+		ctxMain.mainSwiper.current?.removeAttribute('style')
 	}
 
 	const registerClickHandler = (e: MouseEvent) => {
@@ -62,7 +61,7 @@ const DialogLogin: React.FC = () => {
 			padding = String(window.innerWidth - document.documentElement.clientWidth) + 'px'
 		}
 		document.body.classList.add('_lock')
-		if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
+		if (ctxMain.mainSwiper.current) ctxMain.mainSwiper.current.style.paddingRight = padding
 
 		// try {
 		// 	gapi.load('auth2', () => {
@@ -71,11 +70,10 @@ const DialogLogin: React.FC = () => {
 		// 		})
 		// 	})
 		// } catch (e) {}
-	}, [, mainCtx.mainSwiper])
+	}, [, ctxMain.mainSwiper])
 
 	const LoginForm = () => {
 		const [error, setError] = useState<ErrorStatus | null>(null)
-		const login = useAuthContext().login
 
 		const loginSchema = yup.object().shape({
 			login: yup.string().trim().required(d.auth.messages.required).min(2, d.auth.messages.login),
@@ -93,7 +91,7 @@ const DialogLogin: React.FC = () => {
 		})
 
 		const loginSubmitHandle = async () => {
-			const res = await login({ username: getValues('login'), password: getValues('loginPassword') })
+			const res = await ctxAuth.login({ username: getValues('login'), password: getValues('loginPassword') })
 			if (res.message === 'Success') {
 				closeClickHandler()
 			} else {
@@ -164,14 +162,14 @@ const DialogLogin: React.FC = () => {
 							</div>
 						</div>
 						<div className='form-row'>
-							{error?.message && (
+							{error && (
 								<Alert
 									severity='error'
 									onClose={() => {
 										setError(null)
 									}}
 								>
-									{t('server.' + error.error) ? t('server.' + error.error) : error.message}
+									{t('server.' + error.messageId) ? t('server.' + error.messageId) : error.message}
 								</Alert>
 							)}
 						</div>
@@ -194,8 +192,8 @@ const DialogLogin: React.FC = () => {
 	}
 
 	const RegisterForm = () => {
+		const [success, setSuccess] = useState<string | null>(null)
 		const [error, setError] = useState<ErrorStatus | null>(null)
-		const create = useAuthContext().register
 
 		const registerSchema = yup.object().shape({
 			name: yup
@@ -214,16 +212,23 @@ const DialogLogin: React.FC = () => {
 		const {
 			control,
 			register,
+			reset,
 			formState: { errors, isValid },
 			handleSubmit,
 			getValues
 		} = useForm({
 			mode: 'onChange',
-			resolver: yupResolver(registerSchema)
+			resolver: yupResolver(registerSchema),
+			defaultValues: {
+				name: '',
+				phone: '',
+				email: '',
+				password: ''
+			}
 		})
 
 		const registerSubmitHandle = async () => {
-			const res = await create({
+			const res = await ctxAuth.register({
 				name: getValues('name'),
 				phone: getValues('phone')?.replace(/\s/g, '') || '',
 				email: getValues('email'),
@@ -232,7 +237,8 @@ const DialogLogin: React.FC = () => {
 				activation_ref: ''
 			})
 			if (res.message === 'Success') {
-				closeClickHandler()
+				setSuccess('auth.messages.success')
+				reset()
 			} else {
 				setError(res)
 			}
@@ -320,14 +326,24 @@ const DialogLogin: React.FC = () => {
 							</div>
 						</div>
 						<div className='form-row'>
-							{error?.message && (
+							{success && (
+								<Alert
+									severity='success'
+									onClose={() => {
+										setSuccess(null)
+									}}
+								>
+									{t(success)}
+								</Alert>
+							)}
+							{error && (
 								<Alert
 									severity='error'
 									onClose={() => {
 										setError(null)
 									}}
 								>
-									{t('server.' + error.error) ? t('server.' + error.error) : error.message}
+									{t('server.' + error.messageId) ? t('server.' + error.messageId) : error.message}
 								</Alert>
 							)}
 						</div>

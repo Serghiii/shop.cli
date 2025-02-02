@@ -1,15 +1,21 @@
-'use client'
-import { useEffect } from 'react'
+import { Metadata } from 'next'
 import { Footer, Header } from '../../../components'
-import { useDictionary } from '../../../contexts'
+import { Locale } from '../../../i18n-config'
+import { getDictionary } from '../dictionaries'
 
-export default function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-	const { d } = useDictionary()
+type Props = {
+	params: Promise<{ lang: Locale }>
+}
 
-	useEffect(() => {
-		document.title = d.title
-	}, [, d.title])
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const lang = (await params).lang
+	const d = await getDictionary(lang)
+	return {
+		title: d.title
+	}
+}
 
+export default async function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<div className='wrapper'>
 			<Header />

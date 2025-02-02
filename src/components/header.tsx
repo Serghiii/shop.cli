@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import cn from 'clsx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuthContext, useMainContext } from '../contexts'
 import {
@@ -14,18 +14,10 @@ import {
 	Search,
 	SideDrawer
 } from './index'
-// const ProfileButton = dynamic(
-// 	() =>
-// 		import('../components/bt_profile').catch(err => {
-// 			// eslint-disable-next-line react/display-name
-// 			return () => <p>{err.message}</p>
-// 		}),
-// 	{ ssr: false }
-// )
 
 const Header: React.FC = () => {
 	const session = useAuthContext().session
-	const mainCtx = useMainContext()
+	const ctxMain = useMainContext()
 	const [stateDarawer, setStateDarawer] = useState<boolean>(false)
 	const hdTop = useRef<HTMLDivElement>(null)
 	const hdBtm = useRef<HTMLDivElement>(null)
@@ -36,10 +28,9 @@ const Header: React.FC = () => {
 	const hdFixed = useRef<boolean>(false)
 	const scrollup = useRef<boolean>(false)
 	const lockbody = useRef<boolean>(false)
-	const router = useRouter()
 
 	const drawerClickHandler = () => {
-		// показ бокової панелі
+		// show sidebar
 		let padding: string = '0'
 		if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
 			padding = String(window.innerWidth - document.documentElement.clientWidth) + 'px'
@@ -47,68 +38,68 @@ const Header: React.FC = () => {
 		setStateDarawer(!stateDarawer)
 		document.body.classList.add(_lock)
 		lockbody.current = true
-		if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
+		if (ctxMain.mainSwiper.current) ctxMain.mainSwiper.current.style.paddingRight = padding
 	}
 
 	const loginClickHandler = () => {
-		// логін діалог
+		// dialog login
 		if (!session.isLoggedIn) {
 			let padding = '0'
 			if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
 				padding = String(window.innerWidth - document.documentElement.clientWidth) + 'px'
 			}
-			mainCtx.stateLogin[1](true)
+			ctxMain.stateLogin[1](true)
 			document.body.classList.add(_lock)
-			if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
+			if (ctxMain.mainSwiper.current) ctxMain.mainSwiper.current.style.paddingRight = padding
 		}
 	}
 
 	const cartClickHandler = () => {
-		// авторизація
+		// authorization
 		let padding: string = '0'
 		if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
 			padding = String(window.innerWidth - document.documentElement.clientWidth) + 'px'
 		}
-		mainCtx.stateCart[1](true)
+		ctxMain.stateCart[1](true)
 		document.body.classList.add(_lock)
-		if (mainCtx.mainSwiper.current) mainCtx.mainSwiper.current.style.paddingRight = padding
+		if (ctxMain.mainSwiper.current) ctxMain.mainSwiper.current.style.paddingRight = padding
 	}
 
 	const menuBackdropClickHandler = () => {
-		// приховування бокової панелі
+		// hide sidebar
 		setStateDarawer(false)
 		document.body.removeAttribute('class')
 		lockbody.current = false
-		mainCtx.mainSwiper.current?.removeAttribute('style')
+		ctxMain.mainSwiper.current?.removeAttribute('style')
 	}
 
 	const showCategoryes = useCallback(
 		(show: boolean) => {
-			if (show && !mainCtx.stateCategory[0]) {
-				mainCtx.stateCategory[1](show)
-			} else if (!show && mainCtx.stateCategory[0]) {
-				mainCtx.stateCategory[1](show)
+			if (show && !ctxMain.stateCategory[0]) {
+				ctxMain.stateCategory[1](show)
+			} else if (!show && ctxMain.stateCategory[0]) {
+				ctxMain.stateCategory[1](show)
 			}
 		},
-		[mainCtx.stateCategory]
+		[ctxMain.stateCategory]
 	)
 
 	const changeWindowSize = useCallback(() => {
-		// блокування екрану
+		// screen lock
 		if (window.innerWidth > lg) {
-			mainCtx.stateCategory[1](true)
+			ctxMain.stateCategory[1](true)
 			if (lockbody.current) {
 				document.body.classList.remove(_lock)
 				lockbody.current = false
 			}
 		} else {
-			mainCtx.stateCategory[1](false)
+			ctxMain.stateCategory[1](false)
 			if (stateDarawer && !lockbody.current) {
 				document.body.classList.add(_lock)
 				lockbody.current = true
 			}
 		}
-	}, [mainCtx.stateCategory, stateDarawer])
+	}, [ctxMain.stateCategory, stateDarawer])
 
 	function isLargeScreen() {
 		let res = true
@@ -119,41 +110,41 @@ const Header: React.FC = () => {
 	}
 
 	const scrollWindow = useCallback(() => {
-		// фіксація шапки
+		// header fixation
 		if (!hdFixed.current && window.scrollY > (hdBtm.current?.offsetTop || 0)) {
-			// зафіксувати шапку
+			// freeze the header
 			hdBtm.current?.classList.add(Fixed)
 			hdFixed.current = true
 			if (isLargeScreen()) hdTop.current?.classList.add(paddingTop)
 		} else if (hdFixed.current && window.scrollY - (isLargeScreen() ? hdTop.current?.clientHeight || 0 : 0) <= 0) {
-			// зняти фіксацію шапки
+			// unfreeze the header
 			hdBtm.current?.classList.remove(Fixed)
 			hdFixed.current = false
 			hdTop.current?.classList.remove(paddingTop)
 		}
-		// показати/сховати кнопку наверх
+		// show/hide up button
 		if (!scrollup.current && hdFixed.current) {
-			mainCtx.scrollUp.current?.classList.add('show')
+			ctxMain.scrollUp.current?.classList.add('show')
 			scrollup.current = true
 		} else if (scrollup.current && !hdFixed.current) {
-			mainCtx.scrollUp.current?.classList.remove('show')
+			ctxMain.scrollUp.current?.classList.remove('show')
 			scrollup.current = false
 		}
-	}, [mainCtx.scrollUp])
+	}, [ctxMain.scrollUp])
 
 	useEffect(() => {
 		window.addEventListener('resize', changeWindowSize)
 		window.addEventListener('scroll', scrollWindow)
 		if (window.innerWidth > lg) {
-			mainCtx.stateCategory[1](true)
+			ctxMain.stateCategory[1](true)
 		} else {
-			mainCtx.stateCategory[1](false)
+			ctxMain.stateCategory[1](false)
 		}
 		return () => {
 			window.removeEventListener('resize', changeWindowSize)
 			window.removeEventListener('scroll', scrollWindow)
 		}
-	}, [, mainCtx.stateCategory, showCategoryes, changeWindowSize, scrollWindow])
+	}, [, ctxMain.stateCategory, showCategoryes, changeWindowSize, scrollWindow])
 
 	return (
 		<header>
@@ -184,7 +175,7 @@ const Header: React.FC = () => {
 						</div>
 					</div>
 					<SideDrawer show={stateDarawer} />
-					<div className={`menu-backdrop${stateDarawer ? ' show' : ''}`} onClick={menuBackdropClickHandler}></div>
+					<div className={cn('menu-backdrop', { show: stateDarawer })} onClick={menuBackdropClickHandler}></div>
 				</div>
 			</div>
 		</header>

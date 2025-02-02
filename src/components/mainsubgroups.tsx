@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { MainBreadcrumbs, MainFilters, MainProducts } from '.'
 import { useDictionary } from '../contexts'
 import { i18n } from '../i18n-config'
-import { axiosService, pageService } from '../services'
+import { fetchService, pageService } from '../services'
 
 const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
 	const [filters, setFilters] = useState<string[]>(params)
@@ -15,12 +15,15 @@ const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
 	const getParams = (Ids: string[]) => {
 		let res: string[] = []
 		if (Ids.length) {
-			axiosService.post('/propdetail/ids/', { data: Ids }).then(({ data }) => {
-				data.forEach((el: any) => {
-					res.push(el.id)
+			fetchService
+				.post('/propdetail/ids/', { data: Ids })
+				.then(responce => responce.json())
+				.then(data => {
+					data.forEach((el: any) => {
+						res.push(el.id)
+					})
+					setFilters(res)
 				})
-				setFilters(res)
-			})
 		}
 	}
 
