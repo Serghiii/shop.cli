@@ -3,12 +3,8 @@ import { MainLogin } from '../../../../components'
 import { Locale } from '../../../../i18n-config'
 import { getDictionary } from '../../dictionaries'
 
-type Props = {
-	params: Promise<{ lang: Locale }>
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const lang = (await params).lang
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
+	const { lang } = await params
 	const d = await getDictionary(lang)
 	return {
 		title: d.auth.login.title

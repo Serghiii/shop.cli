@@ -1,10 +1,11 @@
 'use client'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { MainBreadcrumbs, MainFilters, MainProducts } from '.'
+import { MainProducts } from '.'
 import { useDictionary } from '../contexts'
 import { i18n } from '../i18n-config'
 import { fetchService, pageService } from '../services'
+import { BreadCrumbs, Filters } from './general'
 
 const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
 	const [filters, setFilters] = useState<string[]>(params)
@@ -44,18 +45,13 @@ const MainSubgroups: React.FC<any> = ({ group, params, data, pg }) => {
 				<div className='container'>
 					<div className='main'>
 						<div className='breadcrumbs'>
-							<MainBreadcrumbs />
+							<BreadCrumbs />
 						</div>
 						<h2 className='main-title'>{d.filter.group.title}</h2>
 						<div className='main-products'>
 							<div>
 								<section className='filters'>
-									<MainFilters
-										group={group}
-										cond={[filters, setFilters]}
-										page={[page, setPage]}
-										fdata={data}
-									/>
+									<Filters group={group} cond={[filters, setFilters]} page={[page, setPage]} fdata={data} />
 								</section>
 							</div>
 							<div className='products'>

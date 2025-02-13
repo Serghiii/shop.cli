@@ -1,10 +1,10 @@
 'use client'
 import dynamic from 'next/dynamic'
-import { Slider } from '../../../components'
+import { Slider } from '../../../components/general'
 import { useMainContext } from '../../../contexts'
 const Categories = dynamic(
 	() =>
-		import('../../../components/categiries').catch(err => {
+		import('../../../components/general/categories').catch(err => {
 			// eslint-disable-next-line react/display-name
 			return () => <p>{err.message}</p>
 		}),
@@ -12,7 +12,7 @@ const Categories = dynamic(
 )
 const NewGoods = dynamic(
 	() =>
-		import('./../../../components/newgoods').catch(err => {
+		import('../../../components/general/newgoods').catch(err => {
 			// eslint-disable-next-line react/display-name
 			return () => <p>{err.message}</p>
 		}),
