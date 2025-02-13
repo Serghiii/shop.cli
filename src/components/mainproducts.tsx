@@ -3,8 +3,8 @@ import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 import React from 'react'
 import useSWR from 'swr'
-import { MainProductCard } from '.'
 import { fetchService, pageService } from '../services'
+import { ProductCard } from './general'
 
 const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 	const limit: number = 6
@@ -34,7 +34,7 @@ const MainProducts: React.FC<any> = ({ group, cond, page }) => {
 				<>
 					<div className='main-product-cards'>
 						{data?.results.map((item: any) => (
-							<MainProductCard key={item.id} {...item} group={group} />
+							<ProductCard key={item.id} {...item} group={group} />
 						))}
 					</div>
 					<div style={{ display: 'flex', justifyContent: 'center' }}>

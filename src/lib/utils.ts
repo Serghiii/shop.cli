@@ -1,3 +1,9 @@
+import clsx, { ClassValue } from 'clsx'
+
+export function cn(...args: ClassValue[]): string {
+	return clsx(args)
+}
+
 export const tt = (str: string, lang: string = 'uk', defstr: string = 'undefined') => {
 	const value = JSON.parse(str)
 	let res: string = value?.[lang] ? value[lang] : ''
@@ -12,7 +18,7 @@ export const decodePayload = (payload: string) => {
 export enum Resize {
 	Auto = 'auto'
 }
-
+// change image size and quality
 export const resize: any = (
 	base64: string,
 	width: Resize | number,

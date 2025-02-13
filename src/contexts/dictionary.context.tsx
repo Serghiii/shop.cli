@@ -30,7 +30,7 @@ export function useDictionary() {
 	}
 
 	if (!d) {
-		throw new Error('useDictionary hook must be used within DictionaryProvider')
+		throw new Error('useDictionary hook must be used within the DictionaryProvider')
 	}
 
 	return { d, t }
