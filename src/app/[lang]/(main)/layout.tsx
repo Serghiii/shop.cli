@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Footer, Header } from '../../../components'
+import { Footer, Header } from '../../../components/general'
 import { Locale } from '../../../i18n-config'
 import { getDictionary } from '../dictionaries'
 
@@ -11,7 +11,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const lang = (await params).lang
 	const d = await getDictionary(lang)
 	return {
-		title: d.title
+		title: d.title,
+		description: d.description
 	}
 }
 

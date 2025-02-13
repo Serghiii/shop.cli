@@ -1,9 +1,12 @@
 import { Roboto } from 'next/font/google'
-import { getDictionary } from './dictionaries'
+import { AuthProvider, CartProvider, DictionaryProvider, MainProvider } from '../../contexts'
 import { Locale } from '../../i18n-config'
-import { DictionaryProvider } from '../../contexts'
+import { getSession } from '../../lib/session'
+import { getDictionary } from './dictionaries'
+import { MuiThemeProvider } from './mui.provider'
+import { SWRProvider } from './swr.provider'
 
-const inter = Roboto({ subsets: ['latin'], weight: ['400'] })
+const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto', weight: ['400', '500', '700', '900'] })
 
 export default async function LangLayout({
 	children,
@@ -14,11 +17,21 @@ export default async function LangLayout({
 
 	return (
 		<html lang={(await params).lang}>
-			<body className={inter.className}>
-				<DictionaryProvider dictionary={dictionary}>
-					{children}
-					{modal}
-				</DictionaryProvider>
+			<body className={roboto.className}>
+				<SWRProvider>
+					<MuiThemeProvider>
+						<DictionaryProvider dictionary={dictionary}>
+							<AuthProvider auth={await getSession()}>
+								<CartProvider>
+									<MainProvider>
+										{children}
+										{modal}
+									</MainProvider>
+								</CartProvider>
+							</AuthProvider>
+						</DictionaryProvider>
+					</MuiThemeProvider>
+				</SWRProvider>
 			</body>
 		</html>
 	)

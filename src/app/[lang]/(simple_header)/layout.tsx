@@ -1,4 +1,4 @@
-import { HeaderSimple } from '../../../components'
+import { HeaderSimple } from '../../../components/general'
 
 export default function SimpleLayout_H({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (

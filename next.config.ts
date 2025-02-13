@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
 		API_URL: process.env.API_URL,
 		STATIC_URL: process.env.STATIC_URL,
 		GOOGLE_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
-		CRIPTO: process.env.CRYPTO_SECRET_KEY
+		CRIPTO: process.env.CRYPTO_SECRET_KEY,
+		SESSION_NAME: process.env.SESSION_NAME
 	},
 	images: {
 		localPatterns: [
