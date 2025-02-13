@@ -36,7 +36,6 @@ export function middleware(request: NextRequest) {
 	const cookieSessionName = 'session'
 	const isSession = request.cookies.has(cookieSessionName)
 	const isProfile = pathname.includes('/profile')
-
 	if (isProfile && !isSession) return NextResponse.redirect(new URL(`/${locale}/login`, request.url))
 	// Routing <--
 
@@ -68,7 +67,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ['/((?!_next|favicon.ico).*)']
+	matcher: ['/((?!_next|api|static|public).*)']
 }
 
 // Internationalization v2 without cookies --->
