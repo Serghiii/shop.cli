@@ -2,19 +2,18 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Alert from '@mui/material/Alert'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { FormEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import User from '../../public/icon/profile/user-login.svg'
 import { useAuthContext, useDictionary } from '../contexts'
 import { ErrorStatus } from '../lib/types'
-import { useRouter } from 'next/navigation'
 
 const MainLogin: React.FC = () => {
 	const [error, setError] = useState<ErrorStatus | null>(null)
 	const { d, t } = useDictionary()
-	const ctxAuth = useAuthContext()
-	const session = ctxAuth.session
+	const { session, login } = useAuthContext()
 	const router = useRouter()
 
 	const loginSchema = yup.object().shape({
@@ -33,11 +32,11 @@ const MainLogin: React.FC = () => {
 
 	useEffect(() => {
 		if (session.isLoggedIn) router.push('/profile')
-	}, [session.isLoggedIn])
+	}, [session.isLoggedIn, router])
 
 	const onSubmitHandler = async (e: FormEvent) => {
 		e.preventDefault()
-		const res = await ctxAuth.login({ username: getValues('login'), password: getValues('loginPassword') })
+		const res = await login({ username: getValues('login'), password: getValues('loginPassword') })
 		if (res.message !== 'Success') {
 			setError(res)
 		}

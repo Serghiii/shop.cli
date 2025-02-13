@@ -1,0 +1,28 @@
+.paragraf {
+	position: absolute;
+	font-size: 20px;
+	margin-top: 200px;
+	color: gray;
+	text-align: center;
+}
+
+.image {
+	width: 500px;
+	height: 500px;
+}
+
+.no-borders {
+	border-left: 0;
+	border-right: 0;
+}
+
+@media (max-width: 767.98px) {
+	.paragraf {
+		font-size: 16px;
+		margin-top: 120px;
+	}
+	.image {
+		width: 300px;
+		height: 300px;
+	}
+}

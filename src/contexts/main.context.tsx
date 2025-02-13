@@ -33,7 +33,7 @@ const MainProvider: React.FC<Props> = ({ children }) => {
 export const useMainContext = () => {
 	const mainContext = useContext(MainContext)
 	if (!mainContext) {
-		throw new Error('useMainContext must be used within the MainContext.Provider')
+		throw new Error('useMainContext must be used within the MainProvider')
 	}
 	return mainContext
 }

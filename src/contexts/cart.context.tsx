@@ -146,6 +146,7 @@ const CartProvider: FC<Props> = ({ children }) => {
 
 	useEffect(() => {
 		updateCart()
+		// eslint-disable-next-line
 	}, [])
 
 	const store: IStore = {
@@ -160,7 +161,7 @@ const CartProvider: FC<Props> = ({ children }) => {
 export const useCartContext = () => {
 	const cartContext = useContext(CartContext)
 	if (!cartContext) {
-		throw new Error('useCartContext must be used within the CartContext.Provider')
+		throw new Error('useCartContext must be used within the CartProvider')
 	}
 	return cartContext
 }

@@ -13,7 +13,7 @@ export default function Checkout() {
 		if (cartItems.length == 0) {
 			router.push('/')
 		} else setShowing(true)
-	}, [])
+	}, [cartItems, router])
 
 	return <>{show && <MainCheckout />}</>
 }

@@ -2,7 +2,7 @@ export const cookieI18nName = 'NEXT_LOCALE'
 
 export const i18n = {
 	defaultLocale: 'uk',
-	defaultLocaleAlias: 'ua', // '' якщо альтернатива відсутня
+	defaultLocaleAlias: 'ua', // if no alias provided, it will be the same as defaultLocale or ''
 	locales: ['uk', 'ru'] as const
 }
 

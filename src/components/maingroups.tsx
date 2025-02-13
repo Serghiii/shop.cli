@@ -1,10 +1,10 @@
 'use client'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid2'
-import { MainBreadcrumbs, MainGroupCard } from '.'
-import { tt } from '../lib/utils'
+import Grid from '@mui/material/Grid'
 import { useParams, usePathname } from 'next/navigation'
 import { useCategories } from '../hooks'
+import { tt } from '../lib/utils'
+import { BreadCrumbs, GroupCard } from './general'
 
 const MainGroups: React.FC = () => {
 	const menu = useCategories()
@@ -45,7 +45,7 @@ const MainGroups: React.FC = () => {
 			<div className='container'>
 				<div className='main'>
 					<div className='breadcrumbs'>
-						<MainBreadcrumbs />
+						<BreadCrumbs />
 					</div>
 					{getItems()?.map((item: any) => (
 						<div className='mb-10' key={item?.id}>
@@ -55,7 +55,7 @@ const MainGroups: React.FC = () => {
 									<Grid container spacing={3}>
 										{getSubGroupsByGroup(item?.id)?.map((item: any) => (
 											<Grid key={item.id}>
-												<MainGroupCard item={item} />
+												<GroupCard item={item} />
 											</Grid>
 										))}
 									</Grid>

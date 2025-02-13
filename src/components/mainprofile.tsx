@@ -1,31 +1,21 @@
 'use client'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import useSWR from 'swr'
-import { ProfileTabs, UserAvatar } from '.'
 import Logout from '../../public/icon/profile/logout.svg'
 import { useAuthContext, useDictionary } from '../contexts'
+import { ProfileTabs } from './general'
+import { UserAvatar } from './ui'
 
-const MainProfile: React.FC = () => {
+const MainProfile: React.FC<any> = ({ data }) => {
 	const { d } = useDictionary()
-	const ctxAuth = useAuthContext()
-	const session = ctxAuth.session
-	const router = useRouter()
-
-	const fetcher = async (url: string) => await ctxAuth.post(url).then(response => response.json())
-	const { data } = useSWR('user/profile', fetcher)
+	const { session, logout } = useAuthContext()
 
 	useEffect(() => {
-		document.title = `${d.auth.login.profile.title}: ${session.name}`
-	}, [, d.auth.login.profile.title])
-
-	useEffect(() => {
-		if (!session.isLoggedIn) router.refresh()
+		if (!session.isLoggedIn) window.location.reload()
 	}, [session.isLoggedIn])
 
 	const exitClickHandler = () => {
-		ctxAuth.logout()
+		logout()
 	}
 
 	return (

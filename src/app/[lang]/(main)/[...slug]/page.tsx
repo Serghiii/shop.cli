@@ -1,10 +1,10 @@
-import { MainGroups, MainSubgroups, ProductOne } from '../../../../components'
+import { MainGroups, MainProductOne, MainSubgroups } from '../../../../components'
 
 import { notFound } from 'next/navigation'
 import { fetchService, pageService } from '../../../../services'
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
-	const slug = (await params).slug
+	const { slug } = await params
 
 	interface Resault {
 		data: any
@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
 	return (
 		<>
 			{res.page == 'product' ? (
-				<ProductOne group={slug[0]} data={res.data[0]} />
+				<MainProductOne group={slug[0]} data={res.data[0]} />
 			) : res.page == 'subgroup' ? (
 				<MainSubgroups
 					group={slug[0]}

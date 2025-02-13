@@ -9,11 +9,11 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
 import * as yup from 'yup'
-import { MoneyFormat } from '.'
 import { useCartContext, useDictionary } from '../contexts'
 import { Masks } from '../lib/masks'
 import { tt } from '../lib/utils'
 import { fetchService } from '../services'
+import { MoneyFormat } from './ui'
 
 interface Details {
 	fio: string
@@ -45,7 +45,7 @@ interface Order {
 export default function MainCheckout() {
 	const { lang } = useParams<{ lang: string }>()
 	const { d } = useDictionary()
-	const cart = useCartContext().cart
+	const cart = JSON.parse(JSON.stringify(useCartContext().cart)) // disconnect from context
 	const removeItem = useCartContext().removeItem
 	const OrderDetails = getDataFromCart()
 	const [Shipping, setShipping] = useState<string>('')
