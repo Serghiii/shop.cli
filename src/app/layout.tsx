@@ -1,7 +1,7 @@
-import 'swiper/scss'
-import 'swiper/scss/navigation'
-import 'swiper/scss/pagination'
-import 'swiper/scss/thumbs'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/thumbs'
 import './global.scss'
 import './normalize.scss'
 
